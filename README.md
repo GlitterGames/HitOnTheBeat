@@ -1,18 +1,18 @@
-# GlitterGames - HIT ON THE BEAT
+# GlitterGames - HIT ON THE BEAT!
 
 Videojuego para la asignatura de Juegos para Web y Redes Sociales en la Universidad Rey Juan Carlos.
 
 ## En desarrollo 🚀
 
-_Hit On The Beat es un Party Game cuya finalidad principal consiste en echar a los demás jugadores de la arena intentando quedar uno solo ganando así el mayor número de puntos. Existirán diversos personajes seleccionables por el jugador donde cada uno de ellos tendrá una habilidad única, una habilidad definitiva distintiva y una acción pasiva que le de ventaja frente el resto de los personajes. 
+Hit On The Beat! es un Party Game cuya finalidad principal consiste en echar a los demás jugadores de la arena intentando quedar uno solo ganando así el mayor número de puntos. Existirán diversos personajes seleccionables por el jugador donde cada uno de ellos tendrá una habilidad única, una habilidad definitiva distintiva y una acción pasiva que le de ventaja frente el resto de los personajes. 
 
 Además, el mapa cambiará tras cada partida pudiendo ofrecer diferentes escenarios con distintos eventos especiales que los jugadores deberán afrontar con tal de ser el único jugador en pie. Estos eventos afectarán a distintas casillas del mapa. 
 
-Las casillas de las que está formado el mapa podrán hacer aparecer objetos que ayuden a vencer a los contrincantes y habrá casillas especiales que ayudarán al jugador y otras casillas negativas que causarán efectos negativos o incluso que desaparezca tras ser pisada.  _
+Las casillas de las que está formado el mapa podrán hacer aparecer objetos que ayuden a vencer a los contrincantes y habrá casillas especiales que ayudarán al jugador y otras casillas negativas que causarán efectos negativos o incluso que desaparezca tras ser pisada.
 
 ## Construido con 🛠️
 
-_Aquí se encuentran todas las herramientas que estamos usando para el desarrollo de nuestro proyecto_
+Aquí se encuentran todas las herramientas que estamos usando para el desarrollo de nuestro proyecto
 
 * [Microsoft Team](https://www.microsoft.com/es-es/microsoft-teams/log-in) - Para comunicarnos en grupo
 * [One Drive](https://urjc-my.sharepoint.com/:f:/g/personal/e_pastor_2018_alumnos_urjc_es/EhTcoD1-0_tOhnSsbQaX9Z8BBColna1ITENbd6EuN7GFFg) - Compartimos nuestros documentos
