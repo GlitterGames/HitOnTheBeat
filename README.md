@@ -14,7 +14,7 @@ Las casillas de las que está formado el mapa podrán hacer aparecer objetos que
 
 Aquí se encuentran todas las herramientas que estamos usando para el desarrollo de nuestro proyecto
 
-* [Microsoft Team](https://www.microsoft.com/es-es/microsoft-teams/log-in) - Para comunicarnos en grupo
+* [Microsoft Teams](https://www.microsoft.com/es-es/microsoft-teams/log-in) - Para comunicarnos en grupo
 * [One Drive](https://urjc-my.sharepoint.com/:f:/g/personal/e_pastor_2018_alumnos_urjc_es/EhTcoD1-0_tOhnSsbQaX9Z8BBColna1ITENbd6EuN7GFFg) - Compartimos nuestros documentos
 * [Trello](https://trello.com/invite/b/8Pe8scyt/2d3d2628bcb84ffa06fb99b40441dbe9/trabajo) - Subimos las tareas
 * [Unity](https://unity.com/es) - Framework para el desarrollo
