@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/VicoMenu.unity
+    guid: b519b2e74441b0344a12ade54524360e
   m_configObjects: {}
