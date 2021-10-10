@@ -2,6 +2,7 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - Lobby
+    - NetworkController
     PhotonUnityNetworking.Demos.dll:
     - Photon.Pun.Demo.Asteroids.Asteroid
     - Photon.Pun.Demo.Asteroids.Bullet
@@ -40,12 +41,70 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.HorizontalLayoutGroup
     - UnityEngine.UI.Image
+    - UnityEngine.UI.InputField
     - UnityEngine.UI.Shadow
     - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
     - UnityEngine.UI.VerticalLayoutGroup
   sceneClasses:
     Assets/Scenes/VicoMenu.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 89
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 108
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 1452}
+    - Class: 114
+      Script: {instanceID: 1454}
+    - Class: 114
+      Script: {instanceID: 1614}
+    - Class: 114
+      Script: {instanceID: 1716}
+    - Class: 114
+      Script: {instanceID: 2496}
+    - Class: 114
+      Script: {instanceID: 2632}
+    - Class: 114
+      Script: {instanceID: 2816}
+    - Class: 114
+      Script: {instanceID: 3048}
+    - Class: 114
+      Script: {instanceID: 3146}
+    - Class: 114
+      Script: {instanceID: 3466}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
+    Assets/Scenes/vico.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -91,51 +150,49 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1556}
     - Class: 114
-      Script: {instanceID: 1704}
+      Script: {instanceID: 1706}
     - Class: 114
-      Script: {instanceID: 1714}
+      Script: {instanceID: 1732}
     - Class: 114
-      Script: {instanceID: 1730}
+      Script: {instanceID: 1738}
     - Class: 114
-      Script: {instanceID: 1736}
+      Script: {instanceID: 2232}
     - Class: 114
-      Script: {instanceID: 2230}
+      Script: {instanceID: 2282}
     - Class: 114
-      Script: {instanceID: 2280}
+      Script: {instanceID: 2420}
     - Class: 114
-      Script: {instanceID: 2494}
+      Script: {instanceID: 2496}
     - Class: 114
-      Script: {instanceID: 2630}
+      Script: {instanceID: 2632}
     - Class: 114
-      Script: {instanceID: 2814}
+      Script: {instanceID: 2816}
     - Class: 114
-      Script: {instanceID: 3038}
+      Script: {instanceID: 2864}
     - Class: 114
-      Script: {instanceID: 3046}
+      Script: {instanceID: 3040}
     - Class: 114
       Script: {instanceID: 3048}
     - Class: 114
-      Script: {instanceID: 3144}
+      Script: {instanceID: 3050}
     - Class: 114
-      Script: {instanceID: 3464}
+      Script: {instanceID: 3146}
     - Class: 114
-      Script: {instanceID: 3632}
+      Script: {instanceID: 3634}
     - Class: 114
-      Script: {instanceID: 3964}
+      Script: {instanceID: 3966}
     - Class: 114
-      Script: {instanceID: 3968}
+      Script: {instanceID: 3970}
     - Class: 114
-      Script: {instanceID: 4152}
+      Script: {instanceID: 4154}
     - Class: 114
-      Script: {instanceID: 4194}
+      Script: {instanceID: 4196}
     - Class: 114
-      Script: {instanceID: 4626}
+      Script: {instanceID: 4628}
     - Class: 114
-      Script: {instanceID: 4792}
+      Script: {instanceID: 4794}
     - Class: 114
-      Script: {instanceID: 5154}
-    - Class: 114
-      Script: {instanceID: 18264}
+      Script: {instanceID: 5156}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -251,6 +308,12 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking.Demos.dll
     namespaceName: Photon.Pun.Demo.SlotRacer.Utils
     className: Line
+  - hash:
+      serializedVersion: 2
+      Hash: 2628964ef08424b21b2843fa2e1d34a6
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Lobby
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -577,7 +640,7 @@ ScriptsOnlyBuild:
     className: PhotonHandler
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: be41da8bf056d4b83b5bbe68aa33b4dc
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: NetworkController
@@ -1805,13 +1868,8 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking.Demos.dll
     namespaceName: Photon.Pun.Demo.Cockpit.Forms
     className: UserIdUiForm
-  - hash:
-      serializedVersion: 2
-      Hash: 4c53c03de8d1670b0954730a452304e0
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Lobby
   platform: 19
   scenePathNames:
+  - Assets/Scenes/vico.unity
   - Assets/Scenes/VicoMenu.unity
   playerPath: C:/Users/javie/Documents/GitHub/HitOnTheBeat/HitOnTheBeat/BuildsPhoton/HitOnTheBeatDev.exe

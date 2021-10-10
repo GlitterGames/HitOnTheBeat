@@ -15,10 +15,10 @@ public class Lobby : MonoBehaviourPunCallbacks
     public byte maxPlayersInRoom = 4;
     public byte minPlayersInRoom = 2;
 
-    private int playerCounter;
+    private int playerCount = 0;
     public Text PlayerCounter;
 
-    public void Connect ()
+    /*public void Connect ()
     {
         if (!PhotonNetwork.IsConnected)
         {
@@ -39,7 +39,7 @@ public class Lobby : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
         ConnectBtn.interactable = false;
         JoinRandomBtn.interactable = true;
-    }
+    }*/
 
     public void JoinRandom()
     {
@@ -73,9 +73,9 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.CurrentCluster != null)
         {
-            playerCounter = PhotonNetwork.CurrentRoom.PlayerCount;
+            playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         }
-        PlayerCounter.text = playerCounter + "/" + maxPlayersInRoom;
+        PlayerCounter.text = playerCount + "/" + maxPlayersInRoom;
     }
     
 }
