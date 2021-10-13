@@ -18,7 +18,6 @@ public class NetworkController : MonoBehaviourPunCallbacks
     [SerializeField] private InputField _name;
 
     // Update is called once per frame
-    #region Photon Callbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.NickName = _name.text;
