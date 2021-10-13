@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,17 +7,18 @@ using Photon.Realtime;
 using Photon;
 using UnityEngine.UI;
 using UnityEngine.TextCore;
+using UnityEngine.SceneManagement;
 public class Lobby : MonoBehaviourPunCallbacks
 {
+	//[SerializeField] private UIManager _uiManager;
     public Button ConnectBtn;
     public Button JoinRandomBtn;
     public Text Log;
-
     public byte maxPlayersInRoom = 4;
     public byte minPlayersInRoom = 2;
-
     private int playerCount = 0;
     public Text PlayerCounter;
+    private bool IsLoading = false;
 
     /*public void Connect ()
     {
@@ -40,7 +42,7 @@ public class Lobby : MonoBehaviourPunCallbacks
         ConnectBtn.interactable = false;
         JoinRandomBtn.interactable = true;
     }*/
-
+    #region Photon Callbakcs
     public void JoinRandom()
     {
         if(!PhotonNetwork.JoinRandomRoom())
@@ -66,9 +68,9 @@ public class Lobby : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Log.text += "\nUnido a la sala";
-        JoinRandomBtn.interactable = false;
-    }
-
+		JoinRandomBtn.interactable = false;
+	}
+	#endregion
     public void FixedUpdate()
     {
         if(PhotonNetwork.CurrentCluster != null)
@@ -76,6 +78,25 @@ public class Lobby : MonoBehaviourPunCallbacks
             playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
         }
         PlayerCounter.text = playerCount + "/" + maxPlayersInRoom;
+        if (!IsLoading && playerCount >= minPlayersInRoom)
+        {
+            LoadMap();
+        }
     }
-    
+
+    private void LoadMap()
+    {
+        IsLoading = true;
+        //PhotonNetwork.LoadLevel("PrimerNivel");
+    }
+	/*public void OnPhotonSerializeView(PhotonStream, PhotonMessageInfo)
+	{
+		throw new NotImplementedException();
+	}
+	[PunRPC]
+	void Method()
+	{
+
+	}
+    */
 }

@@ -1,14 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 using Photon;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class NetworkController : MonoBehaviourPunCallbacks
 {
-
+    //[SerializeField] private UIManager _uiManager;
     void Start()
     {
         Debug.Log("Start");
@@ -16,6 +18,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     [SerializeField] private InputField _name;
 
     // Update is called once per frame
+    #region Photon Callbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.NickName = _name.text;
