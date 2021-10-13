@@ -5,6 +5,8 @@ using UnityEngine;
 public class Floor : MonoBehaviour
 {
     #region Atributes 
+    private static int CURRENT_ID = 0;
+    public int id;
     public Floor east;
     public Floor west;
     public Floor north_east;
@@ -63,7 +65,7 @@ public class Floor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        id = CURRENT_ID++;
     }
 
     // Update is called once per frame
@@ -74,5 +76,17 @@ public class Floor : MonoBehaviour
     public Vector3 GetFloorPosition()
     {
         return (Vector3.right * transform.position.x + Vector3.forward * transform.position.z);
+    }
+
+    public override bool Equals(object other)
+    {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (other.GetType() != this.GetType()) return false;
+
+        Floor otro = (Floor)other;
+
+        if (id == otro.id) return true;
+        else return false;
     }
 }
