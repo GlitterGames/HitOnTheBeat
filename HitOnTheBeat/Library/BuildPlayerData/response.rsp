@@ -4,6 +4,7 @@
 -a="C:\Users\javie\Documents\GitHub\HitOnTheBeat\HitOnTheBeat\Library\PlayerScriptAssemblies\UnityEngine.TestRunner.dll"
 -a="C:\Users\javie\Documents\GitHub\HitOnTheBeat\HitOnTheBeat\Library\PlayerScriptAssemblies\Unity.Timeline.dll"
 -a="C:\Users\javie\Documents\GitHub\HitOnTheBeat\HitOnTheBeat\Library\PlayerScriptAssemblies\Unity.TextMeshPro.dll"
+-a="C:\Users\javie\Documents\GitHub\HitOnTheBeat\HitOnTheBeat\Library\PlayerScriptAssemblies\Unity.InputSystem.dll"
 -a="C:\Users\javie\Documents\GitHub\HitOnTheBeat\HitOnTheBeat\Library\PlayerScriptAssemblies\PhotonRealtime.dll"
 -a="C:\Users\javie\Documents\GitHub\HitOnTheBeat\HitOnTheBeat\Library\PlayerScriptAssemblies\PhotonUnityNetworking.Utilities.dll"
 -a="C:\Users\javie\Documents\GitHub\HitOnTheBeat\HitOnTheBeat\Library\PlayerScriptAssemblies\UnityEngine.UI.dll"

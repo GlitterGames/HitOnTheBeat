@@ -73,21 +73,21 @@ public class Lobby : MonoBehaviourPunCallbacks
 	#endregion
     public void FixedUpdate()
     {
-        if(PhotonNetwork.CurrentCluster != null)
+        if(PhotonNetwork.CurrentRoom != null)
         {
             playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-        }
-        PlayerCounter.text = playerCount + "/" + maxPlayersInRoom;
-        if (!IsLoading && playerCount >= minPlayersInRoom)
-        {
-            LoadMap();
+            PlayerCounter.text = playerCount + "/" + maxPlayersInRoom;
+            if (!IsLoading && playerCount >= minPlayersInRoom)
+            {
+                LoadMap();
+            }
         }
     }
 
     private void LoadMap()
     {
         IsLoading = true;
-        //PhotonNetwork.LoadLevel("PrimerNivel");
+        PhotonNetwork.LoadLevel(2);
     }
 	/*public void OnPhotonSerializeView(PhotonStream, PhotonMessageInfo)
 	{
