@@ -6,6 +6,7 @@ ScriptsOnlyBuild:
     - Lobby
     - NetworkController
     - PlayerControllerV
+    - photonInstanciate
     PhotonUnityNetworking.Demos.dll:
     - Photon.Pun.Demo.Asteroids.Asteroid
     - Photon.Pun.Demo.Asteroids.Bullet
@@ -16,8 +17,6 @@ ScriptsOnlyBuild:
     - Photon.Pun.Demo.PunBasics.PlayerUI
     - Photon.Pun.Demo.SlotRacer.PlayerControl
     - Photon.Pun.Demo.SlotRacer.Utils.SplineWalker
-    PhotonUnityNetworking.Editor.dll:
-    - Photon.Pun.PunSceneSettings
     PhotonUnityNetworking.dll:
     - Photon.Pun.PhotonAnimatorView
     - Photon.Pun.PhotonRigidbodyView
@@ -153,9 +152,15 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1914}
     - Class: 114
+      Script: {instanceID: 3280}
+    - Class: 114
       Script: {instanceID: 3362}
     - Class: 114
       Script: {instanceID: 5150}
+    - Class: 114
+      Script: {instanceID: 5188}
+    - Class: 114
+      Script: {instanceID: 36542}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 136
@@ -222,6 +227,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1796}
     - Class: 114
+      Script: {instanceID: 1914}
+    - Class: 114
       Script: {instanceID: 2350}
     - Class: 114
       Script: {instanceID: 2402}
@@ -240,6 +247,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3292}
     - Class: 114
+      Script: {instanceID: 3362}
+    - Class: 114
       Script: {instanceID: 3408}
     - Class: 114
       Script: {instanceID: 3748}
@@ -257,6 +266,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 4642}
     - Class: 114
       Script: {instanceID: 4702}
+    - Class: 114
+      Script: {instanceID: 5150}
     - Class: 114
       Script: {instanceID: 5188}
     - Class: 114
@@ -1886,7 +1897,7 @@ ScriptsOnlyBuild:
     className: WorldGenerator
   - hash:
       serializedVersion: 2
-      Hash: 5fc6d2da35080c8a3858f267cc3ae2b7
+      Hash: f65e9b95e2528133587ea106fc1e63ba
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerControllerV
@@ -2154,9 +2165,15 @@ ScriptsOnlyBuild:
     assemblyName: PhotonUnityNetworking.Demos.dll
     namespaceName: Photon.Pun.Demo.Cockpit.Forms
     className: UserIdUiForm
+  - hash:
+      serializedVersion: 2
+      Hash: f31761ecc66fbde892198efddad9339e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: photonInstanciate
   platform: 19
   scenePathNames:
   - Assets/Scenes/vico.unity
   - Assets/Scenes/VicoMenu.unity
   - Assets/Scenes/eva - copia.unity
-  playerPath: C:/Users/javie/Documents/GitHub/HitOnTheBeat/HitOnTheBeat/BuildsPhoton/HitOnTheBeatDev.exe
+  playerPath: D:/Universidad/HitOnTheBeatDev.exe

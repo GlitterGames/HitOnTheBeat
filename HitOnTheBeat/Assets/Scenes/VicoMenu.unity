@@ -768,7 +768,7 @@ MonoBehaviour:
   JoinRandomBtn: {fileID: 1233901355}
   Log: {fileID: 1841379277}
   maxPlayersInRoom: 4
-  minPlayersInRoom: 1
+  minPlayersInRoom: 2
   PlayerCounter: {fileID: 655551216}
 --- !u!4 &1653187504
 Transform:

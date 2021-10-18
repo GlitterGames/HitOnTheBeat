@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class PlayerControllerV : MonoBehaviourPun
 {
     #region Atributes
-    private string _name = "personaje";
     public Floor f;
     public GameObject playerAvatar;
     public float speed;
@@ -62,14 +61,14 @@ public class PlayerControllerV : MonoBehaviourPun
     
     */
     // Start is called before the first frame update
-    void Awake()
+        void Awake()
     {
         //JoinRandom();
         my_input = new InputController();
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
-        //Photon.Pun.PhotonNetwork.Instantiate(_name, transform.position, Quaternion.identity);
+        transform.position = new Vector3(f.transform.position.x, 1.062631f, f.transform.position.z);
      
     }
 
