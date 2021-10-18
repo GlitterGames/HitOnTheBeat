@@ -63,7 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac3af3f799ff9d41988334470bd3288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  f: {fileID: 5130158383612537386, guid: 149734c0eb7e0d44abfbbc38aa5ebd74, type: 3}
+  suelo: {fileID: 0}
   playerAvatar: {fileID: 1172451266912291298}
   speed: 2
   rotationSpeed: 10
@@ -79,6 +79,7 @@ MonoBehaviour:
   maxPlayersInRoom: 4
   minPlayersInRoom: 2
   PlayerCounter: {fileID: 0}
+  vacio: {fileID: 0}
 --- !u!114 &1172451266912291303
 MonoBehaviour:
   m_ObjectHideFlags: 0

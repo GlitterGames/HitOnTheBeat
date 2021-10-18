@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PlayerControllerV : MonoBehaviourPun
 {
     #region Atributes
-    public Floor f;
+    public Floor suelo;
     public GameObject playerAvatar;
     public float speed;
     public float rotationSpeed;
@@ -27,7 +27,8 @@ public class PlayerControllerV : MonoBehaviourPun
     private int playerCount = 0;
     public Text PlayerCounter;
     private bool IsLoading = false;
-
+    private photonInstanciate photon;
+    public GameObject vacio;
     private InputController my_input;
     #endregion
 
@@ -64,12 +65,18 @@ public class PlayerControllerV : MonoBehaviourPun
         void Awake()
     {
         //JoinRandom();
+        //photon = GameObject.Find("@photonInstanciate");
+        //suelo = vacio.GetComponent<f>();
+        //photon = GetComponent<photonInstanciate>();
         my_input = new InputController();
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
-        transform.position = new Vector3(f.transform.position.x, 1.062631f, f.transform.position.z);
-     
+        //suelo = photon.f;
+        //vacio = GameObject.Find("@photonInstanciate");
+        photon = GameObject.Find("@photonInstanciate").GetComponent<photonInstanciate>();
+        suelo = photon.f;
+        transform.position = new Vector3(suelo.transform.position.x, 1.062631f, suelo.transform.position.z);
     }
 
     //Para que funcione el Input System en la versi�n actual.
@@ -118,36 +125,36 @@ public class PlayerControllerV : MonoBehaviourPun
             {
                 Floor nextFloor = null;
 
-                if (targetFloor.Equals(f.getNorth_west()))
+                if (targetFloor.Equals(suelo.getNorth_west()))
                 {
-                    nextFloor = f.getNorth_west();
+                    nextFloor = suelo.getNorth_west();
                 }
-                else if (targetFloor.Equals(f.getNorth_east()))
+                else if (targetFloor.Equals(suelo.getNorth_east()))
                 {
-                    nextFloor = f.getNorth_east();
+                    nextFloor = suelo.getNorth_east();
                 }
-                else if (targetFloor.Equals(f.getWest()))
+                else if (targetFloor.Equals(suelo.getWest()))
                 {
-                    nextFloor = f.getWest();
+                    nextFloor = suelo.getWest();
                 }
-                else if (targetFloor.Equals(f.getEast()))
+                else if (targetFloor.Equals(suelo.getEast()))
                 {
-                    nextFloor = f.getEast();
+                    nextFloor = suelo.getEast();
                 }
-                else if (targetFloor.Equals(f.getSouth_west()))
+                else if (targetFloor.Equals(suelo.getSouth_west()))
                 {
-                    nextFloor = f.getSouth_west();
+                    nextFloor = suelo.getSouth_west();
                 }
-                else if (targetFloor.Equals(f.getSouth_east()))
+                else if (targetFloor.Equals(suelo.getSouth_east()))
                 {
-                    nextFloor = f.getSouth_east();
+                    nextFloor = suelo.getSouth_east();
                 }
 
                 //PERFORM MOVEMENT
                 if (nextFloor != null)
                 {
                     transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-                    f = nextFloor;
+                    suelo = nextFloor;
                 }
             }
         }
