@@ -80,6 +80,7 @@ MonoBehaviour:
   minPlayersInRoom: 2
   PlayerCounter: {fileID: 0}
   vacio: {fileID: 0}
+  idPlayer: 0
 --- !u!114 &1172451266912291303
 MonoBehaviour:
   m_ObjectHideFlags: 0

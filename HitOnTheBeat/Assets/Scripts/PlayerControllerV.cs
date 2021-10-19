@@ -30,6 +30,8 @@ public class PlayerControllerV : MonoBehaviourPun
     private photonInstanciate photon;
     public GameObject vacio;
     private InputController my_input;
+
+    public int idPlayer;
     #endregion
 
    /* public void JoinRandom()
@@ -74,8 +76,12 @@ public class PlayerControllerV : MonoBehaviourPun
         my_input.Player.Click.performed += ctx => OnClick();
         //suelo = photon.f;
         //vacio = GameObject.Find("@photonInstanciate");
+        
         photon = GameObject.Find("@photonInstanciate").GetComponent<photonInstanciate>();
-        suelo = photon.f;
+        //idPlayer = playerAvatar.GetComponent<PhotonView>().ViewID;
+        idPlayer = photonView.ViewID;
+        Debug.Log(idPlayer);
+        suelo = photon.f[(idPlayer/1000) - 1];
         transform.position = new Vector3(suelo.transform.position.x, 1.062631f, suelo.transform.position.z);
     }
 
@@ -107,6 +113,8 @@ public class PlayerControllerV : MonoBehaviourPun
         if (Player)
         {
             Player = photonView.IsMine;
+            //idPlayer = playerAvatar.GetComponent<PhotonView>().ViewID;
+            idPlayer = photonView.ViewID;
         }
     }
 
@@ -114,47 +122,50 @@ public class PlayerControllerV : MonoBehaviourPun
     //Se ejecuta cuando se realiza click en la pantalla.
     private void OnClick()
     {
-        Vector3 screenPos = my_input.Player.MousePosition.ReadValue<Vector2>();
-        Ray ray = Camera.main.ScreenPointToRay(screenPos);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Player)
         {
-            //Click realizado sobre casilla
-            Floor targetFloor = hit.transform.GetComponent<Floor>();
-            if (targetFloor)
+            Vector3 screenPos = my_input.Player.MousePosition.ReadValue<Vector2>();
+            Ray ray = Camera.main.ScreenPointToRay(screenPos);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                Floor nextFloor = null;
+                //Click realizado sobre casilla
+                Floor targetFloor = hit.transform.GetComponent<Floor>();
+                if (targetFloor)
+                {
+                    Floor nextFloor = null;
 
-                if (targetFloor.Equals(suelo.getNorth_west()))
-                {
-                    nextFloor = suelo.getNorth_west();
-                }
-                else if (targetFloor.Equals(suelo.getNorth_east()))
-                {
-                    nextFloor = suelo.getNorth_east();
-                }
-                else if (targetFloor.Equals(suelo.getWest()))
-                {
-                    nextFloor = suelo.getWest();
-                }
-                else if (targetFloor.Equals(suelo.getEast()))
-                {
-                    nextFloor = suelo.getEast();
-                }
-                else if (targetFloor.Equals(suelo.getSouth_west()))
-                {
-                    nextFloor = suelo.getSouth_west();
-                }
-                else if (targetFloor.Equals(suelo.getSouth_east()))
-                {
-                    nextFloor = suelo.getSouth_east();
-                }
+                    if (targetFloor.Equals(suelo.getNorth_west()))
+                    {
+                        nextFloor = suelo.getNorth_west();
+                    }
+                    else if (targetFloor.Equals(suelo.getNorth_east()))
+                    {
+                        nextFloor = suelo.getNorth_east();
+                    }
+                    else if (targetFloor.Equals(suelo.getWest()))
+                    {
+                        nextFloor = suelo.getWest();
+                    }
+                    else if (targetFloor.Equals(suelo.getEast()))
+                    {
+                        nextFloor = suelo.getEast();
+                    }
+                    else if (targetFloor.Equals(suelo.getSouth_west()))
+                    {
+                        nextFloor = suelo.getSouth_west();
+                    }
+                    else if (targetFloor.Equals(suelo.getSouth_east()))
+                    {
+                        nextFloor = suelo.getSouth_east();
+                    }
 
-                //PERFORM MOVEMENT
-                if (nextFloor != null)
-                {
-                    transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-                    suelo = nextFloor;
+                    //PERFORM MOVEMENT
+                    if (nextFloor != null)
+                    {
+                        transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
+                        suelo = nextFloor;
+                    }
                 }
             }
         }
