@@ -5,24 +5,27 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     #region Variables
-
-    const int NUM_CASILLAS = 2;
+    const int NUM_CASILLAS = 4;
     const int DESTROY_TIME = 5;
     public static Color casillaAct = Color.blue;
     public static Color casillaAdy = Color.cyan;
-    private List<List<Floor>> casillas = new List<List<Floor>>();
-    private List<Color> color = new List<Color>();
+    public List<List<Floor>> casillas = new List<List<Floor>>();
+    public List<PlayerController> jugadores = new List<PlayerController>();
+    public List<Color> color = new List<Color>();
     #endregion
     // Start is called before the first frame update
     void Start()
     {
         initColor();
         initCasillas();
+        initPlayer();
         casillasSetColor();
     }
     private void initColor() {
         color.Add(Color.black);
         color.Add(Color.grey);
+        color.Add(Color.yellow);
+        color.Add(Color.red);
     }
     private void initCasillas()
     {
@@ -34,10 +37,21 @@ public class GameManager : MonoBehaviour
         //Adquiero todas las casillas de las escena
         Floor[] f = (Floor[])Object.FindObjectsOfType(typeof(Floor));
         //Las añado a la fila que les corresponde
+        int j = 0;
         foreach (Floor floor in f)
         {
+            floor.id = j;
             int posicion = floor.row;
             casillas[posicion].Add(floor);
+            j++;
+        }
+    }
+    private void initPlayer()
+    {
+        PlayerController[] p = (PlayerController[])Object.FindObjectsOfType(typeof(PlayerController));
+        foreach (PlayerController player in p)
+        {
+            jugadores.Add(player);
         }
     }
     private void casillasSetColor()
@@ -74,6 +88,56 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        colision();
+    }
+    private void colision(){
+        for(int k = 0; k<jugadores.Count; k++) {
+            for (int i = k+1; i < jugadores.Count; i++) {
+                if (jugadores[k].f.id == jugadores[i].f.id)
+                {
+                    if (jugadores[k].fuerza == jugadores[i].fuerza)
+                    {
+                        //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
+                        jugadores[k].mover(jugadores[k].antf);
+                        jugadores[i].mover(jugadores[i].antf);
+                        //PIERDEN FUERZA
+                        jugadores[k].fuerza = 0;
+                        jugadores[i].fuerza = 0;
+                    }
+                    else if (jugadores[k].fuerza > jugadores[i].fuerza)
+                    {
+                        //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
+                        jugadores[k].mover(jugadores[k].antf);
+                        //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
+                        int max = jugadores[k].fuerza - jugadores[i].fuerza;
+                        jugadores[k].fuerza = 0;
+                        jugadores[i].fuerza = 0;
+                        //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
+                        bool echado = false;
+                        for (int j = 0; j < max && !echado; j++)
+                        {
+                            echado = jugadores[i].echar(jugadores[k].typeAnt);
+                        }
+                        if (echado) jugadores.Remove(jugadores[i]);
+                    }
+                    else
+                    {
+                        //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
+                        jugadores[i].mover(jugadores[i].antf);
+                        //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
+                        int max = jugadores[i].fuerza - jugadores[k].fuerza;
+                        jugadores[k].fuerza = 0;
+                        jugadores[i].fuerza = 0;
+                        //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
+                        bool echado = false;
+                        for (int j = 0; j < max && !echado; j++)
+                        {
+                            echado = jugadores[k].echar(jugadores[i].typeAnt);
+                        }
+                        if (echado) {jugadores.Remove(jugadores[k]); i = k + 1;}
+                    }                    
+                }
+            }
+        }
     }
 }

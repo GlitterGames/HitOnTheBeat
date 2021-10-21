@@ -4,19 +4,8 @@ using UnityEngine;
 
 public class FloorDetector : MonoBehaviour
 {
-    public enum FloorDetectorType
-    {
-        East,
-        West,
-        North_east,
-        North_west,
-        South_east,
-        South_west
-    }
-
     public FloorDetectorType detectorType;
     Floor f;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -116,4 +105,13 @@ public class FloorDetector : MonoBehaviour
 
         }
     }
+}
+public enum FloorDetectorType
+{
+    East,
+    West,
+    North_east,
+    North_west,
+    South_east,
+    South_west
 }
