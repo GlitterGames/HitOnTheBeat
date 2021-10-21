@@ -86,10 +86,35 @@ public class PlayerController : MonoBehaviour
                 //PERFORM MOVEMENT
                 if (nextFloor != null)
                 {
+                    setNormalColor(f);
+                    
+
                     transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
                     f = nextFloor;
+                    setColor(f);
+
                 }
             }
+        }
+    }
+    private void setNormalColor(Floor f) {
+        f.setColor(f.getColorN());
+        Floor[] casillasAdy = f.getAdyacentes();
+        Floor floor;
+        for (int i = 0; i < casillasAdy.Length; i++)
+        {
+            f = casillasAdy[i];
+            if (f!=null) f.setColor(f.getColorN());
+        }
+    }
+    private void setColor(Floor f)
+    {
+        f.setColor(GameManager.casillaAct);
+        Floor[] casillasAdy = f.getAdyacentes();
+        Floor floor;
+        for (int i = 0; i < casillasAdy.Length; i++) {
+            f = casillasAdy[i];
+            if (f != null) f.setColor(GameManager.casillaAdy);
         }
     }
 

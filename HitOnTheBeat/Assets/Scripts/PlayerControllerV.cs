@@ -153,22 +153,35 @@ public class PlayerControllerV : MonoBehaviourPun
                 //PERFORM MOVEMENT
                 if (nextFloor != null)
                 {
+                    setNormalColor(suelo);
                     transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
                     suelo = nextFloor;
+                    setColor(suelo);
                 }
             }
         }
     }
 
-    //UNA MEJOR MANERA DE HACERLO PERO QUE TIENE EL MISMO RESILTADO, AS� QUE SI ES NECESARIO LO INTENTAR� IMPLEMENTAR EN OTRO MOMENTO 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    Floor floor = other.GetComponent<Floor>();
-    //
-    //    if (floor != null)
-    //    {
-    //        Debug.LogWarning("A OTRA BALDOSA");
-    //        f = floor;
-    //    }
-    //}
+    private void setNormalColor(Floor f)
+    {
+        f.setColor(f.getColorN());
+        Floor[] casillasAdy = f.getAdyacentes();
+        Floor floor;
+        for (int i = 0; i < casillasAdy.Length; i++)
+        {
+            f = casillasAdy[i];
+            if (f != null) f.setColor(f.getColorN());
+        }
+    }
+    private void setColor(Floor f)
+    {
+        f.setColor(GameManager.casillaAct);
+        Floor[] casillasAdy = f.getAdyacentes();
+        Floor floor;
+        for (int i = 0; i < casillasAdy.Length; i++)
+        {
+            f = casillasAdy[i];
+            if (f != null) f.setColor(GameManager.casillaAdy);
+        }
+    }
 }
