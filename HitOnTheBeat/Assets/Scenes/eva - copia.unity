@@ -1688,7 +1688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11806a04fe56cdf43961089eaf94e2b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAvatar: {fileID: 1172451266912291298, guid: 01a85c434260448499129884b304f52d, type: 3}
+  playerAvatar: {fileID: 1784523174532803008, guid: d73a9841283c89041833c85ae2d22013, type: 3}
   f:
   - {fileID: 1438949968}
   - {fileID: 6079861067727097902}
