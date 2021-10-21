@@ -32,39 +32,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(1);
     }
 
-    /*public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        Debug.Log("La sala no existe.");
-    }
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        Debug.Log("No hay sala disponible.");
-    }
-
-    public override void OnJoinedRoom()
-    {
-        Debug.Log("Conectado a la sala.");
-        //SceneManager.LoadScene(1);
-    }*/
-
-    /*public void Connect ()
-    {
-        if (!PhotonNetwork.IsConnected)
-        {
-            if (PhotonNetwork.ConnectUsingSettings())
-            {
-                Debug.Log("\nEstamos conectados al servidor");
-            }
-            else
-            {
-                 Debug.Log("\nError al conectar al servidor");
-            }
-        }
-    }*/
-
         public void Connect ()
     {
-        Debug.Log("CONNEEEEECTTTTT");
+        Debug.Log("Botón de connect pulsado");
         if (!PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.ConnectUsingSettings())

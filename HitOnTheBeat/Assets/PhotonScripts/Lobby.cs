@@ -10,7 +10,6 @@ using UnityEngine.TextCore;
 using UnityEngine.SceneManagement;
 public class Lobby : MonoBehaviourPunCallbacks
 {
-	//[SerializeField] private UIManager _uiManager;
     public Button ConnectBtn;
     public Button JoinRandomBtn;
     public Text Log;
@@ -20,54 +19,32 @@ public class Lobby : MonoBehaviourPunCallbacks
     public Text PlayerCounter;
     private bool IsLoading = false;
 
-    /*public void Connect ()
-    {
-        if (!PhotonNetwork.IsConnected)
-        {
-            if (PhotonNetwork.ConnectUsingSettings())
-            {
-                Log.text += "\nEstamos conectados al servidor";
-            }
-            else
-            {
-                Log.text += "\nError al conectar al servidor";
-            }
-        }
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("Ahora estamos conectados al servidor de la región: " + PhotonNetwork.CloudRegion);
-        PhotonNetwork.JoinLobby();
-        ConnectBtn.interactable = false;
-        JoinRandomBtn.interactable = true;
-    }*/
     #region Photon Callbakcs
     public void JoinRandom()
     {
         if(!PhotonNetwork.JoinRandomRoom())
         {
-            Debug.Log( "\nFallo al unirse a la sala");
+            Debug.Log( "Fallo al unirse a la sala");
         }
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log( "\nNo existen salas a las que unirse, creando una nueva...");
+        Debug.Log( "No existen salas a las que unirse, creando una nueva...");
         if (PhotonNetwork.CreateRoom(null, new Photon.Realtime.RoomOptions()
          {MaxPlayers = maxPlayersInRoom}))
          {
-             Debug.Log( "\nSala creada con éxito");
+             Debug.Log( "Sala creada con éxito");
          }
          else
          {
-             Debug.Log( "\nFallo al crear la sala");
+             Debug.Log( "Fallo al crear la sala");
          }
     }
 
     public override void OnJoinedRoom()
     {
-       Debug.Log("\nUnido a la sala");
+       Debug.Log("Unido a la sala");
 		JoinRandomBtn.interactable = false;
 	}
 	#endregion
@@ -89,14 +66,4 @@ public class Lobby : MonoBehaviourPunCallbacks
         IsLoading = true;
         PhotonNetwork.LoadLevel(2);
     }
-	/*public void OnPhotonSerializeView(PhotonStream, PhotonMessageInfo)
-	{
-		throw new NotImplementedException();
-	}
-	[PunRPC]
-	void Method()
-	{
-
-	}
-    */
 }
