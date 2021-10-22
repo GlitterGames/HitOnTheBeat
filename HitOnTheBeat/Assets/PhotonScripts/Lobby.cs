@@ -47,47 +47,47 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         if(!PhotonNetwork.JoinRandomRoom())
         {
-            Log.text += "\nFallo al unirse a la sala";
+            Debug.Log( "\nFallo al unirse a la sala");
         }
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Log.text += "\nNo existen salas a las que unirse, creando una nueva...";
+        Debug.Log( "\nNo existen salas a las que unirse, creando una nueva...");
         if (PhotonNetwork.CreateRoom(null, new Photon.Realtime.RoomOptions()
          {MaxPlayers = maxPlayersInRoom}))
          {
-             Log.text += "\nSala creada con éxito";
+             Debug.Log( "\nSala creada con éxito");
          }
          else
          {
-             Log.text += "\nFallo al crear la sala";
+             Debug.Log( "\nFallo al crear la sala");
          }
     }
 
     public override void OnJoinedRoom()
     {
-        Log.text += "\nUnido a la sala";
+       Debug.Log("\nUnido a la sala");
 		JoinRandomBtn.interactable = false;
 	}
 	#endregion
     public void FixedUpdate()
     {
-        if(PhotonNetwork.CurrentCluster != null)
+        if(PhotonNetwork.CurrentRoom != null)
         {
             playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-        }
-        PlayerCounter.text = playerCount + "/" + maxPlayersInRoom;
-        if (!IsLoading && playerCount >= minPlayersInRoom)
-        {
-            LoadMap();
+            PlayerCounter.text = playerCount + "/" + maxPlayersInRoom;
+            if (!IsLoading && playerCount >= minPlayersInRoom)
+            {
+                LoadMap();
+            }
         }
     }
 
     private void LoadMap()
     {
         IsLoading = true;
-        //PhotonNetwork.LoadLevel("PrimerNivel");
+        PhotonNetwork.LoadLevel(2);
     }
 	/*public void OnPhotonSerializeView(PhotonStream, PhotonMessageInfo)
 	{
