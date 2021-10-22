@@ -6,21 +6,17 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField] private Button atacar;
+    [SerializeField] private Button ultimate;
+    public PlayerController pc;
 
     // Start is called before the first frame update
     void Start()
     {
-        atacar.onClick.AddListener(() => DoAtacar());
+        ultimate.onClick.AddListener(() => DoUltimate());
+        if (!pc) pc = FindObjectOfType<PlayerController>(); //cambiar para que detecte la del jugador propio.
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void DoAtacar()
+    private void DoUltimate()
     {
         Debug.Log("Atacar");
     }

@@ -9,10 +9,12 @@ public class GameManager : MonoBehaviour
     const int DESTROY_TIME = 5;
     public static Color casillaAct = Color.blue;
     public static Color casillaAdy = Color.cyan;
+    public static Color casillaAttack = Color.yellow;
     public List<List<Floor>> casillas = new List<List<Floor>>();
     public List<PlayerController> jugadores = new List<PlayerController>();
     public List<Color> color = new List<Color>();
     #endregion
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,7 +80,7 @@ public class GameManager : MonoBehaviour
         casillas.RemoveAt(i);
     }
 
-    public Vector3 spawnPowertUp()
+    public Vector3 spawnPowerUp()
     {
         int i = Random.Range(0, casillas.Count);
         int j = Random.Range(0, casillas[i].Count);

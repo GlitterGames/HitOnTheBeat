@@ -4,7 +4,25 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Enumerables
+    public enum Tipo
+    {
+        BOXEADORA = 0,
+        FANTASMA = 1,
+        TERREMOTO = 2,
+        BOMBA = 3
+    }
+    public enum Estado
+    {
+        NORMAL = 0,
+        INVENCIBLE = 1,
+        ULTIMATE = 2
+    }
+    #endregion
+
     #region Atributes
+    public Tipo tipoPersonaje = Tipo.BOXEADORA;
+    private Estado estadoActual = Estado.NORMAL;
     public Floor f;
     public Floor antf;
     public FloorDetectorType typeAnt;
@@ -13,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private InputController my_input;
     public int id;
     #endregion
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -34,21 +53,17 @@ public class PlayerController : MonoBehaviour
         my_input.Disable();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     //Se ejecuta cuando se realiza click en la pantalla.
     private void OnClick()
     {
-        if (id == 0) return;
+        if (id == 0) return; //Provisional prueba multiplayer.
+        if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
         Vector3 screenPos = my_input.Player.MousePosition.ReadValue<Vector2>();
         Ray ray = Camera.main.ScreenPointToRay(screenPos);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            //Click realizado sobre casilla
+            //Click realizado sobre casilla.
             Floor targetFloor = hit.transform.GetComponent<Floor>();
             if (targetFloor)
             {
@@ -94,6 +109,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     #region Moviento
     public void mover(Floor nextFloor)
     {
@@ -130,6 +146,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Me sali de la pista");
     }
     #endregion
+
     #region Colores
     private void setNormalColor() {
         f.setColor(f.getColorN());
@@ -148,6 +165,47 @@ public class PlayerController : MonoBehaviour
             Floor floor = casillasAdy[i];
             if (floor != null) floor.setColor(GameManager.casillaAdy);
         }
+    }
+
+    private void SetRangeColor(HashSet<Floor> casillas)
+    {
+        f.setColor(GameManager.casillaAct);
+
+        foreach (Floor floor in casillas)
+        {
+            if (floor != null) floor.setColor(GameManager.casillaAttack);
+        }
+    }
+    #endregion
+
+    #region  Ultimates
+
+    public void StartUltimate()
+    {
+
+    }
+
+    public void PerformUltimate()
+    {
+        switch ()
+        {
+
+        }
+    }
+
+    private HashSet<Floor> GetFloorAreaRange()
+    {
+        HashSet<Floor> casillas = new HashSet<Floor>();
+        Floor[] casillasAdy = f.getAdyacentes();
+        foreach (Floor floorAdy in casillasAdy)
+        {
+            Floor[] casillasArea = floorAdy.getAdyacentes();
+            foreach (Floor floorArea in casillasArea)
+            {
+                casillas.Add(floorArea);
+            }
+        }
+        return casillas;
     }
     #endregion
 }
