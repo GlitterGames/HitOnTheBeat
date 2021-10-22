@@ -75,7 +75,7 @@ public class PlayerControllerV : MonoBehaviourPun
         //suelo = photon.f;
         //vacio = GameObject.Find("@photonInstanciate");
         photon = GameObject.Find("@photonInstanciate").GetComponent<photonInstanciate>();
-        suelo = photon.f;
+        suelo = photon.f[0];
         transform.position = new Vector3(suelo.transform.position.x, 1.062631f, suelo.transform.position.z);
     }
 
