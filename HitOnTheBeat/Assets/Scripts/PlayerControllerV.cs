@@ -30,6 +30,7 @@ public class PlayerControllerV : MonoBehaviourPun
     private photonInstanciate photon;
     public GameObject vacio;
     private InputController my_input;
+    private Animator animator;
 
     public int idPlayer;
     #endregion
@@ -83,6 +84,11 @@ public class PlayerControllerV : MonoBehaviourPun
         Debug.Log(idPlayer);
         suelo = photon.f[(idPlayer/1000) - 1];
         transform.position = new Vector3(suelo.transform.position.x, 1.062631f, suelo.transform.position.z);
+        animator = GetComponent<Animator>();
+
+        animator.SetBool("IsAttacking", false);
+        animator.SetBool("IsJumping", false);
+        animator.SetBool("IsSpecial", false);
     }
 
     //Para que funcione el Input System en la versi�n actual.

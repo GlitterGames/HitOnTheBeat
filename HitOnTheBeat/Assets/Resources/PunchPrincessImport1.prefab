@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 7777521510113948830}
   - component: {fileID: 6975205652532025814}
   - component: {fileID: 6271384423577877424}
+  - component: {fileID: 6738145142997302262}
   m_Layer: 0
   m_Name: PunchPrincessImport1
   m_TagString: Untagged
@@ -408,6 +409,25 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!95 &6738145142997302262
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784523174532803008}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 79319f792208c3340bffc6e36b3d22d8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2161472409461212526
 GameObject:
   m_ObjectHideFlags: 0
