@@ -1,5 +1,9 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scenes/ivan.unity
+=======
+- path: Assets/Scenes/eva 1.unity
+>>>>>>> eva
   isLoaded: 1
   isActive: 1
   isSubScene: 0

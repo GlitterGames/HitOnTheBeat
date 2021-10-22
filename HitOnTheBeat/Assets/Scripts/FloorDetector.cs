@@ -4,19 +4,8 @@ using UnityEngine;
 
 public class FloorDetector : MonoBehaviour
 {
-    public enum FloorDetectorType
-    {
-        East,
-        West,
-        North_east,
-        North_west,
-        South_east,
-        South_west
-    }
-
     public FloorDetectorType detectorType;
     Floor f;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +37,7 @@ public class FloorDetector : MonoBehaviour
                 Debug.LogError("ERROR: Floor colision does not match");
                 break;
         }
+        transform.localScale = new Vector3(1.5f,1.5f,1.5f);
     }
 
     // Update is called once per frame
@@ -87,6 +77,41 @@ public class FloorDetector : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        
+        Floor floor = other.GetComponent<Floor>();
+
+        if (floor != null)
+        {
+            switch (detectorType)
+            {
+                case FloorDetectorType.East:
+                    f.setEast(null);
+                    break;
+                case FloorDetectorType.West:
+                    f.setWest(null);
+                    break;
+                case FloorDetectorType.North_east:
+                    f.setNorth_east(null);
+                    break;
+                case FloorDetectorType.North_west:
+                    f.setNorth_west(null);
+                    break;
+                case FloorDetectorType.South_east:
+                    f.setSouth_east(null);
+                    break;
+                case FloorDetectorType.South_west:
+                    f.setSouth_west(null);
+                    break;
+            }
+
+        }
     }
+}
+public enum FloorDetectorType
+{
+    East,
+    West,
+    North_east,
+    North_west,
+    South_east,
+    South_west
 }
