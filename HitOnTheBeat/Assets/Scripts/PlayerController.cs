@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon;
 using Photon.Pun;
 public class PlayerController : MonoBehaviourPun
 {
@@ -23,7 +22,7 @@ public class PlayerController : MonoBehaviourPun
 
     #region Atributes
     public Tipo tipoPersonaje = Tipo.BOXEADORA;
-    public Estado estadoActual = Estado.NORMAL;
+    private Estado estadoActual = Estado.NORMAL;
     public Floor f;
     public Floor antf;
     public FloorDetectorType typeAnt;
@@ -33,27 +32,23 @@ public class PlayerController : MonoBehaviourPun
     private photonInstanciate photon;
     private Animator animator;
     public int id;
+    public bool Player=true;
     public float speed;
     public Vector3 newPos;
     #endregion
 
     // Start is called before the first frame update
-
     void Awake()
     {
+        typeAnt = FloorDetectorType.West;
         my_input = new InputController();
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
-    }
-
-    void Start()
-    {
-        typeAnt = FloorDetectorType.West;
 
         photon = GameObject.Find("@photonInstanciate").GetComponent<photonInstanciate>();
-        f = photon.f[(photonView.ViewID/2000)].GetComponent<Floor>();
-        transform.position = new Vector3(f.transform.position.x, 0.5f, f.transform.position.z);
+        f = photon.f[(photonView.ViewID/1000) - 1];
+        transform.position = new Vector3(f.transform.position.x, 1.062631f, f.transform.position.z);
         newPos = transform.position;
 
         animator = GetComponent<Animator>();
@@ -86,15 +81,16 @@ public class PlayerController : MonoBehaviourPun
     public void FixedUpdate()
     {
 
-        if (photonView.IsMine)
+        if (Player)
         {
+            Player = photonView.IsMine;
             id = (photonView.ViewID/1000) - 1;
         }
     }
     //Se ejecuta cuando se realiza click en la pantalla.
     private void OnClick()
     {
-        if (!photonView.IsMine) return;
+        if (!Player) return;
         if (transform.position != newPos) return;
         if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
 

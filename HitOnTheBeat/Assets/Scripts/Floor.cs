@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-[System.Serializable]
-public class Floor : MonoBehaviourPun
+public class Floor : MonoBehaviour
 {
     private Renderer r;
     private Color normal;
     #region Atributes 
     private static int CURRENT_ID = 0;
     public int id;
-    public Floor[] adyacentes = new Floor[6];
+    public Floor south_west;
+    Floor[] adyacentes = new Floor[6];
     public int row;
 
     public Floor GetFloor(FloorDetectorType type) {
