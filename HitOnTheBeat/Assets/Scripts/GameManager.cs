@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
+using Photon.Pun;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPun
 {
     #region Variables
-    const int NUM_CASILLAS = 4;
+    const int NUM_CASILLAS = 6;
     const int DESTROY_TIME = 5;
     public static Color casillaAct = Color.blue;
     public static Color casillaAdy = Color.cyan;
@@ -18,17 +20,25 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        initColor();
         initCasillas();
         initPlayer();
-        casillasSetColor();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (PhotonNetwork.IsMasterClient) colision();
+        }
     }
     private void initColor() {
         color.Add(Color.black);
         color.Add(Color.grey);
         color.Add(Color.yellow);
         color.Add(Color.red);
+        color.Add(Color.black);
+        color.Add(Color.black);
     }
     private void initCasillas()
     {
@@ -39,25 +49,25 @@ public class GameManager : MonoBehaviour
         }
         //Adquiero todas las casillas de las escena
         Floor[] f = (Floor[])Object.FindObjectsOfType(typeof(Floor));
-        //Las a�ado a la fila que les corresponde
-        int j = 0;
+        //Le paso dichas casillas a todos los jugadores.
         foreach (Floor floor in f)
         {
-            floor.id = j;
             int posicion = floor.row;
             casillas[posicion].Add(floor);
-            j++;
         }
+        initColor();
+        casillasSetColor();
     }
 
     private void initPlayer()
     {
-        PlayerController[] p = (PlayerController[])Object.FindObjectsOfType(typeof(PlayerController));
+        PlayerController[] p = (PlayerController[]) FindObjectsOfType(typeof(PlayerController));
         foreach (PlayerController player in p)
         {
             jugadores.Add(player);
         }
     }
+
     private void casillasSetColor()
     {
         for (int i = 0; i < casillas.Count; i++)
@@ -89,15 +99,7 @@ public class GameManager : MonoBehaviour
         
         return casillas[i][j].GetFloorPosition() + new Vector3(0,1.0f,0);
     }
-    // Update is called once per frame
-    void Update()
-    {
-        if(jugadores[0].id == 0)
-        {
-            colision();
-            initPlayer();
-        }
-    }
+    
     private void colision(){
         for(int k = 0; k<jugadores.Count; k++) {
             for (int i = k+1; i < jugadores.Count; i++) {

@@ -82,7 +82,7 @@ public class PlayerControllerV : MonoBehaviourPun
         //idPlayer = playerAvatar.GetComponent<PhotonView>().ViewID;
         idPlayer = photonView.ViewID;
         Debug.Log(idPlayer);
-        suelo = photon.f[(idPlayer/1000) - 1];
+        suelo = photon.f[(idPlayer/1000) - 1].GetComponent<Floor>();
         transform.position = new Vector3(suelo.transform.position.x, 1.062631f, suelo.transform.position.z);
         animator = GetComponent<Animator>();
 
