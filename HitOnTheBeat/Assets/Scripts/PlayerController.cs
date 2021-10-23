@@ -90,57 +90,57 @@ public class PlayerController : MonoBehaviourPun
     //Se ejecuta cuando se realiza click en la pantalla.
     private void OnClick()
     {
-        if (Player)
+        if (!Player) return;
+        if (transform.position != newPos) return;
+        if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
+
+        Vector3 screenPos = my_input.Player.MousePosition.ReadValue<Vector2>();
+        Ray ray = Camera.main.ScreenPointToRay(screenPos);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
-            Vector3 screenPos = my_input.Player.MousePosition.ReadValue<Vector2>();
-            Ray ray = Camera.main.ScreenPointToRay(screenPos);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            //Click realizado sobre casilla.
+            Floor targetFloor = hit.transform.GetComponent<Floor>();
+            if (targetFloor)
             {
-                //Click realizado sobre casilla.
-                Floor targetFloor = hit.transform.GetComponent<Floor>();
-                if (targetFloor)
+                Floor nextFloor = null;
+
+                if (targetFloor.Equals(f.getNorth_west()))
                 {
-                    Floor nextFloor = null;
+                    nextFloor = f.getNorth_west();
+                    typeAnt = FloorDetectorType.North_west;
+                }
+                else if (targetFloor.Equals(f.getNorth_east()))
+                {
+                    nextFloor = f.getNorth_east();
+                    typeAnt = FloorDetectorType.North_east;
+                }
+                else if (targetFloor.Equals(f.getWest()))
+                {
+                    nextFloor = f.getWest();
+                    typeAnt = FloorDetectorType.West;
+                }
+                else if (targetFloor.Equals(f.getEast()))
+                {
+                    nextFloor = f.getEast();
+                    typeAnt = FloorDetectorType.East;
+                }
+                else if (targetFloor.Equals(f.getSouth_west()))
+                {
+                    nextFloor = f.getSouth_west();
+                    typeAnt = FloorDetectorType.South_west;
+                }
+                else if (targetFloor.Equals(f.getSouth_east()))
+                {
+                    nextFloor = f.getSouth_east();
+                    typeAnt = FloorDetectorType.South_east;
+                }
 
-                    if (targetFloor.Equals(f.getNorth_west()))
-                    {
-                        nextFloor = f.getNorth_west();
-                        typeAnt = FloorDetectorType.North_west;
-                    }
-                    else if (targetFloor.Equals(f.getNorth_east()))
-                    {
-                        nextFloor = f.getNorth_east();
-                        typeAnt = FloorDetectorType.North_east;
-                    }
-                    else if (targetFloor.Equals(f.getWest()))
-                    {
-                        nextFloor = f.getWest();
-                        typeAnt = FloorDetectorType.West;
-                    }
-                    else if (targetFloor.Equals(f.getEast()))
-                    {
-                        nextFloor = f.getEast();
-                        typeAnt = FloorDetectorType.East;
-                    }
-                    else if (targetFloor.Equals(f.getSouth_west()))
-                    {
-                        nextFloor = f.getSouth_west();
-                        typeAnt = FloorDetectorType.South_west;
-                    }
-                    else if (targetFloor.Equals(f.getSouth_east()))
-                    {
-                        nextFloor = f.getSouth_east();
-                        typeAnt = FloorDetectorType.South_east;
-                    }
-
-                    
-                    //PERFORM MOVEMENT
-                    if (nextFloor != null)
-                    {
-                        mover(nextFloor);
-                    }
+                
+                //PERFORM MOVEMENT
+                if (nextFloor != null)
+                {
+                    mover(nextFloor);
                 }
             }
         }
