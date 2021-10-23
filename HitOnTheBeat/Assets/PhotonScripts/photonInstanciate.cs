@@ -31,24 +31,18 @@ public class photonInstanciate : MonoBehaviourPun
                 if (t.gameObject.name == "hexagon")
                 {
                     GameObject go = PhotonNetwork.Instantiate(casilla.name, t.position, Quaternion.identity);
-                    go.transform.localScale = t.localScale;
-                    go.GetComponent<Floor>().row = i;
-                    go.GetComponent<Floor>().id = go.GetComponent<PhotonView>().ViewID;
+                    photonView.RPC("SetCasillaRPC", RpcTarget.AllViaServer, t.localScale, i, go.GetPhotonView().ViewID);
                 }
                 else if (t.gameObject.name == "hexagon1")
                 {
                     GameObject go = PhotonNetwork.Instantiate(casilla.name, t.position, Quaternion.identity);
-                    go.transform.localScale = t.localScale;
-                    go.GetComponent<Floor>().row = i;
-                    go.GetComponent<Floor>().id = go.GetComponent<PhotonView>().ViewID;
+                    photonView.RPC("SetCasillaRPC", RpcTarget.AllViaServer, t.localScale, i, go.GetPhotonView().ViewID);
                     f[0] = go.GetComponent<Floor>();
                 }
                 else if (t.gameObject.name == "hexagon2")
                 {
                     GameObject go = PhotonNetwork.Instantiate(casilla.name, t.position, Quaternion.identity);
-                    go.transform.localScale = t.localScale;
-                    go.GetComponent<Floor>().row = i;
-                    go.GetComponent<Floor>().id = go.GetComponent<PhotonView>().ViewID;
+                    photonView.RPC("SetCasillaRPC", RpcTarget.AllViaServer, t.localScale, i, go.GetPhotonView().ViewID);
                     f[1] = go.GetComponent<Floor>();
                 }
             }
@@ -58,6 +52,15 @@ public class photonInstanciate : MonoBehaviourPun
         positions[1] = new Vector3 (f[1].transform.position.x, 0, f[1].transform.position.z);
         GameObject g = PhotonNetwork.Instantiate(this.playerAvatar.name, positions[0], Quaternion.identity);
         photonView.RPC("SetPlayerRPC", RpcTarget.Others, f[0].gameObject.GetPhotonView().ViewID, f[1].gameObject.GetPhotonView().ViewID);
+    }
+
+    [PunRPC]
+    public void SetCasillaRPC(Vector3 scale, int row, int id)
+    {
+        Floor f = PhotonView.Find(id).GetComponent<Floor>();
+        f.transform.localScale = scale;
+        f.id = id;
+        f.row = row;
     }
 
     [PunRPC]

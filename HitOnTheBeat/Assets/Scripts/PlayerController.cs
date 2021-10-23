@@ -107,6 +107,7 @@ public class PlayerController : MonoBehaviourPun
             Floor targetFloor = hit.transform.GetComponent<Floor>();
             if (targetFloor)
             {
+                Debug.Log("Click realizado");
                 Floor nextFloor = null;
 
                 if (targetFloor.Equals(f.getNorth_west()))
@@ -154,11 +155,20 @@ public class PlayerController : MonoBehaviourPun
     public void mover(Floor nextFloor)
     {
         setNormalColor();
-        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-        antf = f;
-        f = nextFloor;
+        photonView.RPC("MoverRPC", RpcTarget.AllViaServer, new Vector3(nextFloor.GetFloorPosition().x,
+                                transform.position.y, nextFloor.GetFloorPosition().z), nextFloor.photonView.ViewID);
         setAreaColor();
     }
+
+    [PunRPC]
+    private void MoverRPC(Vector3 pos, int id)
+    {
+        newPos = pos;
+        Floor nextFloor = PhotonView.Find(id).GetComponent<Floor>();
+        antf = f;
+        f = nextFloor;
+    }
+
     public bool echar(FloorDetectorType type) {
         Floor nextFloor = f.GetFloor(type);
         if (nextFloor != null)

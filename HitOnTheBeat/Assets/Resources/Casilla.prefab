@@ -58,6 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectorType: 0
+  f: {fileID: 0}
 --- !u!1 &6977905735502127776
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,9 +72,9 @@ GameObject:
   - component: {fileID: 6977905735502128475}
   - component: {fileID: 6977905735502128476}
   - component: {fileID: 6977905735502128477}
-  - component: {fileID: 5361233118858967567}
   - component: {fileID: 166072571582389439}
   - component: {fileID: 8140369883065205663}
+  - component: {fileID: 466052083945573883}
   m_Layer: 0
   m_Name: Casilla
   m_TagString: Untagged
@@ -164,7 +165,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &6977905735502128477
 MonoBehaviour:
@@ -187,20 +188,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   row: 1
---- !u!64 &5361233118858967567
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6977905735502127776}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2794067383335433913, guid: b59fc695adce1a0418a349d4d7df68eb, type: 3}
 --- !u!114 &166072571582389439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +227,19 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
   m_UseLocal: 1
+--- !u!65 &466052083945573883
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6977905735502127776}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 0.2, z: 1.5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6977905735823514352
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,6 +298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectorType: 0
+  f: {fileID: 0}
 --- !u!1 &6977905735843192480
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,6 +357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectorType: 0
+  f: {fileID: 0}
 --- !u!1 &6977905736109931061
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,6 +416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectorType: 0
+  f: {fileID: 0}
 --- !u!1 &6977905736174700701
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,6 +475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectorType: 0
+  f: {fileID: 0}
 --- !u!1 &6977905736472273828
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,3 +534,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectorType: 0
+  f: {fileID: 0}
