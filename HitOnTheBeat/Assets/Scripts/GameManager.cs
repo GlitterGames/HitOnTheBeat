@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         initColor();
         initCasillas();
         initPlayer();
@@ -31,14 +32,14 @@ public class GameManager : MonoBehaviour
     }
     private void initCasillas()
     {
-        //Inicialización de la estructura de datos que vamos a utilizar para alamcenar las casillas
+        //Inicializaciï¿½n de la estructura de datos que vamos a utilizar para alamcenar las casillas
         for (int i = 0; i < NUM_CASILLAS; i++)
         {
             casillas.Add(new List<Floor>());
         }
         //Adquiero todas las casillas de las escena
         Floor[] f = (Floor[])Object.FindObjectsOfType(typeof(Floor));
-        //Las añado a la fila que les corresponde
+        //Las aï¿½ado a la fila que les corresponde
         int j = 0;
         foreach (Floor floor in f)
         {
@@ -48,6 +49,7 @@ public class GameManager : MonoBehaviour
             j++;
         }
     }
+
     private void initPlayer()
     {
         PlayerController[] p = (PlayerController[])Object.FindObjectsOfType(typeof(PlayerController));
@@ -73,7 +75,7 @@ public class GameManager : MonoBehaviour
         foreach (Floor f in casillas[i])
         {
             r = f.GetComponent<Rigidbody>();
-            r.useGravity = true; //Animación de caida
+            r.useGravity = true; //Animaciï¿½n de caida
             foreach (Transform child in f.transform) { GameObject.Destroy(child.gameObject, DESTROY_TIME);}
             Destroy(f, DESTROY_TIME);
         }
@@ -90,7 +92,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        colision();
+        if(jugadores[0].id == 0)
+        {
+            colision();
+            initPlayer();
+        }
     }
     private void colision(){
         for(int k = 0; k<jugadores.Count; k++) {
@@ -100,8 +106,11 @@ public class GameManager : MonoBehaviour
                     if (jugadores[k].fuerza == jugadores[i].fuerza)
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
+                        Debug.Log("Sin fuerza");
                         jugadores[k].mover(jugadores[k].antf);
                         jugadores[i].mover(jugadores[i].antf);
+
+                        
                         //PIERDEN FUERZA
                         jugadores[k].fuerza = 0;
                         jugadores[i].fuerza = 0;
@@ -109,7 +118,9 @@ public class GameManager : MonoBehaviour
                     else if (jugadores[k].fuerza > jugadores[i].fuerza)
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
+                         Debug.Log("Cikn fuerza");
                         jugadores[k].mover(jugadores[k].antf);
+                       
                         //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
                         int max = jugadores[k].fuerza - jugadores[i].fuerza;
                         jugadores[k].fuerza = 0;
@@ -125,7 +136,9 @@ public class GameManager : MonoBehaviour
                     else
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
+                        Debug.Log("YXCTFURVYGIHBNJ");
                         jugadores[i].mover(jugadores[i].antf);
+                        
                         //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
                         int max = jugadores[i].fuerza - jugadores[k].fuerza;
                         jugadores[k].fuerza = 0;
@@ -137,7 +150,7 @@ public class GameManager : MonoBehaviour
                             echado = jugadores[k].echar(jugadores[i].typeAnt);
                         }
                         if (echado) {jugadores.Remove(jugadores[k]); i = k + 1;}
-                    }                    
+                    }
                 }
             }
         }

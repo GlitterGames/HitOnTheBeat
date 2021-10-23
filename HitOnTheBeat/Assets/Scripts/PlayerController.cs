@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class PlayerController : MonoBehaviour
+using Photon.Pun;
+public class PlayerController : MonoBehaviourPun
 {
     #region Enumerables
     public enum Tipo
@@ -29,7 +29,12 @@ public class PlayerController : MonoBehaviour
     public int fuerza;
     public GameObject playerAvatar;
     private InputController my_input;
+    private photonInstanciate photon;
+    private Animator animator;
     public int id;
+    public bool Player=true;
+    public float speed;
+    public Vector3 newPos;
     #endregion
 
     // Start is called before the first frame update
@@ -40,9 +45,19 @@ public class PlayerController : MonoBehaviour
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
+
+        photon = GameObject.Find("@photonInstanciate").GetComponent<photonInstanciate>();
+        f = photon.f[(photonView.ViewID/1000) - 1];
+        transform.position = new Vector3(f.transform.position.x, 1.062631f, f.transform.position.z);
+        newPos = transform.position;
+
+        animator = GetComponent<Animator>();
+        animator.SetBool("IsAttacking", false);
+        animator.SetBool("IsJumping", false);
+        animator.SetBool("IsSpecial", false);
     }
 
-    //Para que funcione el Input System en la versión actual.
+    //Para que funcione el Input System en la versiÃ³n actual.
     private void OnEnable()
     {
         my_input.Enable();
@@ -53,58 +68,79 @@ public class PlayerController : MonoBehaviour
         my_input.Disable();
     }
 
+    void Update()
+        {
+            if(transform.position != newPos)
+            {
+                float step = speed * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, newPos, step);
+                transform.LookAt(newPos);
+            }
+        }
+
+    public void FixedUpdate()
+    {
+
+        if (Player)
+        {
+            Player = photonView.IsMine;
+            id = (photonView.ViewID/1000) - 1;
+        }
+    }
     //Se ejecuta cuando se realiza click en la pantalla.
     private void OnClick()
     {
-        if (id == 0) return; //Provisional prueba multiplayer.
-        if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
-        Vector3 screenPos = my_input.Player.MousePosition.ReadValue<Vector2>();
-        Ray ray = Camera.main.ScreenPointToRay(screenPos);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Player)
         {
-            //Click realizado sobre casilla.
-            Floor targetFloor = hit.transform.GetComponent<Floor>();
-            if (targetFloor)
+            if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
+            Vector3 screenPos = my_input.Player.MousePosition.ReadValue<Vector2>();
+            Ray ray = Camera.main.ScreenPointToRay(screenPos);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
             {
-                Floor nextFloor = null;
+                //Click realizado sobre casilla.
+                Floor targetFloor = hit.transform.GetComponent<Floor>();
+                if (targetFloor)
+                {
+                    Floor nextFloor = null;
 
-                if (targetFloor.Equals(f.getNorth_west()))
-                {
-                    nextFloor = f.getNorth_west();
-                    typeAnt = FloorDetectorType.North_west;
-                }
-                else if (targetFloor.Equals(f.getNorth_east()))
-                {
-                    nextFloor = f.getNorth_east();
-                    typeAnt = FloorDetectorType.North_east;
-                }
-                else if (targetFloor.Equals(f.getWest()))
-                {
-                    nextFloor = f.getWest();
-                    typeAnt = FloorDetectorType.West;
-                }
-                else if (targetFloor.Equals(f.getEast()))
-                {
-                    nextFloor = f.getEast();
-                    typeAnt = FloorDetectorType.East;
-                }
-                else if (targetFloor.Equals(f.getSouth_west()))
-                {
-                    nextFloor = f.getSouth_west();
-                    typeAnt = FloorDetectorType.South_west;
-                }
-                else if (targetFloor.Equals(f.getSouth_east()))
-                {
-                    nextFloor = f.getSouth_east();
-                    typeAnt = FloorDetectorType.South_east;
-                }
+                    if (targetFloor.Equals(f.getNorth_west()))
+                    {
+                        nextFloor = f.getNorth_west();
+                        typeAnt = FloorDetectorType.North_west;
+                    }
+                    else if (targetFloor.Equals(f.getNorth_east()))
+                    {
+                        nextFloor = f.getNorth_east();
+                        typeAnt = FloorDetectorType.North_east;
+                    }
+                    else if (targetFloor.Equals(f.getWest()))
+                    {
+                        nextFloor = f.getWest();
+                        typeAnt = FloorDetectorType.West;
+                    }
+                    else if (targetFloor.Equals(f.getEast()))
+                    {
+                        nextFloor = f.getEast();
+                        typeAnt = FloorDetectorType.East;
+                    }
+                    else if (targetFloor.Equals(f.getSouth_west()))
+                    {
+                        nextFloor = f.getSouth_west();
+                        typeAnt = FloorDetectorType.South_west;
+                    }
+                    else if (targetFloor.Equals(f.getSouth_east()))
+                    {
+                        nextFloor = f.getSouth_east();
+                        typeAnt = FloorDetectorType.South_east;
+                    }
 
-                
-                //PERFORM MOVEMENT
-                if (nextFloor != null)
-                {
-                    mover(nextFloor);
+                    
+                    //PERFORM MOVEMENT
+                    if (nextFloor != null)
+                    {
+                        mover(nextFloor);
+                    }
                 }
             }
         }
@@ -114,7 +150,7 @@ public class PlayerController : MonoBehaviour
     public void mover(Floor nextFloor)
     {
         setNormalColor();
-        transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
+        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
         antf = f;
         f = nextFloor;
         setAreaColor();
@@ -123,7 +159,7 @@ public class PlayerController : MonoBehaviour
         Floor nextFloor = f.GetFloor(type);
         if (nextFloor != null)
         {
-            Debug.Log("Me tenía que mover");
+            Debug.Log("Me tenÃ­a que mover");
             transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
             antf = f;
             f = nextFloor;
@@ -180,7 +216,7 @@ public class PlayerController : MonoBehaviour
 
     #region  Ultimates
 
-    public void StartUltimate()
+    /*public void StartUltimate()
     {
 
     }
@@ -191,7 +227,7 @@ public class PlayerController : MonoBehaviour
         {
 
         }
-    }
+    }*/
 
     private HashSet<Floor> GetFloorAreaRange()
     {
