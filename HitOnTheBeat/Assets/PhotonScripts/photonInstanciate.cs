@@ -31,18 +31,18 @@ public class photonInstanciate : MonoBehaviourPun
                 if (t.gameObject.name == "hexagon")
                 {
                     GameObject go = PhotonNetwork.Instantiate(casilla.name, t.position, Quaternion.identity);
-                    photonView.RPC("SetCasillaRPC", RpcTarget.AllViaServer, t.localScale, i, go.GetPhotonView().ViewID);
+                    photonView.RPC("SetCasillaRPC", RpcTarget.All, t.localScale, i, go.GetPhotonView().ViewID);
                 }
                 else if (t.gameObject.name == "hexagon1")
                 {
                     GameObject go = PhotonNetwork.Instantiate(casilla.name, t.position, Quaternion.identity);
-                    photonView.RPC("SetCasillaRPC", RpcTarget.AllViaServer, t.localScale, i, go.GetPhotonView().ViewID);
+                    photonView.RPC("SetCasillaRPC", RpcTarget.All, t.localScale, i, go.GetPhotonView().ViewID);
                     f[0] = go.GetComponent<Floor>();
                 }
                 else if (t.gameObject.name == "hexagon2")
                 {
                     GameObject go = PhotonNetwork.Instantiate(casilla.name, t.position, Quaternion.identity);
-                    photonView.RPC("SetCasillaRPC", RpcTarget.AllViaServer, t.localScale, i, go.GetPhotonView().ViewID);
+                    photonView.RPC("SetCasillaRPC", RpcTarget.All, t.localScale, i, go.GetPhotonView().ViewID);
                     f[1] = go.GetComponent<Floor>();
                 }
             }

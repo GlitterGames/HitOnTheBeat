@@ -412,8 +412,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tipoPersonaje: 0
   estadoActual: 0
-  f: {fileID: 0}
-  antf: {fileID: 0}
+  actualFloor: {fileID: 0}
+  previousFloor: {fileID: 0}
   typeAnt: 0
   fuerza: 10
   playerAvatar: {fileID: 1784523174532803008}

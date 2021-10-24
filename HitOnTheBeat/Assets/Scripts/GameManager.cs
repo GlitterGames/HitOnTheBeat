@@ -7,65 +7,63 @@ using Photon.Pun;
 public class GameManager : MonoBehaviourPun
 {
     #region Variables
-    const int NUM_CASILLAS = 6;
+    const int NUM_FILAS = 6;
+    const int NUM_CASILLAS = 91;
     const int DESTROY_TIME = 5;
     public static Color casillaAct = Color.blue;
     public static Color casillaAdy = Color.cyan;
     public static Color casillaAttack = Color.yellow;
     public List<List<Floor>> casillas = new List<List<Floor>>();
-    public List<PlayerController> jugadores = new List<PlayerController>();
     public List<Color> color = new List<Color>();
+    private bool cargaLista = false;
     #endregion
+
+    void Awake()
+    {
+        //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
+        for (int i = 0; i < NUM_FILAS; i++)
+        {
+            casillas.Add(new List<Floor>());
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        initCasillas();
-        initPlayer();
+        initColor();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            if (PhotonNetwork.IsMasterClient) colision();
-        }
+        if(!cargaLista) initCasillas();
+        if (PhotonNetwork.IsMasterClient) colision();
     }
     private void initColor() {
         color.Add(Color.black);
         color.Add(Color.grey);
         color.Add(Color.yellow);
+        color.Add(Color.yellow);
         color.Add(Color.red);
-        color.Add(Color.black);
-        color.Add(Color.black);
+        color.Add(Color.red);
     }
     private void initCasillas()
     {
-        //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
-        for (int i = 0; i < NUM_CASILLAS; i++)
-        {
-            casillas.Add(new List<Floor>());
-        }
         //Adquiero todas las casillas de las escena
-        Floor[] f = (Floor[])Object.FindObjectsOfType(typeof(Floor));
+        HashSet<GameObject> f = PhotonNetwork.FindGameObjectsWithComponent(typeof(Floor));
+        if(f.Count < NUM_CASILLAS)
+        {
+            return;
+        }
+        cargaLista = true;
         //Le paso dichas casillas a todos los jugadores.
-        foreach (Floor floor in f)
+        foreach (GameObject floor in f)
         {
-            int posicion = floor.row;
-            casillas[posicion].Add(floor);
+            Floor casilla = floor.GetComponent<Floor>();
+            int posicion = casilla.row;
+            casillas[posicion].Add(casilla);
         }
-        initColor();
         casillasSetColor();
-    }
-
-    private void initPlayer()
-    {
-        PlayerController[] p = (PlayerController[]) FindObjectsOfType(typeof(PlayerController));
-        foreach (PlayerController player in p)
-        {
-            jugadores.Add(player);
-        }
     }
 
     private void casillasSetColor()
@@ -101,16 +99,22 @@ public class GameManager : MonoBehaviourPun
     }
     
     private void colision(){
-        for(int k = 0; k<jugadores.Count; k++) {
+        HashSet<GameObject> players = PhotonNetwork.FindGameObjectsWithComponent(typeof(PlayerController));
+        List<PlayerController> jugadores = new List<PlayerController>();
+        foreach(GameObject go in players)
+        {
+            jugadores.Add(go.GetComponent<PlayerController>());
+        }
+        for (int k = 0; k<jugadores.Count; k++) {
             for (int i = k+1; i < jugadores.Count; i++) {
-                if (jugadores[k].f.id == jugadores[i].f.id)
+                if (jugadores[k].actualFloor.id == jugadores[i].actualFloor.id)
                 {
                     if (jugadores[k].fuerza == jugadores[i].fuerza)
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
                         Debug.Log("Sin fuerza");
-                        jugadores[k].mover(jugadores[k].antf);
-                        jugadores[i].mover(jugadores[i].antf);
+                        jugadores[k].mover(jugadores[k].previousFloor);
+                        jugadores[i].mover(jugadores[i].previousFloor);
 
                         
                         //PIERDEN FUERZA
@@ -121,7 +125,7 @@ public class GameManager : MonoBehaviourPun
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
                          Debug.Log("Cikn fuerza");
-                        jugadores[k].mover(jugadores[k].antf);
+                        jugadores[k].mover(jugadores[k].previousFloor);
                        
                         //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
                         int max = jugadores[k].fuerza - jugadores[i].fuerza;
@@ -139,7 +143,7 @@ public class GameManager : MonoBehaviourPun
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
                         Debug.Log("YXCTFURVYGIHBNJ");
-                        jugadores[i].mover(jugadores[i].antf);
+                        jugadores[i].mover(jugadores[i].previousFloor);
                         
                         //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
                         int max = jugadores[i].fuerza - jugadores[k].fuerza;
