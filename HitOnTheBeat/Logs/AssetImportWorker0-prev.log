@@ -1,20 +1,25 @@
 Using pre-set license
 Built from '2020.3/staging' branch; Version is '2020.3.19f1 (68f137dc9bbe) revision 6877495'; Using compiler version '192528614'; Build Type 'Release'
+<<<<<<< HEAD
 OS: 'Windows 10 Home; OS build 19042.1288; Version 2009; 64bit' Language: 'es' Physical Memory: 16262 MB
+=======
+OS: 'Windows 10 Education; OS build 19041.1288; Version 2004; 64bit' Language: 'es' Physical Memory: 8034 MB
+>>>>>>> guille
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
 
 COMMAND LINE ARGUMENTS:
-C:\Program Files\Unity\Hub\Editor\2020.3.19f1\Editor\Unity.exe
+C:\Program Files\Unity\Editor\Unity.exe
 -adb2
 -batchMode
 -noUpm
 -name
 AssetImportWorker0
 -projectPath
-D:/Documentos/Proyectos Unity/HitOnTheBeat/HitOnTheBeat
+C:/Users/Guillermo/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -44,18 +49,26 @@ D:/Documentos/Proyectos Unity/HitOnTheBeat/HitOnTheBeat
 Using Asset Import Pipeline V2.
 Refreshing native plugins compatible for Editor in 80.60 ms, found 2 plugins.
 >>>>>>> jose
+=======
+52838
+Successfully changed project path to: C:/Users/Guillermo/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
+C:/Users/Guillermo/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 46.09 ms, found 2 plugins.
+>>>>>>> guille
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2020.3.19f1 (68f137dc9bbe)
-[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Resources/UnitySubsystems
-[Subsystems] Discovering subsystems at path D:/Documentos/Proyectos Unity/HitOnTheBeat/HitOnTheBeat/Assets
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/Guillermo/Documents/GitHub/HitOnTheBeat/HitOnTheBeat/Assets
 GfxDevice: creating device client; threaded=0
 Direct3D:
     Version:  Direct3D 11.0 [level 11.1]
     Renderer: NVIDIA GeForce GTX 1050 (ID=0x1c8d)
     Vendor:   
     VRAM:     4019 MB
-    Driver:   30.0.14.7168
+    Driver:   27.21.14.5681
 Initialize mono
+<<<<<<< HEAD
 <<<<<<< HEAD
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
@@ -108,11 +121,30 @@ Domain Reload Profiling:
 	ReloadAssembly (1919ms)
 		BeginReloadAssembly (78ms)
 >>>>>>> Photon-Main
+=======
+Mono path[0] = 'C:/Program Files/Unity/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = 'C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56052
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001945 seconds.
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 40.11 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.991 seconds
+Domain Reload Profiling:
+	ReloadAssembly (991ms)
+		BeginReloadAssembly (50ms)
+>>>>>>> guille
 			ExecutionOrderSort (0ms)
 			DisableScriptedObjects (0ms)
 			BackupInstance (0ms)
 			ReleaseScriptingObjects (0ms)
 			CreateAndSetChildDomain (1ms)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 		EndReloadAssembly (586ms)
@@ -161,6 +193,22 @@ Domain Reload Profiling:
 				ProcessInitializeOnLoadAttributes (112ms)
 				ProcessInitializeOnLoadMethodAttributes (35ms)
 >>>>>>> Photon-Main
+=======
+		EndReloadAssembly (376ms)
+			LoadAssemblies (48ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (133ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (28ms)
+			SetupLoadedEditorAssemblies (151ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (40ms)
+				BeforeProcessingInitializeOnLoad (9ms)
+				ProcessInitializeOnLoadAttributes (72ms)
+				ProcessInitializeOnLoadMethodAttributes (26ms)
+>>>>>>> guille
 				AfterProcessingInitializeOnLoad (0ms)
 				EditorAssembliesLoaded (0ms)
 			ExecutionOrderSort2 (0ms)
@@ -169,16 +217,21 @@ Platform modules already initialized, skipping
 Registering precompiled user dll's ...
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 Registered in 0.106520 seconds.
 =======
 Registered in 0.006290 seconds.
 =======
 Registered in 0.060142 seconds.
 >>>>>>> Photon-Main
+=======
+Registered in 0.005591 seconds.
+>>>>>>> guille
 Begin MonoManager ReloadAssembly
 Symbol file data-000001D7058CDE60 doesn't match image C:\Users\javie\Documents\GitHub\HitOnTheBeat\HitOnTheBeat\Library\ScriptAssemblies\Assembly-CSharp.dll
 Symbol file LoadedFromMemory is not a mono symbol file
 Native extension for WindowsStandalone target not found
+<<<<<<< HEAD
 <<<<<<< HEAD
 Refreshing native plugins compatible for Editor in 43.14 ms, found 2 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
@@ -197,10 +250,20 @@ Domain Reload Profiling:
 	ReloadAssembly (1750ms)
 		BeginReloadAssembly (191ms)
 >>>>>>> Photon-Main
+=======
+Refreshing native plugins compatible for Editor in 40.45 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.218 seconds
+Domain Reload Profiling:
+	ReloadAssembly (1219ms)
+		BeginReloadAssembly (132ms)
+>>>>>>> guille
 			ExecutionOrderSort (0ms)
-			DisableScriptedObjects (5ms)
+			DisableScriptedObjects (4ms)
 			BackupInstance (0ms)
 			ReleaseScriptingObjects (0ms)
+<<<<<<< HEAD
 <<<<<<< HEAD
 			CreateAndSetChildDomain (17ms)
 		EndReloadAssembly (963ms)
@@ -229,12 +292,31 @@ Domain Reload Profiling:
 				ProcessInitializeOnLoadAttributes (245ms)
 				ProcessInitializeOnLoadMethodAttributes (12ms)
 				AfterProcessingInitializeOnLoad (8ms)
+=======
+			CreateAndSetChildDomain (17ms)
+		EndReloadAssembly (1031ms)
+			LoadAssemblies (83ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (358ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (69ms)
+			SetupLoadedEditorAssemblies (386ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (4ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (41ms)
+				BeforeProcessingInitializeOnLoad (62ms)
+				ProcessInitializeOnLoadAttributes (261ms)
+				ProcessInitializeOnLoadMethodAttributes (11ms)
+				AfterProcessingInitializeOnLoad (6ms)
+>>>>>>> guille
 				EditorAssembliesLoaded (0ms)
 			ExecutionOrderSort2 (0ms)
 			AwakeInstancesAfterBackupRestoration (6ms)
 Platform modules already initialized, skipping
 ========================================================================
 Worker process is ready to serve import requests
+<<<<<<< HEAD
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.05 seconds
 Refreshing native plugins compatible for Editor in 0.52 ms, found 2 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
@@ -266,6 +348,17 @@ System memory in use after: 92.4 MB.
 Unloading 30 unused Assets to reduce memory usage. Loaded Objects now: 2611.
 Total: 3.405900 ms (FindLiveObjects: 0.177700 ms CreateObjectMapping: 0.079800 ms MarkObjects: 3.039200 ms  DeleteObjects: 0.108200 ms)
 >>>>>>> Photon-Main
+=======
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.08 seconds
+Refreshing native plugins compatible for Editor in 0.43 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2168 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 91.9 MB.
+System memory in use after: 92.0 MB.
+
+Unloading 30 unused Assets to reduce memory usage. Loaded Objects now: 2604.
+Total: 3.237900 ms (FindLiveObjects: 0.199000 ms CreateObjectMapping: 0.073500 ms MarkObjects: 2.905100 ms  DeleteObjects: 0.059400 ms)
+>>>>>>> guille
 
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
@@ -279,6 +372,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
 ========================================================================
 Received Import Request.
+<<<<<<< HEAD
 <<<<<<< HEAD
   path: Assets/Resources/PunchPrincessImport1.prefab
   artifactKey: Guid(d73a9841283c89041833c85ae2d22013) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
@@ -4507,5 +4601,12 @@ Received Import Request.
 Start importing Assets/Prefabs/Camera/CameraSystem.prefab using Guid(4085eb79fd06c744d98472d27da13c5a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'deaa31d08f597775b92f445e78e5d007') in 0.086417 seconds 
   Import took 0.092049 seconds .
 
+=======
+  path: Assets/PunchPrincessAssets/PunchPrincessImport1.blend
+  artifactKey: Guid(fd68ff7b77b518245bb17947bb67bb70) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/PunchPrincessAssets/PunchPrincessImport1.blend using Guid(fd68ff7b77b518245bb17947bb67bb70) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '659cc995d4be6b978f63c7961fb2b990') in 0.144236 seconds 
+  Import took 0.147653 seconds .
+
+>>>>>>> guille
 AssetImportWorkerClient::OnTransportError - code=2 error=End of file
 >>>>>>> jose

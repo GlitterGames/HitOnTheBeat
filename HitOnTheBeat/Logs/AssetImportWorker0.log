@@ -21,6 +21,7 @@ C:/Users/javie/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
 Logs/AssetImportWorker0.log
 -srvPort
 <<<<<<< HEAD
+<<<<<<< HEAD
 52087
 Successfully changed project path to: C:/Users/javie/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
 C:/Users/javie/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
@@ -54,6 +55,13 @@ Successfully changed project path to: C:/Users/pablo/Documents/GitHub/HitOnTheBe
 C:/Users/pablo/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
 Using Asset Import Pipeline V2.
 Refreshing native plugins compatible for Editor in 43.83 ms, found 2 plugins.
+=======
+52203
+Successfully changed project path to: C:/Users/Guillermo/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
+C:/Users/Guillermo/Documents/GitHub/HitOnTheBeat/HitOnTheBeat
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 111.89 ms, found 2 plugins.
+>>>>>>> guille
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2020.3.19f1 (68f137dc9bbe)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Resources/UnitySubsystems
@@ -67,6 +75,7 @@ Direct3D:
     Driver:   30.0.14.7196
 >>>>>>> jose
 Initialize mono
+<<<<<<< HEAD
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2020.3.19f1/Editor/Data/MonoBleedingEdge/etc'
@@ -116,10 +125,29 @@ Domain Reload Profiling:
 	ReloadAssembly (2393ms)
 		BeginReloadAssembly (76ms)
 >>>>>>> jose
+=======
+Mono path[0] = 'C:/Program Files/Unity/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = 'C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56224
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.003946 seconds.
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 78.84 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.223 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2223ms)
+		BeginReloadAssembly (142ms)
+>>>>>>> guille
 			ExecutionOrderSort (0ms)
 			DisableScriptedObjects (0ms)
 			BackupInstance (0ms)
 			ReleaseScriptingObjects (0ms)
+<<<<<<< HEAD
 			CreateAndSetChildDomain (1ms)
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -169,12 +197,30 @@ Domain Reload Profiling:
 				ProcessInitializeOnLoadAttributes (78ms)
 				ProcessInitializeOnLoadMethodAttributes (29ms)
 >>>>>>> jose
+=======
+			CreateAndSetChildDomain (2ms)
+		EndReloadAssembly (817ms)
+			LoadAssemblies (135ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (291ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (60ms)
+			SetupLoadedEditorAssemblies (320ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (7ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (79ms)
+				BeforeProcessingInitializeOnLoad (21ms)
+				ProcessInitializeOnLoadAttributes (153ms)
+				ProcessInitializeOnLoadMethodAttributes (60ms)
+>>>>>>> guille
 				AfterProcessingInitializeOnLoad (0ms)
 				EditorAssembliesLoaded (0ms)
 			ExecutionOrderSort2 (0ms)
 			AwakeInstancesAfterBackupRestoration (0ms)
 Platform modules already initialized, skipping
 Registering precompiled user dll's ...
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 Registered in 0.006906 seconds.
@@ -223,9 +269,34 @@ Domain Reload Profiling:
 			RebuildScriptCaches (81ms)
 			SetupLoadedEditorAssemblies (555ms)
 >>>>>>> Photon-Main
+=======
+Registered in 0.010769 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 105.77 ms, found 2 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.966 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2968ms)
+		BeginReloadAssembly (368ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (11ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (39ms)
+		EndReloadAssembly (2430ms)
+			LoadAssemblies (237ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (745ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (141ms)
+			SetupLoadedEditorAssemblies (1010ms)
+>>>>>>> guille
 				LogAssemblyErrors (0ms)
 				InitializePlatformSupportModulesInManaged (4ms)
 				SetLoadedEditorAssemblies (0ms)
+<<<<<<< HEAD
 <<<<<<< HEAD
 				RefreshPlugins (46ms)
 				BeforeProcessingInitializeOnLoad (82ms)
@@ -292,11 +363,27 @@ Worker process is ready to serve import requests
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.07 seconds
 Refreshing native plugins compatible for Editor in 0.49 ms, found 2 plugins.
 >>>>>>> jose
+=======
+				RefreshPlugins (106ms)
+				BeforeProcessingInitializeOnLoad (170ms)
+				ProcessInitializeOnLoadAttributes (676ms)
+				ProcessInitializeOnLoadMethodAttributes (30ms)
+				AfterProcessingInitializeOnLoad (18ms)
+				EditorAssembliesLoaded (1ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (15ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.19 seconds
+Refreshing native plugins compatible for Editor in 0.92 ms, found 2 plugins.
+>>>>>>> guille
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 2175 Unused Serialized files (Serialized files now loaded: 0)
 System memory in use before: 92.2 MB.
 System memory in use after: 92.3 MB.
 
+<<<<<<< HEAD
 Unloading 30 unused Assets to reduce memory usage. Loaded Objects now: 2611.
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -307,6 +394,10 @@ Total: 3.451400 ms (FindLiveObjects: 0.207000 ms CreateObjectMapping: 0.085200 m
 =======
 Total: 3.525100 ms (FindLiveObjects: 0.230400 ms CreateObjectMapping: 0.147300 ms MarkObjects: 3.074400 ms  DeleteObjects: 0.071700 ms)
 >>>>>>> jose
+=======
+Unloading 30 unused Assets to reduce memory usage. Loaded Objects now: 2604.
+Total: 7.170000 ms (FindLiveObjects: 0.373300 ms CreateObjectMapping: 0.180100 ms MarkObjects: 6.433700 ms  DeleteObjects: 0.181000 ms)
+>>>>>>> guille
 
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
@@ -321,6 +412,7 @@ AssetImportParameters requested are different than current active one (requested
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
 ========================================================================
 Received Import Request.
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   path: Assets/Scripts/Camera
@@ -868,6 +960,12 @@ Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 2166 Unused Serialized files (Serialized files now loaded: 0)
 System memory in use before: 109.1 MB.
 System memory in use after: 109.2 MB.
+=======
+  path: Assets/PunchPrincessAssets/PunchPrincessImport1.blend
+  artifactKey: Guid(fd68ff7b77b518245bb17947bb67bb70) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/PunchPrincessAssets/PunchPrincessImport1.blend using Guid(fd68ff7b77b518245bb17947bb67bb70) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7ee0cb5b7950112b24df7876efd61810') in 1.612466 seconds 
+  Import took 1.649581 seconds .
+>>>>>>> guille
 
 Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 2664.
 Total: 3.053100 ms (FindLiveObjects: 0.215800 ms CreateObjectMapping: 0.048600 ms MarkObjects: 2.770600 ms  DeleteObjects: 0.017200 ms)
