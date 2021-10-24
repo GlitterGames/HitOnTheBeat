@@ -1,5 +1,3 @@
-sceneSetups:
-- path: Assets/Scenes/vico.unity
-  isLoaded: 1
-  isActive: 1
-  isSubScene: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:7fd9793189c7493e8228f4e14aeed2ad7bdfa4659157bc0edefeda006d1c48c5
+size 90
