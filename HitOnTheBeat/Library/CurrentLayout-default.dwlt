@@ -19,9 +19,13 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Console
+  m_Title: Game
   m_RootView: {fileID: 6}
+<<<<<<< HEAD
   m_MinSize: {x: 875, y: 392}
+=======
+  m_MinSize: {x: 875, y: 542}
+>>>>>>> Photon-Main
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -42,6 +46,7 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
+<<<<<<< HEAD
     y: 30
     width: 1920
     height: 947
@@ -49,6 +54,18 @@ MonoBehaviour:
   m_MaxSize: {x: 12003, y: 8042}
   vertical: 0
   controlID: 171
+=======
+    y: 0
+    width: 351.2
+    height: 731
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 14}
+  m_Panes:
+  - {fileID: 14}
+  m_Selected: 0
+  m_LastSelected: 0
+>>>>>>> Photon-Main
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -64,6 +81,7 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 1368
     y: 0
     width: 552
@@ -75,6 +93,16 @@ MonoBehaviour:
   - {fileID: 14}
   m_Selected: 0
   m_LastSelected: 0
+=======
+    x: 0
+    y: 30
+    width: 1536
+    height: 731
+  m_MinSize: {x: 707, y: 492}
+  m_MaxSize: {x: 18002, y: 14042}
+  vertical: 0
+  controlID: 56
+>>>>>>> Photon-Main
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -90,6 +118,7 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 0
     y: 0
     width: 402
@@ -97,6 +126,15 @@ MonoBehaviour:
   m_MinSize: {x: 201, y: 221}
   m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 15}
+=======
+    x: 1260
+    y: 0
+    width: 276
+    height: 731
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 13}
+>>>>>>> Photon-Main
   m_Panes:
   - {fileID: 15}
   m_Selected: 0
@@ -111,12 +149,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ConsoleWindow
+  m_Name: ProjectBrowser
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
     serializedVersion: 2
     x: 0
+<<<<<<< HEAD
     y: 561
     width: 1368
     height: 386
@@ -128,6 +167,19 @@ MonoBehaviour:
   - {fileID: 18}
   m_Selected: 1
   m_LastSelected: 0
+=======
+    y: 459.2
+    width: 908.8
+    height: 271.8
+  m_MinSize: {x: 232, y: 271}
+  m_MaxSize: {x: 10002, y: 10021}
+  m_ActualView: {fileID: 12}
+  m_Panes:
+  - {fileID: 12}
+  - {fileID: 17}
+  m_Selected: 0
+  m_LastSelected: 1
+>>>>>>> Photon-Main
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -148,9 +200,15 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 1920
     height: 997
   m_MinSize: {x: 875, y: 300}
+=======
+    width: 1536
+    height: 781
+  m_MinSize: {x: 875, y: 542}
+>>>>>>> Photon-Main
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
   m_TopViewHeight: 30
@@ -197,8 +255,13 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
+<<<<<<< HEAD
     y: 977
     width: 1920
+=======
+    y: 761
+    width: 1536
+>>>>>>> Photon-Main
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -219,6 +282,7 @@ MonoBehaviour:
   - {fileID: 5}
   m_Position:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 0
     y: 0
     width: 1368
@@ -227,6 +291,16 @@ MonoBehaviour:
   m_MaxSize: {x: 8003, y: 8042}
   vertical: 1
   controlID: 145
+=======
+    x: 351.2
+    y: 0
+    width: 908.8
+    height: 731
+  m_MinSize: {x: 232, y: 492}
+  m_MaxSize: {x: 10002, y: 14042}
+  vertical: 1
+  controlID: 57
+>>>>>>> Photon-Main
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -269,8 +343,13 @@ MonoBehaviour:
     serializedVersion: 2
     x: 402
     y: 0
+<<<<<<< HEAD
     width: 966
     height: 561
+=======
+    width: 908.8
+    height: 459.2
+>>>>>>> Photon-Main
   m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 16}
@@ -361,10 +440,17 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 0
     y: 634
     width: 1368
     height: 365
+=======
+    x: 351.2
+    y: 532.8
+    width: 906.8
+    height: 250.79999
+>>>>>>> Photon-Main
   m_ViewDataDictionary: {fileID: 0}
   m_SearchFilter:
     m_NameFilter: 
@@ -391,6 +477,7 @@ MonoBehaviour:
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
+<<<<<<< HEAD
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 72420000
     m_LastClickedID: 17010
@@ -399,16 +486,30 @@ MonoBehaviour:
       m_UserAcceptedRename: 0
       m_Name: Scenes
       m_OriginalName: Scenes
+=======
+    scrollPos: {x: 0, y: 10}
+    m_SelectedIDs: 66460000
+    m_LastClickedID: 18022
+    m_ExpandedIDs: 00000000b0450000b2450000b4450000
+    m_RenameOverlay:
+      m_UserAcceptedRename: 0
+      m_Name: 
+      m_OriginalName: 
+>>>>>>> Photon-Main
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
+<<<<<<< HEAD
       m_UserData: 17012
+=======
+      m_UserData: 0
+>>>>>>> Photon-Main
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 5}
     m_SearchString: 
@@ -422,7 +523,11 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
+<<<<<<< HEAD
     m_ExpandedIDs: 000000006242000000ca9a3b
+=======
+    m_ExpandedIDs: 00000000b0450000b2450000b4450000
+>>>>>>> Photon-Main
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -498,10 +603,17 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 1368
     y: 73
     width: 551
     height: 926
+=======
+    x: 1260
+    y: 73.6
+    width: 275
+    height: 710
+>>>>>>> Photon-Main
   m_ViewDataDictionary: {fileID: 0}
   m_ObjectsLockedBeforeSerialization: []
   m_InstanceIDsLockedBeforeSerialization: 
@@ -536,16 +648,28 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
+<<<<<<< HEAD
     y: 73
     width: 401
     height: 540
+=======
+    y: 73.6
+    width: 350.2
+    height: 710
+>>>>>>> Photon-Main
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
       m_SelectedIDs: 
       m_LastClickedID: 0
       m_ExpandedIDs: 2409fffff809ffff180affffca0effff7c0fffff860fffff8a0fffff0c13ffffe013ffff0014ffffb218ffff6419ffff6e19ffff7219ffff3021fffffe21ffff1e22ffffd026ffff8227ffff8c27ffff9027ffff8e2bffffae2bffff6030ffff1231ffff1c31ffff2031ffff1635ffffd835fffff835ffffaa3affff5c3bffff663bffff6a3bffff5c3effff2e3fffff4e3fffff0044ffffb244ffffbc44ffffc044ffff2c48ffff1a49ffff3a49ffffec4dffff9e4effffa84effffac4effff8452ffffa452ffff5657ffff0858ffff1258ffff1658ffffb25bffff745cffff945cffffea5effff825fffff865fffff8a5ffffff05fffff1060ffffc264ffff7465ffff7e65ffff8265ffff5269ffff386affff586affff0a6fffffbc6fffffc66fffffca6fffff5673ffff1e74ffff3e74fffff078ffffa279ffffac79ffffb079ffffda7effff9c7fffffbc7fffff7884ffff3a85ffff5485ffff6885ffffd28dffff948effffb48effff6693ffff1894ffff2294ffff2694ffffa497ffff6e98ffff8e98ffff409dfffff29dfffffc9dffff009effffdca2ffffb0a3ffffd0a3ffff82a8ffff34a9ffff3ea9ffff42a9ffff88adffffa8adffff64b2ffff26b3ffff40b3ffff54b3fffff2b7ffff12b8ffffc8bcffff7ebdffff8cbdffff94bdffff8ac1ffff16c2ffff36c2ffffe2c6ffffe6c6fffff0c6fffffcc6ffff72ceffff8cd5ffffacd5ffff5edaffff10dbffff1adbffff1edbffff5edeffff64deffff32dfffff52dfffff02e4ffffb8e4ffffc6e4ffffcee4fffffee4fffff4e5ffff04e9ffff54f6ffff82f6ffff98f6ffffa4f6ffff6cf9fffff4ffffff9666000022740000cc780000587a000060cb030002d003008ed103005a140500661c05004c1f0500901f0500ee2305007a250500
+=======
+      m_SelectedIDs: 76460000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 54f0ffff4af1ffff62f1ffff10fbffff
+>>>>>>> Photon-Main
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -589,10 +713,17 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 402
     y: 73
     width: 964
     height: 540
+=======
+    x: 351.2
+    y: 73.6
+    width: 906.8
+    height: 438.2
+>>>>>>> Photon-Main
   m_ViewDataDictionary: {fileID: 0}
   m_ShowContextualTools: 0
   m_WindowGUID: cc27987af1a868c49b0894db9c0f5429
@@ -605,9 +736,15 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
+<<<<<<< HEAD
     m_Target: {x: 2.455821, y: -4.553763, z: 16.808033}
     speed: 2
     m_Value: {x: 2.455821, y: -4.553763, z: 16.808033}
+=======
+    m_Target: {x: 5.9629326, y: 2.2280617, z: 22.76645}
+    speed: 2
+    m_Value: {x: 5.9629326, y: 2.2280617, z: 22.76645}
+>>>>>>> Photon-Main
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -654,6 +791,7 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
+<<<<<<< HEAD
     m_Target: {x: 0.17922638, y: 0.034238663, z: -0.0062423577, w: 0.983197}
     speed: 2
     m_Value: {x: 0.17922553, y: 0.0342385, z: -0.006242328, w: 0.98319227}
@@ -661,6 +799,15 @@ MonoBehaviour:
     m_Target: 11.852887
     speed: 2
     m_Value: 11.852887
+=======
+    m_Target: {x: -0.118697494, y: -0.085730284, z: 0.01025258, w: -0.9892107}
+    speed: 2
+    m_Value: {x: -0.118692644, y: -0.08572678, z: 0.010252161, w: -0.98917025}
+  m_Size:
+    m_Target: 12.969065
+    speed: 2
+    m_Value: 12.969065
+>>>>>>> Photon-Main
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -705,10 +852,17 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 402
     y: 73
     width: 964
     height: 540
+=======
+    x: 351.2
+    y: 73.6
+    width: 906.8
+    height: 438.2
+>>>>>>> Photon-Main
   m_ViewDataDictionary: {fileID: 0}
   m_SerializedViewNames: []
   m_SerializedViewValues: []
@@ -752,16 +906,24 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
+<<<<<<< HEAD
       width: 964
       height: 519
     m_Scale: {x: 1, y: 1}
     m_Translation: {x: 482, y: 259.5}
+=======
+      width: 906.8
+      height: 417.2
+    m_Scale: {x: 0.67903644, y: 0.67903644}
+    m_Translation: {x: 453.39996, y: 208.6}
+>>>>>>> Photon-Main
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
+<<<<<<< HEAD
       x: -482
       y: -259.5
       width: 964
@@ -769,6 +931,15 @@ MonoBehaviour:
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_LastWindowPixelSize: {x: 964, y: 540}
+=======
+      x: -667.7108
+      y: -307.2
+      width: 1335.4216
+      height: 614.4
+    m_MinimalGUI: 1
+  m_defaultScale: 0.67903644
+  m_LastWindowPixelSize: {x: 1133.5, y: 547.75}
+>>>>>>> Photon-Main
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -794,10 +965,17 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
+<<<<<<< HEAD
     x: 0
     y: 634
     width: 1367
     height: 365
+=======
+    x: 351.2
+    y: 532.8
+    width: 906.8
+    height: 250.79999
+>>>>>>> Photon-Main
   m_ViewDataDictionary: {fileID: 0}
 --- !u!114 &19
 MonoBehaviour:

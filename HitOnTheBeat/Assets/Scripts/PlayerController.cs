@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
 using Photon.Pun;
 public class PlayerController : MonoBehaviourPun
 {
@@ -22,9 +23,9 @@ public class PlayerController : MonoBehaviourPun
 
     #region Atributes
     public Tipo tipoPersonaje = Tipo.BOXEADORA;
-    private Estado estadoActual = Estado.NORMAL;
-    public Floor f;
-    public Floor antf;
+    public Estado estadoActual = Estado.NORMAL;
+    public Floor actualFloor;
+    public Floor previousFloor;
     public FloorDetectorType typeAnt;
     public int fuerza;
     public GameObject playerAvatar;
@@ -32,23 +33,27 @@ public class PlayerController : MonoBehaviourPun
     private photonInstanciate photon;
     private Animator animator;
     public int id;
-    public bool Player=true;
     public float speed;
     public Vector3 newPos;
     #endregion
 
     // Start is called before the first frame update
+
     void Awake()
     {
-        typeAnt = FloorDetectorType.West;
         my_input = new InputController();
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
+    }
+
+    void Start()
+    {
+        typeAnt = FloorDetectorType.West;
 
         photon = GameObject.Find("@photonInstanciate").GetComponent<photonInstanciate>();
-        f = photon.f[(photonView.ViewID/1000) - 1];
-        transform.position = new Vector3(f.transform.position.x, 1.062631f, f.transform.position.z);
+        actualFloor = photon.f[(photonView.ViewID/2000)].GetComponent<Floor>();
+        transform.position = new Vector3(actualFloor.transform.position.x, 0.5f, actualFloor.transform.position.z);
         newPos = transform.position;
 
         animator = GetComponent<Animator>();
@@ -81,16 +86,15 @@ public class PlayerController : MonoBehaviourPun
     public void FixedUpdate()
     {
 
-        if (Player)
+        if (photonView.IsMine)
         {
-            Player = photonView.IsMine;
             id = (photonView.ViewID/1000) - 1;
         }
     }
     //Se ejecuta cuando se realiza click en la pantalla.
     private void OnClick()
     {
-        if (!Player) return;
+        if (!photonView.IsMine) return;
         if (transform.position != newPos) return;
         if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
 
@@ -103,36 +107,37 @@ public class PlayerController : MonoBehaviourPun
             Floor targetFloor = hit.transform.GetComponent<Floor>();
             if (targetFloor)
             {
+                Debug.Log("Click realizado");
                 Floor nextFloor = null;
 
-                if (targetFloor.Equals(f.getNorth_west()))
+                if (targetFloor.Equals(actualFloor.getNorth_west()))
                 {
-                    nextFloor = f.getNorth_west();
+                    nextFloor = actualFloor.getNorth_west();
                     typeAnt = FloorDetectorType.North_west;
                 }
-                else if (targetFloor.Equals(f.getNorth_east()))
+                else if (targetFloor.Equals(actualFloor.getNorth_east()))
                 {
-                    nextFloor = f.getNorth_east();
+                    nextFloor = actualFloor.getNorth_east();
                     typeAnt = FloorDetectorType.North_east;
                 }
-                else if (targetFloor.Equals(f.getWest()))
+                else if (targetFloor.Equals(actualFloor.getWest()))
                 {
-                    nextFloor = f.getWest();
+                    nextFloor = actualFloor.getWest();
                     typeAnt = FloorDetectorType.West;
                 }
-                else if (targetFloor.Equals(f.getEast()))
+                else if (targetFloor.Equals(actualFloor.getEast()))
                 {
-                    nextFloor = f.getEast();
+                    nextFloor = actualFloor.getEast();
                     typeAnt = FloorDetectorType.East;
                 }
-                else if (targetFloor.Equals(f.getSouth_west()))
+                else if (targetFloor.Equals(actualFloor.getSouth_west()))
                 {
-                    nextFloor = f.getSouth_west();
+                    nextFloor = actualFloor.getSouth_west();
                     typeAnt = FloorDetectorType.South_west;
                 }
-                else if (targetFloor.Equals(f.getSouth_east()))
+                else if (targetFloor.Equals(actualFloor.getSouth_east()))
                 {
-                    nextFloor = f.getSouth_east();
+                    nextFloor = actualFloor.getSouth_east();
                     typeAnt = FloorDetectorType.South_east;
                 }
 
@@ -149,31 +154,39 @@ public class PlayerController : MonoBehaviourPun
     #region Moviento
     public void mover(Floor nextFloor)
     {
-        setNormalColor();
-        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-        antf = f;
-        f = nextFloor;
-        setAreaColor();
+        setNormalColor(actualFloor);
+        this.photonView.RPC("MoverRPC", RpcTarget.AllViaServer, nextFloor.photonView.ViewID);
+        setAreaColor(nextFloor);
     }
+
+    [PunRPC]
+    private void MoverRPC(int id)
+    {
+        Floor nextFloor = PhotonView.Find(id).GetComponent<Floor>();
+        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
+        previousFloor = actualFloor;
+        actualFloor = nextFloor;
+    }
+
     public bool echar(FloorDetectorType type) {
-        Floor nextFloor = f.GetFloor(type);
+        Floor nextFloor = actualFloor.GetFloor(type);
         if (nextFloor != null)
         {
             Debug.Log("Me tenía que mover");
             transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-            antf = f;
-            f = nextFloor;
+            previousFloor = actualFloor;
+            actualFloor = nextFloor;
             return false;
         }
         else {
             Debug.Log("Me tengo que eliminar");
             //ENVIARLE A LA POSICION DE LA CASILLA "NULL" 
-            Floor inverse = f.GetInverseFloor(type);
-            Vector3 diferencia = new Vector3(f.GetFloorPosition().x- inverse.GetFloorPosition().x, 0f, f.GetFloorPosition().z-inverse.GetFloorPosition().z);
-            transform.position = new Vector3(f.GetFloorPosition().x+diferencia.x, transform.position.y, f.GetFloorPosition().z+diferencia.z);
+            Floor inverse = actualFloor.GetInverseFloor(type);
+            Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x- inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z-inverse.GetFloorPosition().z);
+            transform.position = new Vector3(actualFloor.GetFloorPosition().x+diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z+diferencia.z);
             //ANIMACION DE ELIMINAR AL JUEGADOR
-            eliminarJugador(f);
-            f = null;
+            eliminarJugador(actualFloor);
+            actualFloor = null;
             return true;
         }
     }
@@ -184,7 +197,7 @@ public class PlayerController : MonoBehaviourPun
     #endregion
 
     #region Colores
-    private void setNormalColor() {
+    private void setNormalColor(Floor f) {
         f.setColor(f.getColorN());
         Floor[] casillasAdy = f.getAdyacentes();
         for (int i = 0; i < casillasAdy.Length; i++)
@@ -193,7 +206,7 @@ public class PlayerController : MonoBehaviourPun
             if (floor != null) floor.setColor(floor.getColorN());
         }
     }
-    private void setAreaColor()
+    private void setAreaColor(Floor f)
     {
         f.setColor(GameManager.casillaAct);
         Floor[] casillasAdy = f.getAdyacentes();
@@ -205,7 +218,7 @@ public class PlayerController : MonoBehaviourPun
 
     private void SetRangeColor(HashSet<Floor> casillas)
     {
-        f.setColor(GameManager.casillaAct);
+        actualFloor.setColor(GameManager.casillaAct);
 
         foreach (Floor floor in casillas)
         {
@@ -232,7 +245,7 @@ public class PlayerController : MonoBehaviourPun
     private HashSet<Floor> GetFloorAreaRange()
     {
         HashSet<Floor> casillas = new HashSet<Floor>();
-        Floor[] casillasAdy = f.getAdyacentes();
+        Floor[] casillasAdy = actualFloor.getAdyacentes();
         foreach (Floor floorAdy in casillasAdy)
         {
             Floor[] casillasArea = floorAdy.getAdyacentes();

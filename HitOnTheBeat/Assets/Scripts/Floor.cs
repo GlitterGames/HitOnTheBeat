@@ -18,23 +18,16 @@ public class Floor : MonoBehaviour
         {
             case FloorDetectorType.East:
                 return adyacentes[0];
-                break;
             case FloorDetectorType.West:
                 return adyacentes[1];
-                break;
             case FloorDetectorType.North_east:
                 return adyacentes[2];
-                break;
             case FloorDetectorType.North_west:
                 return adyacentes[3];
-                break;
             case FloorDetectorType.South_east:
                 return adyacentes[4];
-                break;
             case FloorDetectorType.South_west:
                 return adyacentes[5];
-                break;
-
         }
         return null;
     }
@@ -44,23 +37,16 @@ public class Floor : MonoBehaviour
         {
             case FloorDetectorType.East:
                 return adyacentes[1];
-                break;
             case FloorDetectorType.West:
                 return adyacentes[0];
-                break;
             case FloorDetectorType.North_east:
                 return adyacentes[5];
-                break;
             case FloorDetectorType.North_west:
                 return adyacentes[4];
-                break;
             case FloorDetectorType.South_east:
                 return adyacentes[3];
-                break;
             case FloorDetectorType.South_west:
                 return adyacentes[2];
-                break;
-
         }
         return null;
     }

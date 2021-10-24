@@ -14,7 +14,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/eva 1.unity
     guid: 96ec4b42f8cce3240bcf04e5737ff680
-  - enabled: 1
-    path: Assets/Scenes/eva - copia.unity
-    guid: 5291ca369428ab9478e18bee6c11c820
   m_configObjects: {}

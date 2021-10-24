@@ -5,7 +5,7 @@ using UnityEngine;
 public class FloorDetector : MonoBehaviour
 {
     public FloorDetectorType detectorType;
-    Floor f;
+    public Floor f;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,7 +48,7 @@ public class FloorDetector : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Floor floor = other.GetComponent<Floor>();
-        
+        if(!f) f = GetComponentInParent<Floor>();
         if (floor != null)
         {
             switch (detectorType)
@@ -78,7 +78,7 @@ public class FloorDetector : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Floor floor = other.GetComponent<Floor>();
-
+        if (!f) f = GetComponentInParent<Floor>();
         if (floor != null)
         {
             switch (detectorType)
@@ -102,7 +102,6 @@ public class FloorDetector : MonoBehaviour
                     f.setSouth_west(null);
                     break;
             }
-
         }
     }
 }

@@ -39,6 +39,12 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - SetCasillas
+  - SetJugadores
+  - SetFloorRPC
+  - SetPlayerRPC
+  - MoverRPC
+  - SetCasillaRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
