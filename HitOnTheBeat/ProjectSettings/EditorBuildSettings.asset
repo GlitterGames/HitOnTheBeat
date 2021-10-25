@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/vico.unity
+    path: Assets/Scenes/MainMenu.unity
     guid: 9e46e762b29af9247a983cd76793a59d
   - enabled: 1
-    path: Assets/Scenes/VicoMenu.unity
+    path: Assets/Scenes/Lobby.unity
     guid: b519b2e74441b0344a12ade54524360e
   - enabled: 1
-    path: Assets/Scenes/eva 1.unity
-    guid: 96ec4b42f8cce3240bcf04e5737ff680
+    path: Assets/Scenes/Juego.unity
+    guid: 1e5a144506af3c8478fdf47477555d71
   m_configObjects: {}

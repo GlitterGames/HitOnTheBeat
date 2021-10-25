@@ -5,11 +5,10 @@ using Photon.Pun;
 
 public class photonInstanciate : MonoBehaviourPun
 {
-    private const int PLAYERS = 2;
+    private const int MAX_PLAYERS = 4;
     public GameObject casilla;
     public GameObject playerAvatar;
-    public Floor[] f = new Floor[PLAYERS];
-    Vector3[] positions = new Vector3[PLAYERS];
+    public Floor[] f = new Floor[MAX_PLAYERS];
 
     // Start is called before the first frame update
     void Awake()
@@ -45,13 +44,37 @@ public class photonInstanciate : MonoBehaviourPun
                     photonView.RPC("SetCasillaRPC", RpcTarget.All, t.localScale, i, go.GetPhotonView().ViewID);
                     f[1] = go.GetComponent<Floor>();
                 }
+                else if (t.gameObject.name == "hexagon3")
+                {
+                    GameObject go = PhotonNetwork.Instantiate(casilla.name, t.position, Quaternion.identity);
+                    photonView.RPC("SetCasillaRPC", RpcTarget.All, t.localScale, i, go.GetPhotonView().ViewID);
+                    f[2] = go.GetComponent<Floor>();
+                }
+                else if (t.gameObject.name == "hexagon4")
+                {
+                    GameObject go = PhotonNetwork.Instantiate(casilla.name, t.position, Quaternion.identity);
+                    photonView.RPC("SetCasillaRPC", RpcTarget.All, t.localScale, i, go.GetPhotonView().ViewID);
+                    f[3] = go.GetComponent<Floor>();
+                }
             }
         }
 
-        positions[0] = new Vector3 (f[0].transform.position.x, 0, f[0].transform.position.z);
-        positions[1] = new Vector3 (f[1].transform.position.x, 0, f[1].transform.position.z);
-        GameObject g = PhotonNetwork.Instantiate(this.playerAvatar.name, positions[0], Quaternion.identity);
-        photonView.RPC("SetPlayerRPC", RpcTarget.Others, f[0].gameObject.GetPhotonView().ViewID, f[1].gameObject.GetPhotonView().ViewID);
+        Vector3 pos = new Vector3 (f[0].transform.position.x, 0.5f, f[0].transform.position.z);
+
+        //instanciamos el main character.
+
+        Photon.Realtime.Player[] jugadores = PhotonNetwork.PlayerList;
+
+        GameObject g = PhotonNetwork.Instantiate(this.playerAvatar.name, pos, Quaternion.identity);
+        g.GetComponent<PlayerController>().typeAnt = FloorDetectorType.West;
+        g.GetComponent<PlayerController>().actualFloor = f[0];
+        g.GetComponent<PlayerController>().newPos = g.transform.position;
+
+        //Puede fallar.
+        for (int i = 1; i < jugadores.Length; i++)
+        {
+            photonView.RPC("SetPlayerRPC", jugadores[i], f[i].gameObject.GetPhotonView().ViewID);
+        }
     }
 
     [PunRPC]
@@ -63,11 +86,15 @@ public class photonInstanciate : MonoBehaviourPun
         f.row = row;
     }
 
+    //Instanciamos otros jugadores.
     [PunRPC]
-    public void SetPlayerRPC(int f1, int f2)
+    public void SetPlayerRPC(int fa)
     {
-        GameObject go = PhotonNetwork.Instantiate(this.playerAvatar.name, positions[1], Quaternion.identity);
-        f[0] = PhotonView.Find(f1).GetComponent<Floor>();
-        f[1] = PhotonView.Find(f2).GetComponent<Floor>();
+        Floor f = PhotonView.Find(fa).GetComponent<Floor>();
+        Vector3 pos = new Vector3(f.transform.position.x, 0.5f, f.transform.position.z);
+        GameObject go = PhotonNetwork.Instantiate(this.playerAvatar.name, pos, Quaternion.identity);
+        go.GetComponent<PlayerController>().typeAnt = FloorDetectorType.West;
+        go.GetComponent<PlayerController>().actualFloor = f;
+        go.GetComponent<PlayerController>().newPos = transform.position;
     }
 }

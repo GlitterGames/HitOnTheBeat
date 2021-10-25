@@ -32,7 +32,6 @@ public class PlayerController : MonoBehaviourPun
     private InputController my_input;
     private photonInstanciate photon;
     private Animator animator;
-    public int id;
     public float speed;
     public Vector3 newPos;
     #endregion
@@ -49,13 +48,6 @@ public class PlayerController : MonoBehaviourPun
 
     void Start()
     {
-        typeAnt = FloorDetectorType.West;
-
-        photon = GameObject.Find("@photonInstanciate").GetComponent<photonInstanciate>();
-        actualFloor = photon.f[(photonView.ViewID/2000)].GetComponent<Floor>();
-        transform.position = new Vector3(actualFloor.transform.position.x, 0.5f, actualFloor.transform.position.z);
-        newPos = transform.position;
-
         animator = GetComponent<Animator>();
         animator.SetBool("IsAttacking", false);
         animator.SetBool("IsJumping", false);
@@ -74,23 +66,17 @@ public class PlayerController : MonoBehaviourPun
     }
 
     void Update()
-        {
-            if(transform.position != newPos)
-            {
-                float step = speed * Time.deltaTime;
-                transform.position = Vector3.MoveTowards(transform.position, newPos, step);
-                transform.LookAt(newPos);
-            }
-        }
-
-    public void FixedUpdate()
     {
+        if (!photonView.IsMine) return;
 
-        if (photonView.IsMine)
+        if (transform.position != newPos)
         {
-            id = (photonView.ViewID/1000) - 1;
+            float step = speed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, newPos, step);
+            transform.LookAt(newPos);
         }
     }
+
     //Se ejecuta cuando se realiza click en la pantalla.
     private void OnClick()
     {
@@ -156,6 +142,7 @@ public class PlayerController : MonoBehaviourPun
     {
         setNormalColor(actualFloor);
         this.photonView.RPC("MoverRPC", RpcTarget.AllViaServer, nextFloor.photonView.ViewID);
+        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
         setAreaColor(nextFloor);
     }
 
@@ -163,7 +150,6 @@ public class PlayerController : MonoBehaviourPun
     private void MoverRPC(int id)
     {
         Floor nextFloor = PhotonView.Find(id).GetComponent<Floor>();
-        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
         previousFloor = actualFloor;
         actualFloor = nextFloor;
     }

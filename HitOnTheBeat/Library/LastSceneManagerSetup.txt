@@ -1,13 +1,5 @@
 sceneSetups:
-<<<<<<< HEAD
-<<<<<<< HEAD
-- path: Assets/Scenes/vico.unity
-=======
-- path: Assets/Scenes/eva 1.unity
->>>>>>> jose
-=======
-- path: Assets/Guille.unity
->>>>>>> guille
+- path: Assets/Scenes/MainMenu.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

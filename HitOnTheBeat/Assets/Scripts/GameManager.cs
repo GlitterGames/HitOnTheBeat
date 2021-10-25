@@ -37,8 +37,13 @@ public class GameManager : MonoBehaviourPun
     void Update()
     {
         if(!cargaLista) initCasillas();
+    }
+
+    void FixedUpdate()
+    {
         if (PhotonNetwork.IsMasterClient) colision();
     }
+
     private void initColor() {
         color.Add(Color.black);
         color.Add(Color.grey);

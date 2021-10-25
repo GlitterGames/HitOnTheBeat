@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
+using Photon.Pun;
 
-public class Floor : MonoBehaviour
+public class Floor : MonoBehaviourPun
 {
     private Renderer r;
     private Color normal;
     #region Atributes 
     private static int CURRENT_ID = 0;
     public int id;
-    public Floor south_west;
     Floor[] adyacentes = new Floor[6];
     public int row;
 
@@ -105,7 +106,6 @@ public class Floor : MonoBehaviour
     void Awake()
     {
         r = this.GetComponentInChildren<Renderer>();
-        //id = CURRENT_ID++;
     }
 
     // Update is called once per frame
