@@ -222,9 +222,11 @@ public class PlayerController : MonoBehaviourPun
 
     public void PerformUltimate()
     {
-        switch ()
+        switch (tipoPersonaje)
         {
+            case Tipo.BOMBA:
 
+                break;
         }
     }*/
 
