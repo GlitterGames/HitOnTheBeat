@@ -5,11 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - Suelo
+  - Canvas
+  - Activante
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Casilla
   - Water
   - UI
   - 

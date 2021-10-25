@@ -9,10 +9,9 @@ public class Floor : MonoBehaviourPun
     private Renderer r;
     private Color normal;
     #region Atributes 
-    private static int CURRENT_ID = 0;
-    public int id;
-    Floor[] adyacentes = new Floor[6];
+    public int index;
     public int row;
+    public Floor[] adyacentes = new Floor[6];
 
     public Floor GetFloor(FloorDetectorType type) {
         switch (type)
@@ -140,7 +139,7 @@ public class Floor : MonoBehaviourPun
 
         Floor otro = (Floor)other;
 
-        if (id == otro.id) return true;
+        if (index == otro.index && row == otro.row) return true;
         else return false;
     }
 }

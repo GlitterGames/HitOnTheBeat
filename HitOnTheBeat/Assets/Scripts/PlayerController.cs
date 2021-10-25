@@ -30,7 +30,8 @@ public class PlayerController : MonoBehaviourPun
     public int fuerza;
     public GameObject playerAvatar;
     private InputController my_input;
-    private photonInstanciate photon;
+    private PhotonInstanciate photon;
+    private GameManager gameManager;
     private Animator animator;
     public float speed;
     public Vector3 newPos;
@@ -44,11 +45,17 @@ public class PlayerController : MonoBehaviourPun
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
-    }
 
-    void Start()
-    {
+        typeAnt = FloorDetectorType.West;
+
+        //Los viewId de Cada jugador se caracterizan por el número 1000 así sabemos de quien es este objeto.
+        actualFloor = FindObjectOfType<PhotonInstanciate>().f[(photonView.ViewID-1000)/1000];
+        previousFloor = actualFloor;
+        newPos = transform.position;
+
         animator = GetComponent<Animator>();
+        gameManager = FindObjectOfType<GameManager>();
+
         animator.SetBool("IsAttacking", false);
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsSpecial", false);
@@ -67,8 +74,6 @@ public class PlayerController : MonoBehaviourPun
 
     void Update()
     {
-        if (!photonView.IsMine) return;
-
         if (transform.position != newPos)
         {
             float step = speed * Time.deltaTime;
@@ -93,7 +98,6 @@ public class PlayerController : MonoBehaviourPun
             Floor targetFloor = hit.transform.GetComponent<Floor>();
             if (targetFloor)
             {
-                Debug.Log("Click realizado");
                 Floor nextFloor = null;
 
                 if (targetFloor.Equals(actualFloor.getNorth_west()))
@@ -127,31 +131,36 @@ public class PlayerController : MonoBehaviourPun
                     typeAnt = FloorDetectorType.South_east;
                 }
 
-                
                 //PERFORM MOVEMENT
                 if (nextFloor != null)
                 {
-                    mover(nextFloor);
+                    Mover(nextFloor);
                 }
             }
         }
     }
 
     #region Moviento
-    public void mover(Floor nextFloor)
+    public void Mover(Floor nextFloor)
     {
-        setNormalColor(actualFloor);
-        this.photonView.RPC("MoverRPC", RpcTarget.AllViaServer, nextFloor.photonView.ViewID);
-        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-        setAreaColor(nextFloor);
+        photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+        photonView.RPC("MoverRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
     }
 
     [PunRPC]
-    private void MoverRPC(int id)
+    private void MoverRPC(int row, int index)
     {
-        Floor nextFloor = PhotonView.Find(id).GetComponent<Floor>();
+        Floor nextFloor = gameManager.casillas[row][index];
+        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
         previousFloor = actualFloor;
         actualFloor = nextFloor;
+    }
+
+    [PunRPC]
+    private void ColorearRPC(int row, int index)
+    {
+        SetNormalColor(actualFloor);
+       SetAreaColor(gameManager.casillas[row][index]);
     }
 
     public bool echar(FloorDetectorType type) {
@@ -176,6 +185,13 @@ public class PlayerController : MonoBehaviourPun
             return true;
         }
     }
+
+    [PunRPC]
+    private void EcharRPC(int row, int index)
+    {
+
+    }
+
     public void eliminarJugador(Floor nextFloor)
     {
         Debug.Log("Me sali de la pista");
@@ -183,7 +199,7 @@ public class PlayerController : MonoBehaviourPun
     #endregion
 
     #region Colores
-    private void setNormalColor(Floor f) {
+    private void SetNormalColor(Floor f) {
         f.setColor(f.getColorN());
         Floor[] casillasAdy = f.getAdyacentes();
         for (int i = 0; i < casillasAdy.Length; i++)
@@ -192,23 +208,13 @@ public class PlayerController : MonoBehaviourPun
             if (floor != null) floor.setColor(floor.getColorN());
         }
     }
-    private void setAreaColor(Floor f)
+    private void SetAreaColor(Floor f)
     {
         f.setColor(GameManager.casillaAct);
         Floor[] casillasAdy = f.getAdyacentes();
         for (int i = 0; i < casillasAdy.Length; i++) {
             Floor floor = casillasAdy[i];
             if (floor != null) floor.setColor(GameManager.casillaAdy);
-        }
-    }
-
-    private void SetRangeColor(HashSet<Floor> casillas)
-    {
-        actualFloor.setColor(GameManager.casillaAct);
-
-        foreach (Floor floor in casillas)
-        {
-            if (floor != null) floor.setColor(GameManager.casillaAttack);
         }
     }
     #endregion
@@ -244,5 +250,16 @@ public class PlayerController : MonoBehaviourPun
         }
         return casillas;
     }
+
+    private void SetRangeColor(HashSet<Floor> casillas)
+    {
+        actualFloor.setColor(GameManager.casillaAct);
+
+        foreach (Floor floor in casillas)
+        {
+            if (floor != null) floor.setColor(GameManager.casillaAttack);
+        }
+    }
+
     #endregion
 }
