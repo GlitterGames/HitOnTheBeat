@@ -417,7 +417,6 @@ MonoBehaviour:
   typeAnt: 0
   fuerza: 10
   playerAvatar: {fileID: 1784523174532803008}
-  id: 0
   speed: 2
   newPos: {x: 0, y: 0, z: 0}
 --- !u!1 &2161472409461212526

@@ -8,7 +8,7 @@ public class photonInstanciate : MonoBehaviourPun
     private const int MAX_PLAYERS = 4;
     public GameObject casilla;
     public GameObject playerAvatar;
-    public Floor[] f = new Floor[MAX_PLAYERS];
+    private Floor[] f = new Floor[MAX_PLAYERS];
 
     // Start is called before the first frame update
     void Awake()
