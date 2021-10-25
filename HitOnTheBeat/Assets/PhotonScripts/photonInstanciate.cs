@@ -8,10 +8,10 @@ public class photonInstanciate : MonoBehaviourPun
     private const int MAX_PLAYERS = 4;
     public GameObject casilla;
     public GameObject playerAvatar;
-    private Floor[] f = new Floor[MAX_PLAYERS];
+    public Floor[] f = new Floor[MAX_PLAYERS];
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
@@ -66,11 +66,9 @@ public class photonInstanciate : MonoBehaviourPun
         Photon.Realtime.Player[] jugadores = PhotonNetwork.PlayerList;
 
         GameObject g = PhotonNetwork.Instantiate(this.playerAvatar.name, pos, Quaternion.identity);
-        g.GetComponent<PlayerController>().typeAnt = FloorDetectorType.West;
-        g.GetComponent<PlayerController>().actualFloor = f[0];
-        g.GetComponent<PlayerController>().newPos = g.transform.position;
+        FindObjectOfType<VirtualCameraController>().SetTarget(g.transform);
+        photonView.RPC("SetPlayerDataRPC", RpcTarget.All, f[0].gameObject.GetPhotonView().ViewID, g.GetPhotonView().ViewID);
 
-        //Puede fallar.
         for (int i = 1; i < jugadores.Length; i++)
         {
             photonView.RPC("SetPlayerRPC", jugadores[i], f[i].gameObject.GetPhotonView().ViewID);
@@ -92,9 +90,18 @@ public class photonInstanciate : MonoBehaviourPun
     {
         Floor f = PhotonView.Find(fa).GetComponent<Floor>();
         Vector3 pos = new Vector3(f.transform.position.x, 0.5f, f.transform.position.z);
-        GameObject go = PhotonNetwork.Instantiate(this.playerAvatar.name, pos, Quaternion.identity);
+        GameObject go = PhotonNetwork.Instantiate(playerAvatar.name, pos, Quaternion.identity);
+        FindObjectOfType<VirtualCameraController>().SetTarget(go.transform);
+        photonView.RPC("SetPlayerDataRPC", RpcTarget.All, fa, go.GetPhotonView().ViewID);
+    }
+
+    [PunRPC]
+    public void SetPlayerDataRPC(int fa, int gob)
+    {
+        Floor f = PhotonView.Find(fa).GetComponent<Floor>();
+        GameObject go = PhotonView.Find(gob).gameObject;
         go.GetComponent<PlayerController>().typeAnt = FloorDetectorType.West;
         go.GetComponent<PlayerController>().actualFloor = f;
-        go.GetComponent<PlayerController>().newPos = transform.position;
+        go.GetComponent<PlayerController>().newPos = go.transform.position;
     }
 }

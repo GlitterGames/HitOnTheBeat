@@ -9,6 +9,7 @@ public class VirtualCameraController : MonoBehaviour
     public float mainDistance = 400f;
     public float mainAngle = 30f;
     private CinemachineTransposer transposer;
+    private CinemachineTargetGroup target;
     private bool isMoving = false;
     private Vector3 auxPos;
     private float startTime;
@@ -19,19 +20,20 @@ public class VirtualCameraController : MonoBehaviour
     public UnityEvent atEndEvent;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         transposer = GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineTransposer>();
-        setPos(mainDistance, mainAngle, 0, 0);
+        target = FindObjectOfType<CinemachineTargetGroup>();
+        SetPos(mainDistance, mainAngle, 0, 0);
     }
 
-    public void setPos(float d, float r, float timeToGet, float delay)
+    public void SetPos(float d, float r, float timeToGet, float delay)
     {
         StopAllCoroutines();
         if (timeToGet <= 0 && isMoving == false)
         {
             transposer.m_FollowOffset.y = d * Mathf.Sin(Mathf.Deg2Rad * r);
-            transposer.m_FollowOffset.z = -d * Mathf.Cos(Mathf.Deg2Rad * r);
+            transposer.m_FollowOffset.z = d * Mathf.Cos(Mathf.Deg2Rad * r);
         }
         else
         {
@@ -59,20 +61,42 @@ public class VirtualCameraController : MonoBehaviour
         isMoving = false;
         atEndEvent.Invoke();
     }
-    public bool getMovingState()
+    public bool GetMovingState()
     {
         return isMoving;
     }
 
-    public void setMovingState(bool state)
+    public void SetMovingState(bool state)
     {
         isMoving = state;
     }
 
-    public void eraseAllEvents()
+    public void EraseAllEvents()
     {
         atStartEvent.RemoveAllListeners();
         delayEvent.RemoveAllListeners();
         atEndEvent.RemoveAllListeners();
+    }
+
+    public void SetTarget(Transform[] transform)
+    {
+        List<CinemachineTargetGroup.Target> targets = new List<CinemachineTargetGroup.Target>();
+        foreach(Transform t in transform)
+        {
+            CinemachineTargetGroup.Target my_target = new CinemachineTargetGroup.Target();
+            my_target.target = t;
+            my_target.weight = 1f;
+            targets.Add(my_target);
+        }
+        target.m_Targets = targets.ToArray();
+    }
+    public void SetTarget(Transform transform)
+    {
+        CinemachineTargetGroup.Target[] targets = new CinemachineTargetGroup.Target[1];
+        CinemachineTargetGroup.Target my_target = new CinemachineTargetGroup.Target();
+        my_target.target = transform;
+        my_target.weight = 1f;
+        targets[0] = my_target;
+        target.m_Targets = targets;
     }
 }

@@ -13,16 +13,11 @@ public class Juego : MonoBehaviour
     public GameObject myPrefab;
     public GameObject canvasObject;
 
-
-
-
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
         InvokeRepeating("InvocarFlecha", tiempo, retraso);
-      
-       
     }
 
     // Update is called once per frame
@@ -47,8 +42,6 @@ public class Juego : MonoBehaviour
         // myPrefab.transform.SetParent(canvasObject.transform, false);
         //myPrefab.transform.localScale = new Vector3(1, 1, 1);
         nuevaFlecha.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, false);
-
-
 
     }
 }
