@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
-using UnityEngine.InputSystem;
-
 public class PlayerController : MonoBehaviourPun
 {
     #region Enumerables
@@ -165,33 +163,56 @@ public class PlayerController : MonoBehaviourPun
        SetAreaColor(gameManager.casillas[row][index]);
     }
 
-    public bool echar(FloorDetectorType type) {
-        Floor nextFloor = actualFloor.GetFloor(type);
-        if (nextFloor != null)
+    public bool echar(FloorDetectorType type, int max)
+    {
+        bool echado = false;
+        Vector3 pos = Vector3.zero;
+        Floor nextFloor = null;
+        for (int i = 0; i < max && !echado; i++)
         {
-            Debug.Log("Me tenía que mover");
-            transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-            previousFloor = actualFloor;
-            actualFloor = nextFloor;
-            return false;
+            nextFloor = actualFloor.GetFloor(type);
+            if (nextFloor != null)
+            {
+                previousFloor = actualFloor;
+                actualFloor = nextFloor;
+                echado = false;
+            }
+            else
+            {
+                //ENVIARLE A LA POSICION DE LA CASILLA "NULL" 
+                Floor inverse = actualFloor.GetInverseFloor(type);
+                Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x - inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z - inverse.GetFloorPosition().z);
+                pos = new Vector3(actualFloor.GetFloorPosition().x + diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z + diferencia.z);
+                echado = true;
+            }
         }
-        else {
-            Debug.Log("Me tengo que eliminar");
-            //ENVIARLE A LA POSICION DE LA CASILLA "NULL" 
-            Floor inverse = actualFloor.GetInverseFloor(type);
-            Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x- inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z-inverse.GetFloorPosition().z);
-            transform.position = new Vector3(actualFloor.GetFloorPosition().x+diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z+diferencia.z);
-            //ANIMACION DE ELIMINAR AL JUEGADOR
-            eliminarJugador(actualFloor);
-            actualFloor = null;
-            return true;
+        if (!echado)
+        {
+            photonView.RPC("EcharRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
+        else
+        {
+            photonView.RPC("EcharMapaRPC", RpcTarget.AllViaServer, pos.x, pos.z);
+        }
+
+        return echado;
     }
 
     [PunRPC]
     private void EcharRPC(int row, int index)
     {
+        Floor nextFloor = gameManager.casillas[row][index];
+        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
+        previousFloor = actualFloor;
+        actualFloor = nextFloor;
+    }
 
+    [PunRPC]
+    private void EcharMapaRPC(float x, float z)
+    {
+        newPos = new Vector3(x, transform.position.y, z);
+        previousFloor = null;
+        actualFloor = null;
     }
 
     public void eliminarJugador(Floor nextFloor)

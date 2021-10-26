@@ -90,26 +90,30 @@ public class GameManager : MonoBehaviourPun
         
         return casillas[i][j].GetFloorPosition() + new Vector3(0,1.0f,0);
     }
-    
-    private void PerformColision(){
+
+    private void PerformColision()
+    {
         HashSet<GameObject> players = PhotonNetwork.FindGameObjectsWithComponent(typeof(PlayerController));
         List<PlayerController> jugadores = new List<PlayerController>();
-        foreach(GameObject go in players)
+        foreach (GameObject go in players)
         {
             jugadores.Add(go.GetComponent<PlayerController>());
         }
-        for (int k = 0; k<jugadores.Count; k++) {
-            for (int i = k+1; i < jugadores.Count; i++) {
+        for (int k = 0; k < jugadores.Count; k++)
+        {
+            for (int i = k + 1; i < jugadores.Count; i++)
+            {
                 if (jugadores[k].actualFloor.Equals(jugadores[i].actualFloor))
                 {
+                    jugadores[i].fuerza = 0;
+                    jugadores[k].fuerza = 30;
+
                     if (jugadores[k].fuerza == jugadores[i].fuerza)
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        Debug.Log("Sin fuerza");
                         jugadores[k].Mover(jugadores[k].previousFloor);
                         jugadores[i].Mover(jugadores[i].previousFloor);
 
-                        
                         //PIERDEN FUERZA
                         jugadores[k].fuerza = 0;
                         jugadores[i].fuerza = 0;
@@ -117,38 +121,36 @@ public class GameManager : MonoBehaviourPun
                     else if (jugadores[k].fuerza > jugadores[i].fuerza)
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                         Debug.Log("Cikn fuerza");
-                        jugadores[k].Mover(jugadores[k].previousFloor);
-                       
+                        jugadores[k].Mover(jugadores[k].actualFloor); //SE MUEVE EL JUGADOR AL NEXT FLOOR
+
                         //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
                         int max = jugadores[k].fuerza - jugadores[i].fuerza;
                         jugadores[k].fuerza = 0;
                         jugadores[i].fuerza = 0;
                         //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
-                        bool echado = false;
-                        for (int j = 0; j < max && !echado; j++)
+                        bool echado = jugadores[i].echar(jugadores[k].typeAnt, max);
+                        if (echado)
                         {
-                            echado = jugadores[i].echar(jugadores[k].typeAnt);
+                            jugadores.Remove(jugadores[i]);
+                            i--;
                         }
-                        if (echado) jugadores.Remove(jugadores[i]);
                     }
                     else
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        Debug.Log("YXCTFURVYGIHBNJ");
-                        jugadores[i].Mover(jugadores[i].previousFloor);
-                        
+                        jugadores[i].Mover(jugadores[i].actualFloor); //SE MUEVE EL JUGADOR AL NEXT FLOOR
+
                         //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
                         int max = jugadores[i].fuerza - jugadores[k].fuerza;
                         jugadores[k].fuerza = 0;
                         jugadores[i].fuerza = 0;
                         //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
-                        bool echado = false;
-                        for (int j = 0; j < max && !echado; j++)
+                        bool echado = jugadores[k].echar(jugadores[i].typeAnt, max);
+                        if (echado)
                         {
-                            echado = jugadores[k].echar(jugadores[i].typeAnt);
+                            jugadores.Remove(jugadores[k]);
+                            i = k + 1;
                         }
-                        if (echado) {jugadores.Remove(jugadores[k]); i = k + 1;}
                     }
                 }
             }

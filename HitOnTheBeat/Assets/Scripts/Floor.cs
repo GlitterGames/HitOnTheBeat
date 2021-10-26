@@ -147,4 +147,9 @@ public class Floor : MonoBehaviour
         if (row == 0) return 0;
         else return row * (row * 6) + index - 5;
     }
+
+    public override string ToString()
+    {
+        return "CASILLA[Anillo: " + row + ". Indice: " + index + ".]"; 
+    }
 }
