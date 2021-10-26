@@ -6,14 +6,23 @@ using Photon.Pun;
 
 public class GameManager : MonoBehaviourPun
 {
+    #region Estructuras
+    public struct Movement
+    {
+        public PlayerController player;
+        public Floor nextFloor;
+    }
+    #endregion
+
     #region Variables
-    const int NUM_ANILLOS = 6;
-    const int DESTROY_TIME = 5;
     public static Color casillaAct = Color.blue;
     public static Color casillaAdy = Color.cyan;
     public static Color casillaAttack = Color.yellow;
-    public List<Floor[]> casillas = new List<Floor[]>();
     public List<Color> color = new List<Color>();
+
+    public List<Floor[]> casillas = new List<Floor[]>();
+    public List<PlayerController> jugadores = new List<PlayerController>();
+    public Queue<Movement> movimientos = new Queue<Movement>();
     #endregion
 
     void Awake()
@@ -34,15 +43,11 @@ public class GameManager : MonoBehaviourPun
         InitCasillas();
     }
 
-    // Update is called once per frame
-    void Update()
+    //Se ejecuta cada vez que comienza un nuevo Beat.
+    public void DoBeatActions()
     {
-
-    }
-
-    void FixedUpdate()
-    {
-        if (PhotonNetwork.IsMasterClient) PerformColision();
+        PerformMovements();
+        PerformColision();
     }
 
     private void InitColor() {
@@ -53,6 +58,24 @@ public class GameManager : MonoBehaviourPun
         color.Add(Color.red);
         color.Add(Color.red);
     }
+    public void UpdatePlayers()
+    {
+        jugadores.Clear();
+        HashSet<GameObject> players = PhotonNetwork.FindGameObjectsWithComponent(typeof(PlayerController));
+        foreach (GameObject go in players)
+        {
+            jugadores.Add(go.GetComponent<PlayerController>());
+        }
+    }
+
+    private void RemovePlayer(PlayerController pc)
+    {
+        if (jugadores.Contains(pc))
+        {
+            jugadores.Remove(pc);
+        }
+    }
+
     private void InitCasillas()
     {
         //Adquiero todas las casillas de las escena
@@ -73,8 +96,8 @@ public class GameManager : MonoBehaviourPun
         {
             foreach (Floor suelo in casillas[i])
             {
-                suelo.setColorN(color[i]);
-                suelo.setColor(color[i]);
+                suelo.SetColorN(color[i]);
+                suelo.SetColor(color[i]);
             }
         }
     }
@@ -105,14 +128,11 @@ public class GameManager : MonoBehaviourPun
             {
                 if (jugadores[k].actualFloor.Equals(jugadores[i].actualFloor))
                 {
-                    jugadores[i].fuerza = 0;
-                    jugadores[k].fuerza = 30;
-
                     if (jugadores[k].fuerza == jugadores[i].fuerza)
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        jugadores[k].Mover(jugadores[k].previousFloor);
-                        jugadores[i].Mover(jugadores[i].previousFloor);
+                        jugadores[k].Echar(jugadores[k].typeAnt, 1);
+                        jugadores[i].Echar(jugadores[k].typeAnt, 1);
 
                         //PIERDEN FUERZA
                         jugadores[k].fuerza = 0;
@@ -121,14 +141,13 @@ public class GameManager : MonoBehaviourPun
                     else if (jugadores[k].fuerza > jugadores[i].fuerza)
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        jugadores[k].Mover(jugadores[k].actualFloor); //SE MUEVE EL JUGADOR AL NEXT FLOOR
-
+                        jugadores[k].Golpear(); //SE MUEVE EL JUGADOR AL NEXT FLOOR
                         //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
                         int max = jugadores[k].fuerza - jugadores[i].fuerza;
-                        jugadores[k].fuerza = 0;
+                        jugadores[k].fuerza = max;
                         jugadores[i].fuerza = 0;
                         //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
-                        bool echado = jugadores[i].echar(jugadores[k].typeAnt, max);
+                        bool echado = jugadores[i].Echar(jugadores[k].typeAnt, max);
                         if (echado)
                         {
                             jugadores.Remove(jugadores[i]);
@@ -138,14 +157,13 @@ public class GameManager : MonoBehaviourPun
                     else
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        jugadores[i].Mover(jugadores[i].actualFloor); //SE MUEVE EL JUGADOR AL NEXT FLOOR
-
+                        jugadores[i].Golpear(); //SE MUEVE EL JUGADOR AL NEXT FLOOR
                         //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
                         int max = jugadores[i].fuerza - jugadores[k].fuerza;
                         jugadores[k].fuerza = 0;
-                        jugadores[i].fuerza = 0;
+                        jugadores[i].fuerza = max;
                         //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
-                        bool echado = jugadores[k].echar(jugadores[i].typeAnt, max);
+                        bool echado = jugadores[k].Echar(jugadores[i].typeAnt, max);
                         if (echado)
                         {
                             jugadores.Remove(jugadores[k]);
@@ -154,6 +172,23 @@ public class GameManager : MonoBehaviourPun
                     }
                 }
             }
+        }
+    }
+    public void RegisterMovement(int id, int row, int index)
+    {
+        Movement move = new Movement();
+        move.player = jugadores.Find((player) => (player.photonView.ViewID/1000-1) == id);
+        move.nextFloor = casillas[row][index];
+        Debug.Log(move.player);
+        movimientos.Enqueue(move);
+    }
+
+    private void PerformMovements()
+    {
+        while (movimientos.Count>0)
+        {
+            Movement m = movimientos.Dequeue();
+            m.player.Mover(m.nextFloor);
         }
     }
 }

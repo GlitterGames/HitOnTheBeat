@@ -767,7 +767,7 @@ MonoBehaviour:
   ConnectBtn: {fileID: 839732378}
   JoinRandomBtn: {fileID: 1233901355}
   Log: {fileID: 1841379277}
-  maxPlayersInRoom: 4
+  maxPlayersInRoom: 2
   minPlayersInRoom: 2
   PlayerCounter: {fileID: 655551216}
 --- !u!4 &1653187504

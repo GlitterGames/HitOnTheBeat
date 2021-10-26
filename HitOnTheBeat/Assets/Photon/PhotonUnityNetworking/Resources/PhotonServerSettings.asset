@@ -49,6 +49,12 @@ MonoBehaviour:
   - ColorearRPC
   - EcharRPC
   - EcharMapaRPC
+  - UpdatePlayersRPC
+  - MoverServerRPC
+  - RegisterMoveRPC
+  - EcharMapaServerRPC
+  - EcharServerRPC
+  - GolpearRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
