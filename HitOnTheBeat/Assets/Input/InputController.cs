@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Inputs/InputController.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Input/InputController.inputactions'
 
 using System;
 using System.Collections;
@@ -19,18 +19,18 @@ public class @InputController : IInputActionCollection, IDisposable
             ""id"": ""58e71075-3f02-4d1a-85d3-05a5992b32fd"",
             ""actions"": [
                 {
-                    ""name"": ""Click"",
-                    ""type"": ""Button"",
-                    ""id"": ""d24ada2f-575b-40f7-9fa6-09b46aae4caf"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""MousePosition"",
                     ""type"": ""Value"",
                     ""id"": ""64487238-063c-41a7-aff8-2651fbf4262f"",
                     ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""d24ada2f-575b-40f7-9fa6-09b46aae4caf"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -87,8 +87,8 @@ public class @InputController : IInputActionCollection, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Click = m_Player.FindAction("Click", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
+        m_Player_Click = m_Player.FindAction("Click", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -138,14 +138,14 @@ public class @InputController : IInputActionCollection, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
-    private readonly InputAction m_Player_Click;
     private readonly InputAction m_Player_MousePosition;
+    private readonly InputAction m_Player_Click;
     public struct PlayerActions
     {
         private @InputController m_Wrapper;
         public PlayerActions(@InputController wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Click => m_Wrapper.m_Player_Click;
         public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
+        public InputAction @Click => m_Wrapper.m_Player_Click;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -155,29 +155,29 @@ public class @InputController : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
             {
-                @Click.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClick;
-                @Click.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClick;
-                @Click.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClick;
                 @MousePosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
                 @MousePosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
                 @MousePosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePosition;
+                @Click.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClick;
+                @Click.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClick;
+                @Click.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClick;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Click.started += instance.OnClick;
-                @Click.performed += instance.OnClick;
-                @Click.canceled += instance.OnClick;
                 @MousePosition.started += instance.OnMousePosition;
                 @MousePosition.performed += instance.OnMousePosition;
                 @MousePosition.canceled += instance.OnMousePosition;
+                @Click.started += instance.OnClick;
+                @Click.performed += instance.OnClick;
+                @Click.canceled += instance.OnClick;
             }
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
     public interface IPlayerActions
     {
-        void OnClick(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
 }

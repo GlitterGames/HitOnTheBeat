@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
+using UnityEngine.InputSystem;
+
 public class PlayerController : MonoBehaviourPun
 {
     #region Enumerables

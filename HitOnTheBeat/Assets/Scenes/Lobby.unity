@@ -454,7 +454,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 333.6174, y: 0.000030517578}
+  m_AnchoredPosition: {x: 333.61743, y: 0}
   m_SizeDelta: {x: -667.2316, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &845223642
@@ -768,7 +768,7 @@ MonoBehaviour:
   JoinRandomBtn: {fileID: 1233901355}
   Log: {fileID: 1841379277}
   maxPlayersInRoom: 4
-  minPlayersInRoom: 2
+  minPlayersInRoom: 1
   PlayerCounter: {fileID: 655551216}
 --- !u!4 &1653187504
 Transform:

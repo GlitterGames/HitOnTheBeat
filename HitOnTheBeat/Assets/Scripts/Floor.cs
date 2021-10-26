@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 
-public class Floor : MonoBehaviourPun
+public class Floor : MonoBehaviour
 {
     private Renderer r;
     private Color normal;
@@ -134,12 +134,17 @@ public class Floor : MonoBehaviourPun
     public override bool Equals(object other)
     {
         if (other == null) return false;
-        if (other == this) return true;
+        if (other == (object)this) return true;
         if (other.GetType() != this.GetType()) return false;
 
         Floor otro = (Floor)other;
 
         if (index == otro.index && row == otro.row) return true;
         else return false;
+    }
+    public override int GetHashCode()
+    {
+        if (row == 0) return 0;
+        else return row * (row * 6) + index - 5;
     }
 }

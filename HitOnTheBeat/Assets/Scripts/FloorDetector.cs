@@ -37,7 +37,6 @@ public class FloorDetector : MonoBehaviour
                 Debug.LogError("ERROR: Floor colision does not match");
                 break;
         }
-        transform.localScale = new Vector3(1.5f,1.5f,1.5f);
     }
 
     // Update is called once per frame
