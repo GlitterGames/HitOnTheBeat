@@ -10,10 +10,9 @@ using UnityEngine.TextCore;
 using UnityEngine.SceneManagement;
 public class Lobby : MonoBehaviourPunCallbacks
 {
-    public Button ConnectBtn;
     public Button JoinRandomBtn;
     public Text Log;
-    public byte maxPlayersInRoom = 4;
+    public byte maxPlayersInRoom = 2;
     public byte minPlayersInRoom = 2;
     private int playerCount = 0;
     public Text PlayerCounter;
@@ -24,27 +23,27 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         if(!PhotonNetwork.JoinRandomRoom())
         {
-            Debug.Log( "Fallo al unirse a la sala");
+            Log.text = "Fallo al unirse a la sala";
         }
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log( "No existen salas a las que unirse, creando una nueva...");
+        Log.text = "No existen salas a las que unirse, creando una nueva...";
         if (PhotonNetwork.CreateRoom(null, new Photon.Realtime.RoomOptions()
          {MaxPlayers = maxPlayersInRoom}))
          {
-             Debug.Log( "Sala creada con éxito");
+            Log.text = "Sala creada con éxito";
          }
          else
          {
-             Debug.Log( "Fallo al crear la sala");
+            Log.text = "Fallo al crear la sala";
          }
     }
 
     public override void OnJoinedRoom()
     {
-       Debug.Log("Unido a la sala");
+        Log.text = "Unido a la sala";
 		JoinRandomBtn.interactable = false;
 	}
 	#endregion
