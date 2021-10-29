@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class FlechaController : MonoBehaviour
 {
@@ -13,14 +14,15 @@ public class FlechaController : MonoBehaviour
     void FixedUpdate()
     {
         transform.position += new Vector3(100 * Time.deltaTime, 0f, 0f);
-        if (transform.position.x < Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth * 2, 0, 0)).x)
+        if (transform.position.x > Screen.width + 50f)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D otroObjeto)
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         if (otroObjeto.tag == "Activante")
         {
             Ritmo.instance.puedeClickear = true;
@@ -29,7 +31,7 @@ public class FlechaController : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D otroObjeto)
     {
-
+        if (!PhotonNetwork.IsMasterClient) return;
         if (otroObjeto.tag == "Activante")
         {
             Ritmo.instance.puedeClickear = false;

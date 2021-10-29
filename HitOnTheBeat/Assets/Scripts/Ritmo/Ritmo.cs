@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class Ritmo : MonoBehaviour
+public class Ritmo : MonoBehaviourPun
 {
     public static Ritmo instance;
     public bool puedeClickear = false;
@@ -16,11 +16,13 @@ public class Ritmo : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         instance = this;
         InvokeRepeating("InvocarFlecha", tiempoInicial, delay);
     }
     void Start()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
         gameManager = FindObjectOfType<GameManager>();
     }
 
@@ -60,8 +62,13 @@ public class Ritmo : MonoBehaviour
 
     public void InvocarFlecha()
     {
-       GameObject nuevaFlecha= Instantiate(flecha, flecha.transform.position, flecha.transform.rotation);
-       nuevaFlecha.transform.SetParent(GetComponentInChildren<Canvas>().transform, false);
+        photonView.RPC("InvocarFlechaRPC", RpcTarget.AllViaServer);
+    }
 
+    [PunRPC]
+    public void InvocarFlechaRPC()
+    {
+        GameObject nuevaFlecha = Instantiate(flecha, flecha.transform.position, flecha.transform.rotation);
+        nuevaFlecha.transform.SetParent(GetComponentInChildren<Canvas>().transform, false);
     }
 }

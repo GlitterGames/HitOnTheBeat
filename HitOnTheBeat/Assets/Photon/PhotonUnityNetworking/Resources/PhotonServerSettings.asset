@@ -55,6 +55,9 @@ MonoBehaviour:
   - EcharMapaServerRPC
   - EcharServerRPC
   - GolpearRPC
+  - RegisterClickRPC
+  - InvocarFlechaRPC
+  - DismarkPlayerRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

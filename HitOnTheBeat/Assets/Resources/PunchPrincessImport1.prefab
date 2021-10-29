@@ -416,7 +416,7 @@ MonoBehaviour:
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
-  typeAnt: 0
+  floorDir: 0
   fuerza: 10
   playerAvatar: {fileID: 1784523174532803008}
   speed: 2
@@ -424,6 +424,7 @@ MonoBehaviour:
   oldPos: {x: 0, y: 0, z: 0}
   secondsCounter: 0
   secondsToCount: 0.4
+  movimientoMarcado: 0
 --- !u!114 &7285398391901293338
 MonoBehaviour:
   m_ObjectHideFlags: 0

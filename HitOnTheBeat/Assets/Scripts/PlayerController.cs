@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviourPun
     public Estado estadoActual = Estado.NORMAL;
     public Floor actualFloor;
     public Floor previousFloor;
-    public FloorDetectorType typeAnt;
+    public FloorDetectorType floorDir;
     public int fuerza;
     public GameObject playerAvatar;
     private InputController my_input;
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviourPun
     public Vector3 oldPos;
     public float secondsCounter = 0f;
     public float secondsToCount = 0.4f;
-    private bool movimientoMarcado = false;
+    public bool movimientoMarcado = false;
     #endregion
 
     // Start is called before the first frame update
@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviourPun
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
 
-        typeAnt = FloorDetectorType.West;
+        floorDir = FloorDetectorType.West;
 
         //Los viewId de Cada jugador se caracterizan por el número 1000 así sabemos de quien es este objeto.
         actualFloor = FindObjectOfType<PhotonInstanciate>().f[(photonView.ViewID/1000)-1];
@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviourPun
             float step = speed * Time.deltaTime;
             if (secondsCounter >= secondsToCount)
                 transform.position = Vector3.MoveTowards(transform.position, newPos, step);
-            if (animator.GetBool("IsJumping") && !animator.GetBool("IsFalling"))
+            if ((animator.GetBool("IsJumping") || (animator.GetBool("IsAttacking"))) && !animator.GetBool("IsFalling"))
             {
                 Quaternion rotTarget = Quaternion.LookRotation(newPos - this.transform.position);
                 this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, rotTarget, 250f * Time.deltaTime);
@@ -130,42 +130,40 @@ public class PlayerController : MonoBehaviourPun
                 if (targetFloor.Equals(actualFloor.GetNorth_west()))
                 {
                     nextFloor = actualFloor.GetNorth_west();
-                    typeAnt = FloorDetectorType.North_west;
+                    floorDir = FloorDetectorType.North_west;
                 }
                 else if (targetFloor.Equals(actualFloor.GetNorth_east()))
                 {
                     nextFloor = actualFloor.GetNorth_east();
-                    typeAnt = FloorDetectorType.North_east;
+                    floorDir = FloorDetectorType.North_east;
                 }
                 else if (targetFloor.Equals(actualFloor.GetWest()))
                 {
                     nextFloor = actualFloor.GetWest();
-                    typeAnt = FloorDetectorType.West;
+                    floorDir = FloorDetectorType.West;
                 }
                 else if (targetFloor.Equals(actualFloor.GetEast()))
                 {
                     nextFloor = actualFloor.GetEast();
-                    typeAnt = FloorDetectorType.East;
+                    floorDir = FloorDetectorType.East;
                 }
                 else if (targetFloor.Equals(actualFloor.GetSouth_west()))
                 {
                     nextFloor = actualFloor.GetSouth_west();
-                    typeAnt = FloorDetectorType.South_west;
+                    floorDir = FloorDetectorType.South_west;
                 }
                 else if (targetFloor.Equals(actualFloor.GetSouth_east()))
                 {
                     nextFloor = actualFloor.GetSouth_east();
-                    typeAnt = FloorDetectorType.South_east;
+                    floorDir = FloorDetectorType.South_east;
                 }
 
                 //PERFORM MOVEMENT
                 if (nextFloor != null)
                 {
-                    if (Ritmo.instance.TryMovePlayer())
-                    {
-                        movimientoMarcado = true;
-                        photonView.RPC("RegisterMoveRPC", RpcTarget.MasterClient, (photonView.ViewID / 1000) - 1, nextFloor.row, nextFloor.index);
-                    }
+                    movimientoMarcado = true;
+                    photonView.RPC("RegisterClickRPC", RpcTarget.MasterClient, (photonView.ViewID / 1000) - 1,
+                        nextFloor.row, nextFloor.index, floorDir);   
                 }
             }
         }
@@ -173,30 +171,49 @@ public class PlayerController : MonoBehaviourPun
 
     #region Moviento
     [PunRPC]
-    public void RegisterMoveRPC(int id, int row, int index)
+    public void RegisterClickRPC(int id, int row, int index, FloorDetectorType dir)
     {
-        gameManager.RegisterMovement(id, row, index);
+        if (Ritmo.instance.TryMovePlayer())
+        {
+            gameManager.RegisterMovement(id, row, index, dir);
+        }
+        else photonView.RPC("DismarkPlayerRPC", photonView.Owner);
     }
 
-    public void Mover(Floor nextFloor)
+    [PunRPC]
+    public void DismarkPlayerRPC()
     {
-        fuerza++;
-        photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
-        photonView.RPC("MoverRPC", RpcTarget.All, nextFloor.row, nextFloor.index);
-        photonView.RPC("MoverServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
+        movimientoMarcado = false;
     }
+
     public void Golpear()
     {
         photonView.RPC("GolpearRPC", RpcTarget.AllViaServer);
     }
 
     [PunRPC]
-    private void MoverRPC(int row, int index)
+    private void GolpearRPC()
+    {
+        animator.SetBool("IsJumping", false);
+        animator.SetBool("IsAttacking", true);
+    }
+
+    public void Mover(Floor nextFloor, FloorDetectorType dir)
+    {
+        fuerza++;
+        photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+        photonView.RPC("MoverRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
+        photonView.RPC("MoverServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
+    }
+    
+    [PunRPC]
+    private void MoverRPC(int row, int index, FloorDetectorType dir)
     {
         Floor nextFloor = gameManager.casillas[row][index];
         movimientoMarcado = false;
         previousFloor = actualFloor;
         actualFloor = nextFloor;
+        floorDir = dir;
     }
 
     [PunRPC]
@@ -208,37 +225,34 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void GolpearRPC()
-    {
-        animator.SetBool("IsJumping", false);
-        animator.SetBool("IsAttacking", true);
-    }
-
-    [PunRPC]
     private void ColorearRPC(int row, int index)
     {
         SetNormalColor(actualFloor);
         SetAreaColor(gameManager.casillas[row][index]);
     }
 
-    public bool Echar(FloorDetectorType type, int max)
+    public bool Echar(FloorDetectorType dir, int max)
     {
         bool echado = false;
         Vector3 pos = Vector3.zero;
         Floor nextFloor = null;
         for (int i = 0; i < max && !echado; i++)
         {
-            nextFloor = actualFloor.GetFloor(type);
+            nextFloor = actualFloor.GetFloor(dir);
             if (nextFloor != null)
             {
-                previousFloor = actualFloor;
-                actualFloor = nextFloor;
-                echado = false;
+                //Se actualiza no es la última iteración.
+                //Si es la última iteración se cambiará vía RPC.
+                if (i < max - 1)
+                {
+                    previousFloor = actualFloor;
+                    actualFloor = nextFloor;
+                }
             }
             else
             {
                 //ENVIARLE A LA POSICION DE LA CASILLA "NULL" 
-                Floor inverse = actualFloor.GetInverseFloor(type);
+                Floor inverse = actualFloor.GetInverseFloor(dir);
                 Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x - inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z - inverse.GetFloorPosition().z);
                 pos = new Vector3(actualFloor.GetFloorPosition().x + diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z + diferencia.z);
                 echado = true;
@@ -247,7 +261,7 @@ public class PlayerController : MonoBehaviourPun
         if (!echado)
         {
             photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
-            photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index);
+            photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
             photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
         else
@@ -260,11 +274,12 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void EcharRPC(int row, int index)
+    private void EcharRPC(int row, int index, FloorDetectorType dir)
     {
         Floor nextFloor = gameManager.casillas[row][index];
         previousFloor = actualFloor;
         actualFloor = nextFloor;
+        floorDir = dir;
     }
 
     [PunRPC]
@@ -280,7 +295,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharMapaRPC()
     {
-        previousFloor = null;
+        previousFloor = actualFloor;
         actualFloor = null;
     }
 
@@ -290,6 +305,7 @@ public class PlayerController : MonoBehaviourPun
         animator.SetBool("IsFalling", true);
         animator.SetBool("IsJumping", false);
         newPos = new Vector3(x, transform.position.y, z);
+        oldPos = new Vector3(previousFloor.GetFloorPosition().x, transform.position.y, previousFloor.GetFloorPosition().z);
     }
     #endregion
 

@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviourPun
     {
         public PlayerController player;
         public Floor nextFloor;
+        public FloorDetectorType dir;
     }
     #endregion
 
@@ -68,14 +69,6 @@ public class GameManager : MonoBehaviourPun
         }
     }
 
-    private void RemovePlayer(PlayerController pc)
-    {
-        if (jugadores.Contains(pc))
-        {
-            jugadores.Remove(pc);
-        }
-    }
-
     private void InitCasillas()
     {
         //Adquiero todas las casillas de las escena
@@ -116,12 +109,6 @@ public class GameManager : MonoBehaviourPun
 
     private void PerformColision()
     {
-        HashSet<GameObject> players = PhotonNetwork.FindGameObjectsWithComponent(typeof(PlayerController));
-        List<PlayerController> jugadores = new List<PlayerController>();
-        foreach (GameObject go in players)
-        {
-            jugadores.Add(go.GetComponent<PlayerController>());
-        }
         for (int k = 0; k < jugadores.Count; k++)
         {
             for (int i = k + 1; i < jugadores.Count; i++)
@@ -131,8 +118,9 @@ public class GameManager : MonoBehaviourPun
                     if (jugadores[k].fuerza == jugadores[i].fuerza)
                     {
                         //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        jugadores[k].Echar(jugadores[k].typeAnt, 1);
-                        jugadores[i].Echar(jugadores[k].typeAnt, 1);
+                        FloorDetectorType aux = jugadores[k].floorDir;
+                        jugadores[k].Echar(jugadores[i].floorDir, 1);
+                        jugadores[i].Echar(aux, 1);
 
                         //PIERDEN FUERZA
                         jugadores[k].fuerza = 0;
@@ -147,10 +135,10 @@ public class GameManager : MonoBehaviourPun
                         jugadores[k].fuerza = max;
                         jugadores[i].fuerza = 0;
                         //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
-                        bool echado = jugadores[i].Echar(jugadores[k].typeAnt, max);
+                        bool echado = jugadores[i].Echar(jugadores[k].floorDir, max);
                         if (echado)
                         {
-                            jugadores.Remove(jugadores[i]);
+                            jugadores.RemoveAt(i);
                             i--;
                         }
                     }
@@ -163,23 +151,23 @@ public class GameManager : MonoBehaviourPun
                         jugadores[k].fuerza = 0;
                         jugadores[i].fuerza = max;
                         //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
-                        bool echado = jugadores[k].Echar(jugadores[i].typeAnt, max);
+                        bool echado = jugadores[k].Echar(jugadores[i].floorDir, max);
                         if (echado)
                         {
-                            jugadores.Remove(jugadores[k]);
-                            i = k + 1;
+                            jugadores.RemoveAt(k);
+                            i = k;
                         }
                     }
                 }
             }
         }
     }
-    public void RegisterMovement(int id, int row, int index)
+    public void RegisterMovement(int id, int row, int index, FloorDetectorType dir)
     {
         Movement move = new Movement();
         move.player = jugadores.Find((player) => (player.photonView.ViewID/1000-1) == id);
         move.nextFloor = casillas[row][index];
-        Debug.Log(move.player);
+        move.dir = dir;
         movimientos.Enqueue(move);
     }
 
@@ -188,7 +176,7 @@ public class GameManager : MonoBehaviourPun
         while (movimientos.Count>0)
         {
             Movement m = movimientos.Dequeue();
-            m.player.Mover(m.nextFloor);
+            m.player.Mover(m.nextFloor, m.dir);
         }
     }
 }
