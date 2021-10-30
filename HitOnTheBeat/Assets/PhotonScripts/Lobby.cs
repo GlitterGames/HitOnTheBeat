@@ -63,6 +63,17 @@ public class Lobby : MonoBehaviourPunCallbacks
     private void LoadMap()
     {
         IsLoading = true;
-        PhotonNetwork.LoadLevel(2);
+        FindObjectOfType<SceneTransitioner>().StartTransition(2, 0.5f);
+    }
+
+    public void OnGoBack()
+    {
+        PhotonNetwork.Disconnect();
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        SceneManager.LoadScene(0);
     }
 }
