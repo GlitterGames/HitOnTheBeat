@@ -10,6 +10,7 @@ using UnityEngine.TextCore;
 using UnityEngine.SceneManagement;
 public class Lobby : MonoBehaviourPunCallbacks
 {
+    public GameObject playerSelector;
     public Button JoinRandomBtn;
     public Text Log;
     public byte maxPlayersInRoom = 2;
@@ -17,6 +18,12 @@ public class Lobby : MonoBehaviourPunCallbacks
     private int playerCount = 0;
     public Text PlayerCounter;
     private bool IsLoading = false;
+
+    public void Start()
+    {
+        if (!FindObjectOfType<PlayerSelector>()) DontDestroyOnLoad(Instantiate(playerSelector,
+             playerSelector.transform.position, playerSelector.transform.rotation));
+    }
 
     #region Photon Callbakcs
     public void JoinRandom()
@@ -74,6 +81,6 @@ public class Lobby : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-        SceneManager.LoadScene(0);
+        FindObjectOfType<SceneTransitioner>().StartTransition(0, 0);
     }
 }

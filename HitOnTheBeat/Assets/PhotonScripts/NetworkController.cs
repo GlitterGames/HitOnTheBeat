@@ -61,4 +61,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
             Debug.Log("\nYa conectado");
         }
     }
+
+    public void OnExit()
+    {
+        Application.Quit();
+    }
 }

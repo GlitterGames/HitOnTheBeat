@@ -10,7 +10,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     public GameObject[] playerAvatar = new GameObject[2];
     public GameObject ritmoSystem;
     public Floor[] f;
-    private GameObject my_player;
+    public GameObject my_player;
 
     private PlayerSelector playerSelector;
 
@@ -37,12 +37,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     }
     public void OnGoBack()
     {
-        PhotonNetwork.Disconnect();
-    }
-
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        base.OnDisconnected(cause);
-        SceneManager.LoadScene(0);
+        FindObjectOfType<SceneTransitioner>().StartTransition(0, 1);
+        PhotonNetwork.LeaveRoom(true);
     }
 }

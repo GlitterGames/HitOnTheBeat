@@ -32,5 +32,26 @@ public class SceneTransitioner : MonoBehaviour
     {
         yield return new WaitForSeconds(0.55f + delay);
         SceneManager.LoadScene(level);
-    }    
+    }
+
+    #region Eventos
+    public void GoToMainScene(float delay)
+    {
+        anim.SetTrigger("Activate");
+        this.level = 0;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
+    public void GoToCreditsScene(float delay)
+    {
+        anim.SetTrigger("Activate");
+        this.level = 3;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
+    public void GoToLobbyScene(float delay)
+    {
+        anim.SetTrigger("Activate");
+        this.level = 1;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
+    #endregion
 }

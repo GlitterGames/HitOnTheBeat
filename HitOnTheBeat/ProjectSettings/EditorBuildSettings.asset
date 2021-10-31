@@ -7,11 +7,17 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
-    guid: 9e46e762b29af9247a983cd76793a59d
+    guid: fe07fc90d8ea6e34a82e8c9e9838d1a1
   - enabled: 1
     path: Assets/Scenes/Lobby.unity
     guid: b519b2e74441b0344a12ade54524360e
   - enabled: 1
     path: Assets/Scenes/Juego.unity
     guid: 1e5a144506af3c8478fdf47477555d71
+  - enabled: 1
+    path: Assets/Scenes/Creditos.unity
+    guid: 9e46e762b29af9247a983cd76793a59d
+  - enabled: 1
+    path: Assets/Scenes/Victoria.unity
+    guid: 3297eeb87d4dbd5469991160f6b67c84
   m_configObjects: {}

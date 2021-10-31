@@ -9,9 +9,9 @@ public class PlayerController : MonoBehaviourPun
     public enum Tipo
     {
         BOXEADORA = 0,
-        FANTASMA = 1,
-        TERREMOTO = 2,
-        BOMBA = 3
+        BOMBA = 1,
+        FANTASMA = 2,
+        TERREMOTO = 3
     }
     public enum Estado
     {
@@ -28,17 +28,17 @@ public class PlayerController : MonoBehaviourPun
     public Floor previousFloor;
     public FloorDetectorType floorDir;
     public int fuerza;
-    public GameObject playerAvatar;
     private InputController my_input;
-    private PhotonInstanciate photon;
     private GameManager gameManager;
     private Animator animator;
+    private Rigidbody rb;
     public float speed;
     public Vector3 newPos;
     public Vector3 oldPos;
     public float secondsCounter = 0f;
     public float secondsToCount = 0.4f;
     public bool movimientoMarcado = false;
+    private Vector3 pos = Vector3.zero;
     #endregion
 
     // Start is called before the first frame update
@@ -61,11 +61,23 @@ public class PlayerController : MonoBehaviourPun
 
         animator = GetComponent<Animator>();
         gameManager = FindObjectOfType<GameManager>();
+        rb = GetComponent<Rigidbody>();
 
         animator.SetBool("IsAttacking", false);
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsSpecial", false);
         animator.SetBool("IsFalling", false);
+    }
+
+    void Start()
+    {
+        StartCoroutine(PrimerPintado());
+    }
+
+    IEnumerator PrimerPintado()
+    {
+        yield return new WaitForEndOfFrame();
+        SetAreaColor(actualFloor);
     }
 
     //Para que funcione el Input System en la versión actual.
@@ -105,6 +117,8 @@ public class PlayerController : MonoBehaviourPun
             animator.SetBool("IsJumping", false);
             animator.SetBool("IsFalling", false);
             animator.SetBool("IsAttacking", false);
+            if (transform.position == pos)
+                photonView.RPC("UseGravityRPC", RpcTarget.All);
         }
     }
 
@@ -231,10 +245,15 @@ public class PlayerController : MonoBehaviourPun
         SetAreaColor(gameManager.casillas[row][index]);
     }
 
+    [PunRPC]
+    private void UseGravityRPC()
+    {
+        rb.useGravity = true;
+    }
+
     public bool Echar(FloorDetectorType dir, int max)
     {
         bool echado = false;
-        Vector3 pos = Vector3.zero;
         Floor nextFloor = null;
         for (int i = 0; i < max && !echado; i++)
         {
@@ -287,9 +306,9 @@ public class PlayerController : MonoBehaviourPun
     {
         animator.SetBool("IsFalling", true);
         animator.SetBool("IsJumping", false);
-        Floor nextFloor = gameManager.casillas[row][index];
+        Floor nextFloor = gameManager.casillas[row][index]; 
+        oldPos = newPos;
         newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-        oldPos = new Vector3(previousFloor.GetFloorPosition().x, transform.position.y, previousFloor.GetFloorPosition().z);
     }
 
     [PunRPC]
@@ -304,8 +323,8 @@ public class PlayerController : MonoBehaviourPun
     {
         animator.SetBool("IsFalling", true);
         animator.SetBool("IsJumping", false);
+        oldPos = newPos;
         newPos = new Vector3(x, transform.position.y, z);
-        oldPos = new Vector3(previousFloor.GetFloorPosition().x, transform.position.y, previousFloor.GetFloorPosition().z);
     }
     #endregion
 
@@ -375,9 +394,21 @@ public class PlayerController : MonoBehaviourPun
 
     #region RPC Calls
     [PunRPC]
+    private void SetPlayerCamera(int id)
+    {
+        FindObjectOfType<VirtualCameraController>().SetTarget(PhotonView.Find(id).transform);
+    }
+
+    [PunRPC]
     private void UpdatePlayersRPC()
     {
         gameManager.UpdatePlayers();
+    }
+
+    [PunRPC]
+    private void DoExitPlayer()
+    {
+        FindObjectOfType<RemovePlayers>().ExitPlayer();
     }
     #endregion
 }

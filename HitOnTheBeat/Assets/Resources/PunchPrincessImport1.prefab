@@ -302,6 +302,7 @@ GameObject:
   - component: {fileID: 6738145142997302262}
   - component: {fileID: 3452583889996066242}
   - component: {fileID: 7285398391901293338}
+  - component: {fileID: 8666236001121033234}
   m_Layer: 0
   m_Name: PunchPrincessImport1
   m_TagString: Untagged
@@ -317,7 +318,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1784523174532803008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.151, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5618891866473183819}
@@ -417,8 +418,7 @@ MonoBehaviour:
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
   floorDir: 0
-  fuerza: 10
-  playerAvatar: {fileID: 1784523174532803008}
+  fuerza: 0
   speed: 2
   newPos: {x: 0, y: 0, z: 0}
   oldPos: {x: 0, y: 0, z: 0}
@@ -455,6 +455,20 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
+--- !u!136 &8666236001121033234
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784523174532803008}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.113875814
+  m_Height: 0.55564904
+  m_Direction: 1
+  m_Center: {x: -0.0051949695, y: 0.4687538, z: 0.059404664}
 --- !u!1 &2161472409461212526
 GameObject:
   m_ObjectHideFlags: 0
