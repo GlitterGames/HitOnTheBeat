@@ -71,12 +71,12 @@ public class PlayerController : MonoBehaviourPun
 
     void Start()
     {
-        StartCoroutine(PrimerPintado());
+        if(photonView.IsMine) StartCoroutine(PrimerPintado());
     }
 
     IEnumerator PrimerPintado()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(1);
         SetAreaColor(actualFloor);
     }
 

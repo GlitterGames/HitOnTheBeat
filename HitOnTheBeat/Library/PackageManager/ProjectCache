@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637712082896610992
-    m_Hash: 1383714623
+      ticks: 637713179360100306
+    m_Hash: 2332450746
   m_LockFileStatus:
     m_FilePath: D:/Documentos/Proyectos Unity/HitOnTheBeat/HitOnTheBeat/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637712082899428895
-    m_Hash: 3265808532
+      ticks: 637713179360100306
+    m_Hash: 1810722879
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_PackageAssets:

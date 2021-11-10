@@ -190,7 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5af9335833fb8542946a855f9bd17eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipoPersonaje: 3
+  tipoPersonaje: 1
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
