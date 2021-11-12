@@ -12,7 +12,12 @@ public class Floor : MonoBehaviour
     public int index;
     public int row;
     public Floor[] adyacentes = new Floor[6];
-
+    public enum Type {
+        Vacio,
+        DobleRitmo
+    }
+    private Type type = Type.Vacio;
+    public Coroutine powertime = null;
     public Floor GetFloor(FloorDetectorType type) {
         switch (type)
         {
@@ -99,6 +104,23 @@ public class Floor : MonoBehaviour
     }
     public Floor[] GetAdyacentes() {
         return adyacentes;
+    }
+    public void SetPower(Type t)
+    {
+        this.type = t;
+        switch (t)
+        {
+            case Type.Vacio:
+                SetColor(Color.white);
+                break;
+            case Type.DobleRitmo:
+                SetColor(Color.black);
+                break;
+        }
+    }
+    public Type GetPower()
+    {
+        return type;
     }
     #endregion
     // Start is called before the first frame update

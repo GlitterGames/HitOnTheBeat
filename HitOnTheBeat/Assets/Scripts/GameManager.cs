@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviourPun
     {
         PerformMovements();
         PerformColision();
+        ApplyEfectsFromFloor();
     }
 
     private void InitColor() {
@@ -103,14 +104,38 @@ public class GameManager : MonoBehaviourPun
         }
     }
 
-    public Vector3 spawnPowerUp()
+    public void SpawnPowerUp(float time)
     {
         int i = Random.Range(0, casillas.Count);
         int j = Random.Range(0, casillas[i].Length);
 
-        return casillas[i][j].GetFloorPosition() + new Vector3(0, 1.0f, 0);
-    }
+        Floor f = casillas[i][j];
+        Debug.Log("La casilla donde se dbería pintar es: " +f.row +" " +f.index);
 
+        f.powertime = StartCoroutine(SetType(f, Floor.Type.DobleRitmo, time));
+    }
+    private IEnumerator SetType(Floor f, Floor.Type t, float time) {
+        FindObjectOfType<PhotonInstanciate>().my_player.
+            GetComponent<PlayerController>().SetPowerUp(f, t);
+        yield return new WaitForSeconds(time);
+        FindObjectOfType<PhotonInstanciate>().my_player.
+            GetComponent<PlayerController>().SetPowerUp(f, Floor.Type.Vacio);
+
+    }
+    public void ApplyEfectsFromFloor() {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (PlayerController jugador in jugadores)
+            {
+                if (jugador.actualFloor.GetPower() != Floor.Type.Vacio)
+                {
+                    Debug.Log("He cogido un power up");
+                    jugador.GetPowerUp();
+                    StopCoroutine(jugador.actualFloor.powertime);
+                }
+            }
+        }
+    }
     private void PerformColision()
     {
         for (int k = 0; k < jugadores.Count; k++)
@@ -226,8 +251,15 @@ public class GameManager : MonoBehaviourPun
     public void Update()
     {
         //PRUEBA DE USO CASILLAS PARPADEO Y CAIDA.
-        if (!usado) {
-            DestroyRow(4, 0.1f, 5);
+        //if (!usado) {
+        //    DestroyRow(4, 0.1f, 5);
+        //    usado = true;
+        //}
+        if (!usado&&PhotonNetwork.IsMasterClient) {
+            SpawnPowerUp(3f);
+            SpawnPowerUp(5f);
+            SpawnPowerUp(6f);
+            SpawnPowerUp(10f);
             usado = true;
         }
     }

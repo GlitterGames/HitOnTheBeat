@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviourPun
         floorDir = FloorDetectorType.West;
 
         //Los viewId de Cada jugador se caracterizan por el número 1000 así sabemos de quien es este objeto.
-        actualFloor = FindObjectOfType<PhotonInstanciate>().f[(photonView.ViewID/1000)-1];
+        actualFloor = FindObjectOfType<PhotonInstanciate>().f[(photonView.ViewID / 1000) - 1];
         previousFloor = actualFloor;
         newPos = transform.position;
         oldPos = transform.position;
@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Start()
     {
-        if(photonView.IsMine) StartCoroutine(PrimerPintado());
+        if (photonView.IsMine) StartCoroutine(PrimerPintado());
     }
 
     IEnumerator PrimerPintado()
@@ -177,7 +177,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     movimientoMarcado = true;
                     photonView.RPC("RegisterClickRPC", RpcTarget.MasterClient, (photonView.ViewID / 1000) - 1,
-                        nextFloor.row, nextFloor.index, floorDir);   
+                        nextFloor.row, nextFloor.index, floorDir);
                 }
             }
         }
@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviourPun
         photonView.RPC("MoverRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
         photonView.RPC("MoverServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
     }
-    
+
     [PunRPC]
     private void MoverRPC(int row, int index, FloorDetectorType dir)
     {
@@ -306,7 +306,7 @@ public class PlayerController : MonoBehaviourPun
     {
         animator.SetBool("IsFalling", true);
         animator.SetBool("IsJumping", false);
-        Floor nextFloor = gameManager.casillas[row][index]; 
+        Floor nextFloor = gameManager.casillas[row][index];
         oldPos = newPos;
         newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
     }
@@ -328,7 +328,7 @@ public class PlayerController : MonoBehaviourPun
     }
 
     public void Caer() {
-        newPos = new Vector3(transform.position.x, transform.position.y+2, transform.position.z);
+        newPos = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
         photonView.RPC("CaerRCP", RpcTarget.AllViaServer);
     }
 
@@ -337,6 +337,25 @@ public class PlayerController : MonoBehaviourPun
     {
         newPos = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
     }
+
+    public void GetPowerUp() {
+        Floor.Type t = actualFloor.GetPower();
+        actualFloor.SetPower(Floor.Type.Vacio);
+        switch (t) {
+            case Floor.Type.DobleRitmo:
+                break;
+        }
+    }
+    public void SetPowerUp(Floor f, Floor.Type type)
+    {
+        photonView.RPC("SetPowerUpRPC", RpcTarget.AllViaServer, f.row, f.index, type);
+    }
+    [PunRPC]
+    private void SetPowerUpRPC(int row, int index, Floor.Type type)
+    {
+        gameManager.casillas[row][index].SetPower(type);    
+    }
+
     #endregion
 
     #region Colores

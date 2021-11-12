@@ -62,6 +62,7 @@ MonoBehaviour:
   - SetPlayerCamera
   - DoExitPlayer
   - CaerRCP
+  - SetPowerUpRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
