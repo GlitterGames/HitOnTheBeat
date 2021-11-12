@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviourPun
     public static Color casillaAdy = Color.cyan;
     public static Color casillaAttack = Color.yellow;
     public List<Color> color = new List<Color>();
+    public List<Color> colorBlink = new List<Color>();
 
     public List<Floor[]> casillas = new List<Floor[]>();
     public List<PlayerController> jugadores = new List<PlayerController>();
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviourPun
     void Start()
     {
         InitColor();
+        InitColorBlink();
         InitCasillas();
     }
 
@@ -58,6 +60,12 @@ public class GameManager : MonoBehaviourPun
         color.Add(Color.yellow);
         color.Add(Color.red);
         color.Add(Color.red);
+    }
+    private void InitColorBlink()
+    {
+        colorBlink.Add(Color.green);
+        colorBlink.Add(Color.yellow);
+        colorBlink.Add(Color.red);
     }
     public void UpdatePlayers()
     {
@@ -94,17 +102,13 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
-    public void EliminarCasillas(int i)
-    {
-        casillas.RemoveAt(i);
-    }
 
     public Vector3 spawnPowerUp()
     {
         int i = Random.Range(0, casillas.Count);
         int j = Random.Range(0, casillas[i].Length);
-        
-        return casillas[i][j].GetFloorPosition() + new Vector3(0,1.0f,0);
+
+        return casillas[i][j].GetFloorPosition() + new Vector3(0, 1.0f, 0);
     }
 
     private void PerformColision()
@@ -165,7 +169,7 @@ public class GameManager : MonoBehaviourPun
     public void RegisterMovement(int id, int row, int index, FloorDetectorType dir)
     {
         Movement move = new Movement();
-        move.player = jugadores.Find((player) => (player.photonView.ViewID/1000-1) == id);
+        move.player = jugadores.Find((player) => (player.photonView.ViewID / 1000 - 1) == id);
         move.nextFloor = casillas[row][index];
         move.dir = dir;
         movimientos.Enqueue(move);
@@ -173,10 +177,58 @@ public class GameManager : MonoBehaviourPun
 
     private void PerformMovements()
     {
-        while (movimientos.Count>0)
+        while (movimientos.Count > 0)
         {
             Movement m = movimientos.Dequeue();
             m.player.Mover(m.nextFloor, m.dir);
+        }
+    }
+    public void DestroyRow(int row, float seg, int repeticiones) {
+        foreach (Floor f in casillas[row])
+        {
+            StartCoroutine(Blink(f, seg, repeticiones));
+        }
+    }
+    private IEnumerator Blink(Floor f, float seg, int repeticiones) {
+        int j;
+        //LAS CASILLAS PARPADEAN
+        for (j = 1; j < colorBlink.Count; j++) {
+            Color c1 = colorBlink[j-1];
+            Color c2 = colorBlink[j];
+            f.SetColor(colorBlink[j-1]);
+            yield return new WaitForSeconds(seg);
+            for (int i = 0; i < repeticiones; i++)
+            {
+                f.SetColor(c1);
+                yield return new WaitForSeconds(seg/repeticiones);
+                f.SetColor(c2);
+                yield return new WaitForSeconds(seg/repeticiones);
+            }
+        }
+        yield return new WaitForSeconds(seg);
+        //LAS CASILLAS SE CAEN POR ACCIÓN DE LA GRAVEDAD
+        f.GetComponentInChildren<Rigidbody>().isKinematic = false;
+        f.GetComponentInChildren<Rigidbody>().useGravity = true;
+        yield return new WaitForEndOfFrame();
+
+        if (PhotonNetwork.IsMasterClient) {
+            foreach (PlayerController jugador in jugadores) {
+                if (jugador.actualFloor.Equals(f))
+                {
+                    Debug.Log("A caerme");
+                    jugador.Caer();
+                }
+            }
+            casillas[f.row][f.index] = null;
+        }
+    }
+    bool usado = false;
+    public void Update()
+    {
+        //PRUEBA DE USO CASILLAS PARPADEO Y CAIDA.
+        if (!usado) {
+            DestroyRow(4, 0.1f, 5);
+            usado = true;
         }
     }
 }

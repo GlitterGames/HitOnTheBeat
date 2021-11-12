@@ -630,7 +630,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4117320156741995902, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: mainDistance
-      value: 80
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 4117320156741995903, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3075,6 +3075,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: []
+  colorBlink: []
   jugadores: []
 --- !u!4 &1113414128
 Transform:

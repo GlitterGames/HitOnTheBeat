@@ -326,6 +326,17 @@ public class PlayerController : MonoBehaviourPun
         oldPos = newPos;
         newPos = new Vector3(x, transform.position.y, z);
     }
+
+    public void Caer() {
+        newPos = new Vector3(transform.position.x, transform.position.y+2, transform.position.z);
+        photonView.RPC("CaerRCP", RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    private void CaerRCP()
+    {
+        newPos = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+    }
     #endregion
 
     #region Colores
