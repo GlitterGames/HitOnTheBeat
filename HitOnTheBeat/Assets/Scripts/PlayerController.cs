@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
+using UnityEngine.UI;
+
 public class PlayerController : MonoBehaviourPun
 {
     #region Enumerables
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviourPun
     public Floor previousFloor;
     public FloorDetectorType floorDir;
     public int fuerza;
+    public int fuerzaSinPulsar = 1;
     private InputController my_input;
     private GameManager gameManager;
     private Animator animator;
@@ -127,6 +130,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!photonView.IsMine) return;
         if (movimientoMarcado) return;
+        if (Ritmo.instance.haFallado) return;
         if (transform.position != newPos) return;
         if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
 
@@ -187,17 +191,61 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void RegisterClickRPC(int id, int row, int index, FloorDetectorType dir)
     {
-        if (Ritmo.instance.TryMovePlayer())
+        bool acierto = Ritmo.instance.TryMovePlayer();
+        if (acierto)
         {
             gameManager.RegisterMovement(id, row, index, dir);
+            photonView.RPC("AciertoRPC", RpcTarget.All);
         }
-        else photonView.RPC("DismarkPlayerRPC", photonView.Owner);
+        else
+        {
+            photonView.RPC("DismarkPlayerRPC", photonView.Owner);
+            photonView.RPC("FalloRPC", RpcTarget.All);
+        }
+        photonView.RPC("MarcarRitmoRPC", photonView.Owner, acierto);
     }
 
     [PunRPC]
     public void DismarkPlayerRPC()
     {
         movimientoMarcado = false;
+    }
+
+    [PunRPC]
+    public void MarcarRitmoRPC(bool ritmoAcertado)
+    {
+        Ritmo ritmo = Ritmo.instance;
+        ritmo.haPulsado = true;
+        if (ritmoAcertado)
+        {
+            ritmo.SetColor(ritmo.colores.acierto);
+        }
+        else
+        {
+            ritmo.SetColor(ritmo.colores.fallo);
+            ritmo.haFallado = true;
+        }
+    }
+
+    [PunRPC]
+    public void AciertoRPC()
+    {
+        fuerzaSinPulsar = 1;
+    }
+
+    [PunRPC]
+    public void FalloRPC()
+    {
+        fuerza--;
+        if (fuerza < 0) fuerza = 0;
+    }
+
+    [PunRPC]
+    public void NoHaPulsadoRPC()
+    {
+        this.fuerza -= fuerzaSinPulsar;
+        if (fuerza < 0) fuerza = 0;
+        fuerzaSinPulsar++;
     }
 
     public void Golpear()
@@ -214,7 +262,6 @@ public class PlayerController : MonoBehaviourPun
 
     public void Mover(Floor nextFloor, FloorDetectorType dir)
     {
-        fuerza++;
         photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
         photonView.RPC("MoverRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
         photonView.RPC("MoverServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
@@ -223,6 +270,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void MoverRPC(int row, int index, FloorDetectorType dir)
     {
+        fuerza++;
         Floor nextFloor = gameManager.casillas[row][index];
         movimientoMarcado = false;
         previousFloor = actualFloor;
@@ -326,8 +374,8 @@ public class PlayerController : MonoBehaviourPun
         oldPos = newPos;
         newPos = new Vector3(x, transform.position.y, z);
     }
-
-    public void Caer() {
+	
+	public void Caer() {
         newPos = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
         photonView.RPC("CaerRCP", RpcTarget.AllViaServer);
     }
@@ -355,7 +403,7 @@ public class PlayerController : MonoBehaviourPun
     {
         gameManager.casillas[row][index].SetPower(type);    
     }
-
+	
     #endregion
 
     #region Colores
@@ -440,5 +488,12 @@ public class PlayerController : MonoBehaviourPun
     {
         FindObjectOfType<RemovePlayers>().ExitPlayer();
     }
+
+    [PunRPC]
+    private void DoUpdateWinner(int num)
+    {
+        FindObjectOfType<PlayerSelector>().playerWinner = num;
+    }
     #endregion
+
 }

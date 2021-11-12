@@ -21,7 +21,7 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
 
         if (gm.jugadores.Count == 1)
         {
-            FindObjectOfType<PlayerSelector>().playerWinner = (int) gm.jugadores[0].tipoPersonaje;
+            FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoUpdateWinner", RpcTarget.AllViaServer, (int) gm.jugadores[0].tipoPersonaje);
             FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoExitPlayer", RpcTarget.Others);
             StartCoroutine(ExitMaster());
         }

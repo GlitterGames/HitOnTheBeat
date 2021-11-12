@@ -8,9 +8,9 @@ using UnityEngine.SceneManagement;
 public class PhotonInstanciate : MonoBehaviourPunCallbacks
 {
     public GameObject[] playerAvatar = new GameObject[2];
-    public GameObject ritmoSystem;
     public Floor[] f;
     public GameObject my_player;
+    public GameObject ritmo;
 
     private PlayerSelector playerSelector;
 
@@ -23,7 +23,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
         int id = PhotonNetwork.LocalPlayer.ActorNumber - 1;
         Vector3 pos = new Vector3(f[id].transform.position.x, 0.6f, f[id].transform.position.z);
         my_player = PhotonNetwork.Instantiate(playerAvatar[typePlayer].name, pos, Quaternion.Euler(0,180,0));
-        if(PhotonNetwork.IsMasterClient) PhotonNetwork.Instantiate(this.ritmoSystem.name, ritmoSystem.transform.position, Quaternion.identity);
+        if(PhotonNetwork.IsMasterClient) PhotonNetwork.Instantiate(ritmo.name, pos, Quaternion.identity);
     }
 
     private void Start()

@@ -113,6 +113,7 @@ MonoBehaviour:
   previousFloor: {fileID: 0}
   floorDir: 0
   fuerza: 0
+  fuerzaFallo: 1
   speed: 2
   newPos: {x: 0, y: 0, z: 0}
   oldPos: {x: 0, y: 0, z: 0}
