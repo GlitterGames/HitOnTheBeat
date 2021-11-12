@@ -374,6 +374,36 @@ public class PlayerController : MonoBehaviourPun
         oldPos = newPos;
         newPos = new Vector3(x, transform.position.y, z);
     }
+	
+	public void Caer() {
+        newPos = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+        photonView.RPC("CaerRCP", RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    private void CaerRCP()
+    {
+        newPos = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+    }
+
+    public void GetPowerUp() {
+        Floor.Type t = actualFloor.GetPower();
+        actualFloor.SetPower(Floor.Type.Vacio);
+        switch (t) {
+            case Floor.Type.DobleRitmo:
+                break;
+        }
+    }
+    public void SetPowerUp(Floor f, Floor.Type type)
+    {
+        photonView.RPC("SetPowerUpRPC", RpcTarget.AllViaServer, f.row, f.index, type);
+    }
+    [PunRPC]
+    private void SetPowerUpRPC(int row, int index, Floor.Type type)
+    {
+        gameManager.casillas[row][index].SetPower(type);    
+    }
+	
     #endregion
 
     #region Colores
