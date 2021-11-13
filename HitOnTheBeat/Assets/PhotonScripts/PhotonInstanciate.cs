@@ -28,7 +28,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        //Asignamos la c·mara al jugador.
+        //Asignamos la c√°mara al jugador.
         FindObjectOfType<VirtualCameraController>().SetTarget(my_player.transform);
 
         //Actualizamos la lista de jugadores del master.
