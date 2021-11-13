@@ -352,8 +352,26 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharServerRPC(int row, int index)
     {
-        animator.SetBool("IsFalling", true);
+        
+        if (animator.GetBool("IsJumping"))
+        {  
+            StartCoroutine(AnimationsUpdate(row, index));
+        }
+        else
+        {
+            animator.SetBool("IsFalling", true);
+            Floor nextFloor = gameManager.casillas[row][index];
+            oldPos = newPos;
+            newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
+        }
+    }
+
+    IEnumerator AnimationsUpdate(int row, int index)
+    {
+        yield return new WaitForSeconds(1);
+        SetAreaColor(actualFloor);
         animator.SetBool("IsJumping", false);
+        animator.SetBool("IsFalling", true);
         Floor nextFloor = gameManager.casillas[row][index];
         oldPos = newPos;
         newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
