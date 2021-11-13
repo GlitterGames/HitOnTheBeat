@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviourPun
     public static Color casillaAttack = Color.yellow;
     public List<Color> color = new List<Color>();
     public List<Color> colorBlink = new List<Color>();
-
+    public Color backgroundColor;
+    public GameObject[] background = new GameObject[6];
     public List<Floor[]> casillas = new List<Floor[]>();
     public List<PlayerController> jugadores = new List<PlayerController>();
     public Queue<Movement> movimientos = new Queue<Movement>();
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviourPun
         InitColor();
         InitColorBlink();
         InitCasillas();
+        InitBackground();
     }
 
     //Se ejecuta cada vez que comienza un nuevo Beat.
@@ -67,6 +69,13 @@ public class GameManager : MonoBehaviourPun
         colorBlink.Add(Color.green);
         colorBlink.Add(Color.yellow);
         colorBlink.Add(Color.red);
+    }
+    private void InitBackground()
+    {
+        for(int i = 0; i<6; i++)
+        {
+            background[i].GetComponent<Renderer>().material.color = backgroundColor;
+        }
     }
     public void UpdatePlayers()
     {
@@ -120,7 +129,6 @@ public class GameManager : MonoBehaviourPun
         yield return new WaitForSeconds(time);
         FindObjectOfType<PhotonInstanciate>().my_player.
             GetComponent<PlayerController>().SetPowerUp(f, Floor.Type.Vacio);
-
     }
     public void ApplyEfectsFromFloor() {
         if (PhotonNetwork.IsMasterClient)
@@ -213,6 +221,7 @@ public class GameManager : MonoBehaviourPun
         {
             StartCoroutine(Blink(f, seg, repeticiones));
         }
+        StartCoroutine(BlinkBackground(row, seg, repeticiones));
     }
     private IEnumerator Blink(Floor f, float seg, int repeticiones) {
         int j;
@@ -220,7 +229,7 @@ public class GameManager : MonoBehaviourPun
         for (j = 1; j < colorBlink.Count; j++) {
             Color c1 = colorBlink[j-1];
             Color c2 = colorBlink[j];
-            f.SetColor(colorBlink[j-1]);
+            f.SetColor(c1);
             yield return new WaitForSeconds(seg);
             for (int i = 0; i < repeticiones; i++)
             {
@@ -231,36 +240,63 @@ public class GameManager : MonoBehaviourPun
             }
         }
         yield return new WaitForSeconds(seg);
+        yield return new WaitForSeconds(0.02f);
         //LAS CASILLAS SE CAEN POR ACCIÓN DE LA GRAVEDAD
         f.GetComponentInChildren<Rigidbody>().isKinematic = false;
         f.GetComponentInChildren<Rigidbody>().useGravity = true;
+        yield return new WaitForSeconds(0.5f);
+        f.gameObject.active = false;
         yield return new WaitForEndOfFrame();
-
+        yield return new WaitForEndOfFrame();
+        //LOS JUGADORES QUE SE ENCUENTREN EN ESAS CASILLAS SE CAERAN
         if (PhotonNetwork.IsMasterClient) {
             foreach (PlayerController jugador in jugadores) {
                 if (jugador.actualFloor.Equals(f))
                 {
-                    Debug.Log("A caerme");
-                    jugador.Caer();
+                    jugador.Caer(); 
+                    jugadores.Remove(jugador);
                 }
             }
             casillas[f.row][f.index] = null;
         }
     }
+    private IEnumerator BlinkBackground(int row, float seg, int repeticiones)
+    {
+        int j;
+        //LAS CASILLAS PARPADEAN
+        for (j = 1; j < colorBlink.Count; j++)
+        {
+            Color c1 = colorBlink[j - 1];
+            Color c2 = colorBlink[j];
+            background[row].GetComponent<Renderer>().material.color = c1;
+            yield return new WaitForSeconds(seg);
+            for (int i = 0; i < repeticiones; i++)
+            {
+                background[row].GetComponent<Renderer>().material.color = c1;
+                yield return new WaitForSeconds(seg / repeticiones);
+                background[row].GetComponent<Renderer>().material.color = c2;
+                yield return new WaitForSeconds(seg / repeticiones);
+            }
+        }
+        yield return new WaitForSeconds(seg);
+        
+        background[row].active = false;
+        yield return new WaitForEndOfFrame();
+    }
     bool usado = false;
     public void Update()
     {
         //PRUEBA DE USO CASILLAS PARPADEO Y CAIDA.
-        //if (!usado) {
-        //    DestroyRow(4, 0.1f, 5);
-        //    usado = true;
-        //}
-        if (!usado&&PhotonNetwork.IsMasterClient) {
-            SpawnPowerUp(3f);
-            SpawnPowerUp(5f);
-            SpawnPowerUp(6f);
-            SpawnPowerUp(10f);
+        if (!usado) {
+            DestroyRow(5, 0.5f, 3);
             usado = true;
         }
+        //if (!usado&&PhotonNetwork.IsMasterClient) {
+        //    SpawnPowerUp(3f);
+        //    SpawnPowerUp(5f);
+        //    SpawnPowerUp(6f);
+        //    SpawnPowerUp(10f);
+        //    usado = true;
+        //}
     }
 }
