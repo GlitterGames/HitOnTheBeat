@@ -28,7 +28,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.NickName = _name.text;
-        Debug.Log(_name + "estás conectado al servidor de la región: " + PhotonNetwork.CloudRegion);
+        Debug.Log(PhotonNetwork.NickName + "estás conectado al servidor de la región: " + PhotonNetwork.CloudRegion);
         PhotonNetwork.JoinLobby();
     }
 
