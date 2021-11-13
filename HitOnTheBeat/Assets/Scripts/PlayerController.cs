@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviourPun
     public float secondsCounter = 0f;
     public float secondsToCount = 0.4f;
     public bool movimientoMarcado = false;
+    private int hitsStats = 0;  //Jugadores que ha golpeado
+    private int jumpStats = 0;  //Saltos que ha dado
+    private int pushStats = 0;  //Veces que ha sido golpeado
+    private int killsStats = 0; //Jugadores que ha sacado del ring
     private Vector3 pos = Vector3.zero;
     #endregion
 
@@ -180,6 +184,7 @@ public class PlayerController : MonoBehaviourPun
                 if (nextFloor != null)
                 {
                     movimientoMarcado = true;
+                    jumpStats++;
                     photonView.RPC("RegisterClickRPC", RpcTarget.MasterClient, (photonView.ViewID / 1000) - 1,
                         nextFloor.row, nextFloor.index, floorDir);
                 }
@@ -251,6 +256,7 @@ public class PlayerController : MonoBehaviourPun
     public void Golpear()
     {
         photonView.RPC("GolpearRPC", RpcTarget.AllViaServer);
+        hitsStats++;
     }
 
     [PunRPC]
@@ -258,6 +264,11 @@ public class PlayerController : MonoBehaviourPun
     {
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsAttacking", true);
+    }
+
+    public void Kill()
+    {
+        killsStats++;
     }
 
     public void Mover(Floor nextFloor, FloorDetectorType dir)
@@ -303,6 +314,7 @@ public class PlayerController : MonoBehaviourPun
     {
         bool echado = false;
         Floor nextFloor = null;
+        pushStats++;
         for (int i = 0; i < max && !echado; i++)
         {
             nextFloor = actualFloor.GetFloor(dir);

@@ -167,6 +167,7 @@ public class GameManager : MonoBehaviourPun
                         bool echado = jugadores[i].Echar(jugadores[k].floorDir, max);
                         if (echado)
                         {
+                            jugadores[k].Kill();
                             jugadores.RemoveAt(i);
                             i--;
                         }
@@ -183,6 +184,7 @@ public class GameManager : MonoBehaviourPun
                         bool echado = jugadores[k].Echar(jugadores[i].floorDir, max);
                         if (echado)
                         {
+                            jugadores[i].Kill();
                             jugadores.RemoveAt(k);
                             i = k;
                         }
