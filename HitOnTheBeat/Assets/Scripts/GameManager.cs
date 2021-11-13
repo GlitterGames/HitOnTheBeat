@@ -118,10 +118,10 @@ public class GameManager : MonoBehaviourPun
         int i = Random.Range(0, casillas.Count);
         int j = Random.Range(0, casillas[i].Length);
 
-        Floor f = casillas[i][j];
+        Floor f = casillas[0][0];
         Debug.Log("La casilla donde se dbería pintar es: " +f.row +" " +f.index);
-
-        f.powertime = StartCoroutine(SetType(f, Floor.Type.DobleRitmo, time));
+       
+        f.powertime = StartCoroutine(SetType(f, Floor.Type.RitmoDuplicado, time));
     }
     private IEnumerator SetType(Floor f, Floor.Type t, float time) {
         FindObjectOfType<PhotonInstanciate>().my_player.
@@ -137,7 +137,6 @@ public class GameManager : MonoBehaviourPun
             {
                 if (jugador.actualFloor.GetPower() != Floor.Type.Vacio)
                 {
-                    Debug.Log("He cogido un power up");
                     jugador.GetPowerUp();
                     StopCoroutine(jugador.actualFloor.powertime);
                 }
@@ -287,15 +286,15 @@ public class GameManager : MonoBehaviourPun
     public void Update()
     {
         //PRUEBA DE USO CASILLAS PARPADEO Y CAIDA.
-        if (!usado) {
-            DestroyRow(5, 0.5f, 3);
-            usado = true;
-        }
+        //if (!usado) {
+        //    DestroyRow(4, 0.5f, 3);
+        //    usado = true;
+        //}
         //if (!usado&&PhotonNetwork.IsMasterClient) {
-        //    SpawnPowerUp(3f);
-        //    SpawnPowerUp(5f);
-        //    SpawnPowerUp(6f);
-        //    SpawnPowerUp(10f);
+        //    SpawnPowerUp(100f);
+        //    SpawnPowerUp(100f);
+        //    SpawnPowerUp(100f);
+        //    SpawnPowerUp(100f);
         //    usado = true;
         //}
     }

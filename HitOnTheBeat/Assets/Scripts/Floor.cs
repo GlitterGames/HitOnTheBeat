@@ -14,7 +14,8 @@ public class Floor : MonoBehaviour
     public Floor[] adyacentes = new Floor[6];
     public enum Type {
         Vacio,
-        DobleRitmo
+        RitmoDuplicado,
+        Escudo
     }
     private Type type = Type.Vacio;
     public Coroutine powertime = null;
@@ -111,10 +112,10 @@ public class Floor : MonoBehaviour
         switch (t)
         {
             case Type.Vacio:
-                SetColor(Color.white);
+                SetColor(Color.green);
                 break;
-            case Type.DobleRitmo:
-                SetColor(Color.black);
+            case Type.RitmoDuplicado:
+                SetColor(Color.red);
                 break;
         }
     }

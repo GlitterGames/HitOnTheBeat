@@ -21,6 +21,12 @@ public class PlayerController : MonoBehaviourPun
         INVENCIBLE = 1,
         ULTIMATE = 2
     }
+    public enum Power_Up
+    {
+        NORMAL = 0,
+        ESCUDO = 1,
+        RITMODUPLICADO = 2
+    }
     #endregion
 
     #region Atributes
@@ -42,6 +48,8 @@ public class PlayerController : MonoBehaviourPun
     public float secondsToCount = 0.4f;
     public bool movimientoMarcado = false;
     private Vector3 pos = Vector3.zero;
+    public Power_Up power = Power_Up.NORMAL;
+    public float durationPowerUp = 5f;
     #endregion
 
     // Start is called before the first frame update
@@ -271,6 +279,9 @@ public class PlayerController : MonoBehaviourPun
     private void MoverRPC(int row, int index, FloorDetectorType dir)
     {
         fuerza++;
+        if (Power_Up.RITMODUPLICADO == power) {
+            fuerza++;
+        }
         Floor nextFloor = gameManager.casillas[row][index];
         movimientoMarcado = false;
         previousFloor = actualFloor;
@@ -379,14 +390,31 @@ public class PlayerController : MonoBehaviourPun
         photonView.RPC("EcharMapaRPC", RpcTarget.All);
         photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
     }
-
-    public void GetPowerUp() {
+    public void GetPowerUp()
+    {
+        if (Power_Up.NORMAL != this.power) return; //LO PILLAS PERO NO TE AFECTA YA QUE YA POSEES UN POWER 
         Floor.Type t = actualFloor.GetPower();
-        actualFloor.SetPower(Floor.Type.Vacio);
-        switch (t) {
-            case Floor.Type.DobleRitmo:
+        SetPowerUp(actualFloor, Floor.Type.Vacio);
+        StartCoroutine(PowerUp());
+        photonView.RPC("GetPowerUpRPC", RpcTarget.All, t);
+    }
+    [PunRPC]
+    private void GetPowerUpRPC(Floor.Type t)
+    {
+        switch (t)
+        {
+            case Floor.Type.RitmoDuplicado:
+                this.power = Power_Up.RITMODUPLICADO;
+                break;
+            case Floor.Type.Escudo:
+                this.power = Power_Up.ESCUDO;
                 break;
         }
+    }
+    private IEnumerator PowerUp()
+    {
+        yield return new WaitForSeconds(durationPowerUp);
+        this.power = Power_Up.NORMAL;
     }
     public void SetPowerUp(Floor f, Floor.Type type)
     {
@@ -397,7 +425,7 @@ public class PlayerController : MonoBehaviourPun
     {
         gameManager.casillas[row][index].SetPower(type);    
     }
-	
+    
     #endregion
 
     #region Colores

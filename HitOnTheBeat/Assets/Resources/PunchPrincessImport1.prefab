@@ -426,6 +426,8 @@ MonoBehaviour:
   secondsCounter: 0
   secondsToCount: 0.4
   movimientoMarcado: 0
+  power: 0
+  durationPowerUp: 5
 --- !u!114 &7285398391901293338
 MonoBehaviour:
   m_ObjectHideFlags: 0
