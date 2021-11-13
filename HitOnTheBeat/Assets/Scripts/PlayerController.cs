@@ -368,7 +368,7 @@ public class PlayerController : MonoBehaviourPun
 
     IEnumerator AnimationsUpdate(int row, int index)
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.7f);
         SetAreaColor(actualFloor);
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsFalling", true);
