@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 265172764}
   - component: {fileID: 265172763}
   - component: {fileID: 265172762}
+  - component: {fileID: 265172765}
   m_Layer: 5
   m_Name: Frank
   m_TagString: Untagged
@@ -191,7 +192,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 21300000, guid: 722b90d45b28bc345869fe17c2b823be, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: 722b90d45b28bc345869fe17c2b823be, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -255,6 +256,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 265172760}
   m_CullTransparentMesh: 1
+--- !u!114 &265172765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265172760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d734756e6998a447a30eb581bca8663, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alphaThreshold: 0.1
 --- !u!1 &471530814
 GameObject:
   m_ObjectHideFlags: 0
@@ -2169,6 +2183,7 @@ GameObject:
   - component: {fileID: 839732380}
   - component: {fileID: 839732379}
   - component: {fileID: 839732378}
+  - component: {fileID: 839732381}
   m_Layer: 5
   m_Name: PunchPrincess
   m_TagString: Untagged
@@ -2225,7 +2240,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 21300000, guid: 923ee1aa90f1670419bb87aaf9a421fb, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: 923ee1aa90f1670419bb87aaf9a421fb, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -2289,6 +2304,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 839732376}
   m_CullTransparentMesh: 1
+--- !u!114 &839732381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839732376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d734756e6998a447a30eb581bca8663, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alphaThreshold: 0.1
 --- !u!1 &1012423048
 GameObject:
   m_ObjectHideFlags: 0
@@ -2570,6 +2598,7 @@ GameObject:
   - component: {fileID: 1528621642}
   - component: {fileID: 1528621641}
   - component: {fileID: 1528621640}
+  - component: {fileID: 1528621643}
   m_Layer: 5
   m_Name: XXColor
   m_TagString: Untagged
@@ -2626,7 +2655,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 21300000, guid: 53f80233f59c2d34cb50721ffd840605, type: 3}
     m_SelectedSprite: {fileID: 21300000, guid: 53f80233f59c2d34cb50721ffd840605, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -2690,6 +2719,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528621638}
   m_CullTransparentMesh: 1
+--- !u!114 &1528621643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528621638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d734756e6998a447a30eb581bca8663, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alphaThreshold: 0.1
 --- !u!1001 &1653037357
 PrefabInstance:
   m_ObjectHideFlags: 0
