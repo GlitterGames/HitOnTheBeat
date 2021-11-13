@@ -376,14 +376,8 @@ public class PlayerController : MonoBehaviourPun
     }
 	
 	public void Caer() {
-        newPos = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
-        photonView.RPC("CaerRCP", RpcTarget.AllViaServer);
-    }
-
-    [PunRPC]
-    private void CaerRCP()
-    {
-        newPos = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+        photonView.RPC("EcharMapaRPC", RpcTarget.All);
+        photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
     }
 
     public void GetPowerUp() {
