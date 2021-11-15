@@ -48,6 +48,33 @@ MonoBehaviour:
   - SetPlayerDataRPC
   - ColorearRPC
   - EcharRPC
+  - EcharMapaRPC
+  - UpdatePlayersRPC
+  - MoverServerRPC
+  - RegisterMoveRPC
+  - EcharMapaServerRPC
+  - EcharServerRPC
+  - GolpearRPC
+  - RegisterClickRPC
+  - InvocarFlechaRPC
+  - DismarkPlayerRPC
+  - UseGravityRPC
+  - SetPlayerCamera
+  - DoExitPlayer
+  - CaerRCP
+  - SetPowerUpRPC
+  - InvocarIndicadorRPC
+  - BeatIndicadorRPC
+  - SetColorRPC
+  - MarcarRitmoRPC
+  - IndicatorSetSizeRPC
+  - SetColorBeatEndRPC
+  - SetColorBeatStartRPC
+  - AciertoRPC
+  - FalloRPC
+  - NoHaPulsadoRPC
+  - DoUpdateWinner
+  - GetPowerUpRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

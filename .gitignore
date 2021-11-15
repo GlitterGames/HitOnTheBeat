@@ -1,14 +1,16 @@
-[Ll]ibrary/
+HitOnTheBeat/[Ll]ibrary/
 
-[Tt]emp/
+HitOnTheBeat/[Tt]emp/
 
-[Oo]bj/
+HitOnTheBeat/[Oo]bj/
 
-[Bb]uild/
+HitOnTheBeat/[Bb]uild/
 
-[Bb]uilds/
+HitOnTheBeat/[Bb]uilds/
 
-Assets/AssetStoreTools*
+HitOnTheBeat/[Ll]ogs/
+
+HitOnTheBeat/Assets/AssetStoreTools*
 
 # Visual Studio cache directory
  .vs/

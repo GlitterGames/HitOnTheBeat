@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 
-public class Floor : MonoBehaviourPun
+public class Floor : MonoBehaviour
 {
     private Renderer r;
     private Color normal;
@@ -12,7 +12,13 @@ public class Floor : MonoBehaviourPun
     public int index;
     public int row;
     public Floor[] adyacentes = new Floor[6];
-
+    public enum Type {
+        Vacio,
+        RitmoDuplicado,
+        Escudo
+    }
+    private Type type = Type.Vacio;
+    public Coroutine powertime = null;
     public Floor GetFloor(FloorDetectorType type) {
         switch (type)
         {
@@ -50,55 +56,72 @@ public class Floor : MonoBehaviourPun
         }
         return null;
     }
-    public Floor getEast() {
+    public Floor GetEast() {
         return adyacentes[0];
     }
-    public void setEast(Floor _east)
+    public void SetEast(Floor _east)
     {
         adyacentes[0] = _east;
     }
-    public Floor getWest()
+    public Floor GetWest()
     {
         return adyacentes[1];
     }
-    public void setWest(Floor _west)
+    public void SetWest(Floor _west)
     {
        adyacentes[1] = _west;
     }
-    public Floor getNorth_east()
+    public Floor GetNorth_east()
     {
         return adyacentes[2];
     }
-    public void setNorth_east(Floor _north_east)
+    public void SetNorth_east(Floor _north_east)
     {
         adyacentes[2] = _north_east;
     }
-    public Floor getNorth_west()
+    public Floor GetNorth_west()
     {
         return adyacentes[3];
     }
-    public void setNorth_west(Floor _north_west)
+    public void SetNorth_west(Floor _north_west)
     {
         adyacentes[3] = _north_west;
     }
-    public Floor getSouth_east()
+    public Floor GetSouth_east()
     {
         return adyacentes[4];
     }
-    public void setSouth_east(Floor _south_east)
+    public void SetSouth_east(Floor _south_east)
     {
         adyacentes[4] = _south_east;
     }
-    public Floor getSouth_west()
+    public Floor GetSouth_west()
     {
         return adyacentes[5];
     }
-    public void setSouth_west(Floor _south_west)
+    public void SetSouth_west(Floor _south_west)
     {
         adyacentes[5] = _south_west;
     }
-    public Floor[] getAdyacentes() {
+    public Floor[] GetAdyacentes() {
         return adyacentes;
+    }
+    public void SetPower(Type t)
+    {
+        this.type = t;
+        switch (t)
+        {
+            case Type.Vacio:
+                SetColor(Color.green);
+                break;
+            case Type.RitmoDuplicado:
+                SetColor(Color.red);
+                break;
+        }
+    }
+    public Type GetPower()
+    {
+        return type;
     }
     #endregion
     // Start is called before the first frame update
@@ -116,17 +139,17 @@ public class Floor : MonoBehaviourPun
     {
         return (Vector3.right * transform.position.x + Vector3.forward * transform.position.z);
     }
-    public void setColor(Color c) {
+    public void SetColor(Color c) {
         r.material.color = c;
     }
-    public void setColorN(Color c)
+    public void SetColorN(Color c)
     {
         normal = c;
     }
-    public Color getColor() {
+    public Color GetColor() {
         return r.material.color;
     }
-    public Color getColorN()
+    public Color GetColorN()
     {
         return normal;
     }
@@ -134,12 +157,22 @@ public class Floor : MonoBehaviourPun
     public override bool Equals(object other)
     {
         if (other == null) return false;
-        if (other == this) return true;
+        if (other == (object)this) return true;
         if (other.GetType() != this.GetType()) return false;
 
         Floor otro = (Floor)other;
 
         if (index == otro.index && row == otro.row) return true;
         else return false;
+    }
+    public override int GetHashCode()
+    {
+        if (row == 0) return 0;
+        else return row * (row * 6) + index - 5;
+    }
+
+    public override string ToString()
+    {
+        return "CASILLA[Anillo: " + row + ". Indice: " + index + ".]"; 
     }
 }

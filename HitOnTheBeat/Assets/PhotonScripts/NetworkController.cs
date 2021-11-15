@@ -11,11 +11,18 @@ using UnityEngine.SceneManagement;
 public class NetworkController : MonoBehaviourPunCallbacks
 {
     //[SerializeField] private UIManager _uiManager;
+    public GameObject conectando;
+    private SceneTransitioner st;
     void Start()
     {
         Debug.Log("Start");
     }
     [SerializeField] private InputField _name;
+
+    public void Awake()
+    {
+        st = FindObjectOfType<SceneTransitioner>();
+    }
 
     // Update is called once per frame
     public override void OnConnectedToMaster()
@@ -30,11 +37,13 @@ public class NetworkController : MonoBehaviourPunCallbacks
         Debug.Log("Conectado a la lobby general.");
         //PhotonNetwork.CreateRoom(_name.text);
         SceneManager.LoadScene(1);
+        st.EndTransition();
     }
 
         public void Connect ()
     {
         Debug.Log("Botón de connect pulsado");
+        st.StartTransition(1);
         if (!PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.ConnectUsingSettings())
@@ -44,11 +53,17 @@ public class NetworkController : MonoBehaviourPunCallbacks
             else
             {
                  Debug.Log("\nError al conectar al servidor");
+                st.EndTransition();
             }
         }
         else
         {
             Debug.Log("\nYa conectado");
         }
+    }
+
+    public void OnExit()
+    {
+        Application.Quit();
     }
 }

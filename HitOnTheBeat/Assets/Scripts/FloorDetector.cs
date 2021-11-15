@@ -37,7 +37,6 @@ public class FloorDetector : MonoBehaviour
                 Debug.LogError("ERROR: Floor colision does not match");
                 break;
         }
-        transform.localScale = new Vector3(1.5f,1.5f,1.5f);
     }
 
     // Update is called once per frame
@@ -54,22 +53,22 @@ public class FloorDetector : MonoBehaviour
             switch (detectorType)
             {
                 case FloorDetectorType.East:
-                    f.setEast(floor);
+                    f.SetEast(floor);
                     break;
                 case FloorDetectorType.West:
-                    f.setWest(floor);
+                    f.SetWest(floor);
                     break;
                 case FloorDetectorType.North_east:
-                    f.setNorth_east(floor);
+                    f.SetNorth_east(floor);
                     break;
                 case FloorDetectorType.North_west:
-                    f.setNorth_west(floor);
+                    f.SetNorth_west(floor);
                     break;
                 case FloorDetectorType.South_east:
-                    f.setSouth_east(floor);
+                    f.SetSouth_east(floor);
                     break;
                 case FloorDetectorType.South_west:
-                    f.setSouth_west(floor);
+                    f.SetSouth_west(floor);
                     break;
             }
 
@@ -84,22 +83,22 @@ public class FloorDetector : MonoBehaviour
             switch (detectorType)
             {
                 case FloorDetectorType.East:
-                    f.setEast(null);
+                    f.SetEast(null);
                     break;
                 case FloorDetectorType.West:
-                    f.setWest(null);
+                    f.SetWest(null);
                     break;
                 case FloorDetectorType.North_east:
-                    f.setNorth_east(null);
+                    f.SetNorth_east(null);
                     break;
                 case FloorDetectorType.North_west:
-                    f.setNorth_west(null);
+                    f.SetNorth_west(null);
                     break;
                 case FloorDetectorType.South_east:
-                    f.setSouth_east(null);
+                    f.SetSouth_east(null);
                     break;
                 case FloorDetectorType.South_west:
-                    f.setSouth_west(null);
+                    f.SetSouth_west(null);
                     break;
             }
         }

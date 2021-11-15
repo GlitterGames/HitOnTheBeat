@@ -3,21 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
+using UnityEngine.UI;
+
 public class PlayerController : MonoBehaviourPun
 {
     #region Enumerables
     public enum Tipo
     {
         BOXEADORA = 0,
-        FANTASMA = 1,
-        TERREMOTO = 2,
-        BOMBA = 3
+        BOMBA = 1,
+        FANTASMA = 2,
+        TERREMOTO = 3
     }
     public enum Estado
     {
         NORMAL = 0,
         INVENCIBLE = 1,
         ULTIMATE = 2
+    }
+    public enum Power_Up
+    {
+        NORMAL = 0,
+        ESCUDO = 1,
+        RITMODUPLICADO = 2
     }
     #endregion
 
@@ -26,15 +34,22 @@ public class PlayerController : MonoBehaviourPun
     public Estado estadoActual = Estado.NORMAL;
     public Floor actualFloor;
     public Floor previousFloor;
-    public FloorDetectorType typeAnt;
+    public FloorDetectorType floorDir;
     public int fuerza;
-    public GameObject playerAvatar;
+    public int fuerzaSinPulsar = 1;
     private InputController my_input;
-    private PhotonInstanciate photon;
     private GameManager gameManager;
     private Animator animator;
+    private Rigidbody rb;
     public float speed;
     public Vector3 newPos;
+    public Vector3 oldPos;
+    public float secondsCounter = 0f;
+    public float secondsToCount = 0.4f;
+    public bool movimientoMarcado = false;
+    private Vector3 pos = Vector3.zero;
+    public Power_Up power = Power_Up.NORMAL;
+    public float durationPowerUp = 5f;
     #endregion
 
     // Start is called before the first frame update
@@ -46,19 +61,34 @@ public class PlayerController : MonoBehaviourPun
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
 
-        typeAnt = FloorDetectorType.West;
+        floorDir = FloorDetectorType.West;
 
         //Los viewId de Cada jugador se caracterizan por el número 1000 así sabemos de quien es este objeto.
-        actualFloor = FindObjectOfType<PhotonInstanciate>().f[(photonView.ViewID-1000)/1000];
+        actualFloor = FindObjectOfType<PhotonInstanciate>().f[(photonView.ViewID / 1000) - 1];
         previousFloor = actualFloor;
         newPos = transform.position;
+        oldPos = transform.position;
+        fuerza = 0;
 
         animator = GetComponent<Animator>();
         gameManager = FindObjectOfType<GameManager>();
+        rb = GetComponent<Rigidbody>();
 
         animator.SetBool("IsAttacking", false);
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsSpecial", false);
+        animator.SetBool("IsFalling", false);
+    }
+
+    void Start()
+    {
+        if (photonView.IsMine) StartCoroutine(PrimerPintado());
+    }
+
+    IEnumerator PrimerPintado()
+    {
+        yield return new WaitForSeconds(1);
+        SetAreaColor(actualFloor);
     }
 
     //Para que funcione el Input System en la versión actual.
@@ -76,9 +106,30 @@ public class PlayerController : MonoBehaviourPun
     {
         if (transform.position != newPos)
         {
+            secondsCounter += Time.deltaTime;
             float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, newPos, step);
-            transform.LookAt(newPos);
+            if (secondsCounter >= secondsToCount)
+                transform.position = Vector3.MoveTowards(transform.position, newPos, step);
+            if ((animator.GetBool("IsJumping") || (animator.GetBool("IsAttacking"))) && !animator.GetBool("IsFalling"))
+            {
+                Quaternion rotTarget = Quaternion.LookRotation(newPos - this.transform.position);
+                this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, rotTarget, 250f * Time.deltaTime);
+            }
+            else if (animator.GetBool("IsFalling"))
+            {
+                Quaternion rotTarget = Quaternion.LookRotation(oldPos - this.transform.position);
+                this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, rotTarget, 50f * Time.deltaTime);
+            }
+
+        }
+        else
+        {
+            secondsCounter = 0;
+            animator.SetBool("IsJumping", false);
+            animator.SetBool("IsFalling", false);
+            animator.SetBool("IsAttacking", false);
+            if (transform.position == pos)
+                photonView.RPC("UseGravityRPC", RpcTarget.All);
         }
     }
 
@@ -86,6 +137,8 @@ public class PlayerController : MonoBehaviourPun
     private void OnClick()
     {
         if (!photonView.IsMine) return;
+        if (movimientoMarcado) return;
+        if (Ritmo.instance.haFallado) return;
         if (transform.position != newPos) return;
         if (estadoActual == Estado.ULTIMATE && tipoPersonaje == Tipo.BOMBA) return;
 
@@ -100,121 +153,298 @@ public class PlayerController : MonoBehaviourPun
             {
                 Floor nextFloor = null;
 
-                if (targetFloor.Equals(actualFloor.getNorth_west()))
+                if (targetFloor.Equals(actualFloor.GetNorth_west()))
                 {
-                    nextFloor = actualFloor.getNorth_west();
-                    typeAnt = FloorDetectorType.North_west;
+                    nextFloor = actualFloor.GetNorth_west();
+                    floorDir = FloorDetectorType.North_west;
                 }
-                else if (targetFloor.Equals(actualFloor.getNorth_east()))
+                else if (targetFloor.Equals(actualFloor.GetNorth_east()))
                 {
-                    nextFloor = actualFloor.getNorth_east();
-                    typeAnt = FloorDetectorType.North_east;
+                    nextFloor = actualFloor.GetNorth_east();
+                    floorDir = FloorDetectorType.North_east;
                 }
-                else if (targetFloor.Equals(actualFloor.getWest()))
+                else if (targetFloor.Equals(actualFloor.GetWest()))
                 {
-                    nextFloor = actualFloor.getWest();
-                    typeAnt = FloorDetectorType.West;
+                    nextFloor = actualFloor.GetWest();
+                    floorDir = FloorDetectorType.West;
                 }
-                else if (targetFloor.Equals(actualFloor.getEast()))
+                else if (targetFloor.Equals(actualFloor.GetEast()))
                 {
-                    nextFloor = actualFloor.getEast();
-                    typeAnt = FloorDetectorType.East;
+                    nextFloor = actualFloor.GetEast();
+                    floorDir = FloorDetectorType.East;
                 }
-                else if (targetFloor.Equals(actualFloor.getSouth_west()))
+                else if (targetFloor.Equals(actualFloor.GetSouth_west()))
                 {
-                    nextFloor = actualFloor.getSouth_west();
-                    typeAnt = FloorDetectorType.South_west;
+                    nextFloor = actualFloor.GetSouth_west();
+                    floorDir = FloorDetectorType.South_west;
                 }
-                else if (targetFloor.Equals(actualFloor.getSouth_east()))
+                else if (targetFloor.Equals(actualFloor.GetSouth_east()))
                 {
-                    nextFloor = actualFloor.getSouth_east();
-                    typeAnt = FloorDetectorType.South_east;
+                    nextFloor = actualFloor.GetSouth_east();
+                    floorDir = FloorDetectorType.South_east;
                 }
 
                 //PERFORM MOVEMENT
                 if (nextFloor != null)
                 {
-                    Mover(nextFloor);
+                    movimientoMarcado = true;
+                    photonView.RPC("RegisterClickRPC", RpcTarget.MasterClient, (photonView.ViewID / 1000) - 1,
+                        nextFloor.row, nextFloor.index, floorDir);
                 }
             }
         }
     }
 
     #region Moviento
-    public void Mover(Floor nextFloor)
+    [PunRPC]
+    public void RegisterClickRPC(int id, int row, int index, FloorDetectorType dir)
     {
-        photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
-        photonView.RPC("MoverRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
+        bool acierto = Ritmo.instance.TryMovePlayer();
+        if (acierto)
+        {
+            gameManager.RegisterMovement(id, row, index, dir);
+            photonView.RPC("AciertoRPC", RpcTarget.All);
+        }
+        else
+        {
+            photonView.RPC("DismarkPlayerRPC", photonView.Owner);
+            photonView.RPC("FalloRPC", RpcTarget.All);
+        }
+        photonView.RPC("MarcarRitmoRPC", photonView.Owner, acierto);
     }
 
     [PunRPC]
-    private void MoverRPC(int row, int index)
+    public void DismarkPlayerRPC()
     {
+        movimientoMarcado = false;
+    }
+
+    [PunRPC]
+    public void MarcarRitmoRPC(bool ritmoAcertado)
+    {
+        Ritmo ritmo = Ritmo.instance;
+        ritmo.haPulsado = true;
+        if (ritmoAcertado)
+        {
+            ritmo.SetColor(ritmo.colores.acierto);
+        }
+        else
+        {
+            ritmo.SetColor(ritmo.colores.fallo);
+            ritmo.haFallado = true;
+        }
+    }
+
+    [PunRPC]
+    public void AciertoRPC()
+    {
+        fuerzaSinPulsar = 1;
+    }
+
+    [PunRPC]
+    public void FalloRPC()
+    {
+        fuerza--;
+        if (fuerza < 0) fuerza = 0;
+    }
+
+    [PunRPC]
+    public void NoHaPulsadoRPC()
+    {
+        this.fuerza -= fuerzaSinPulsar;
+        if (fuerza < 0) fuerza = 0;
+        fuerzaSinPulsar++;
+    }
+
+    public void Golpear()
+    {
+        photonView.RPC("GolpearRPC", RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    private void GolpearRPC()
+    {
+        animator.SetBool("IsJumping", false);
+        animator.SetBool("IsAttacking", true);
+    }
+
+    public void Mover(Floor nextFloor, FloorDetectorType dir)
+    {
+        photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+        photonView.RPC("MoverRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
+        photonView.RPC("MoverServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
+    }
+
+    [PunRPC]
+    private void MoverRPC(int row, int index, FloorDetectorType dir)
+    {
+        fuerza++;
+        if (Power_Up.RITMODUPLICADO == power) {
+            fuerza++;
+        }
         Floor nextFloor = gameManager.casillas[row][index];
-        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
+        movimientoMarcado = false;
         previousFloor = actualFloor;
         actualFloor = nextFloor;
+        floorDir = dir;
+    }
+
+    [PunRPC]
+    private void MoverServerRPC(int row, int index)
+    {
+        Floor nextFloor = gameManager.casillas[row][index];
+        animator.SetBool("IsJumping", true);
+        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
     }
 
     [PunRPC]
     private void ColorearRPC(int row, int index)
     {
         SetNormalColor(actualFloor);
-       SetAreaColor(gameManager.casillas[row][index]);
-    }
-
-    public bool echar(FloorDetectorType type) {
-        Floor nextFloor = actualFloor.GetFloor(type);
-        if (nextFloor != null)
-        {
-            Debug.Log("Me tenía que mover");
-            transform.position = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-            previousFloor = actualFloor;
-            actualFloor = nextFloor;
-            return false;
-        }
-        else {
-            Debug.Log("Me tengo que eliminar");
-            //ENVIARLE A LA POSICION DE LA CASILLA "NULL" 
-            Floor inverse = actualFloor.GetInverseFloor(type);
-            Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x- inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z-inverse.GetFloorPosition().z);
-            transform.position = new Vector3(actualFloor.GetFloorPosition().x+diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z+diferencia.z);
-            //ANIMACION DE ELIMINAR AL JUEGADOR
-            eliminarJugador(actualFloor);
-            actualFloor = null;
-            return true;
-        }
+        SetAreaColor(gameManager.casillas[row][index]);
     }
 
     [PunRPC]
-    private void EcharRPC(int row, int index)
+    private void UseGravityRPC()
     {
-
+        rb.useGravity = true;
     }
 
-    public void eliminarJugador(Floor nextFloor)
+    public bool Echar(FloorDetectorType dir, int max)
     {
-        Debug.Log("Me sali de la pista");
+        bool echado = false;
+        Floor nextFloor = null;
+        for (int i = 0; i < max && !echado; i++)
+        {
+            nextFloor = actualFloor.GetFloor(dir);
+            if (nextFloor != null)
+            {
+                //Se actualiza no es la última iteración.
+                //Si es la última iteración se cambiará vía RPC.
+                if (i < max - 1)
+                {
+                    previousFloor = actualFloor;
+                    actualFloor = nextFloor;
+                }
+            }
+            else
+            {
+                //ENVIARLE A LA POSICION DE LA CASILLA "NULL" 
+                Floor inverse = actualFloor.GetInverseFloor(dir);
+                Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x - inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z - inverse.GetFloorPosition().z);
+                pos = new Vector3(actualFloor.GetFloorPosition().x + diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z + diferencia.z);
+                echado = true;
+            }
+        }
+        if (!echado)
+        {
+            photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+            photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
+            photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
+        }
+        else
+        {
+            photonView.RPC("EcharMapaRPC", RpcTarget.All);
+            photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
+        }
+
+        return echado;
     }
+
+    [PunRPC]
+    private void EcharRPC(int row, int index, FloorDetectorType dir)
+    {
+        Floor nextFloor = gameManager.casillas[row][index];
+        previousFloor = actualFloor;
+        actualFloor = nextFloor;
+        floorDir = dir;
+    }
+
+    [PunRPC]
+    private void EcharServerRPC(int row, int index)
+    {
+        animator.SetBool("IsFalling", true);
+        animator.SetBool("IsJumping", false);
+        Floor nextFloor = gameManager.casillas[row][index];
+        oldPos = newPos;
+        newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
+    }
+
+    [PunRPC]
+    private void EcharMapaRPC()
+    {
+        previousFloor = actualFloor;
+        actualFloor = null;
+    }
+
+    [PunRPC]
+    private void EcharMapaServerRPC(float x, float z)
+    {
+        animator.SetBool("IsFalling", true);
+        animator.SetBool("IsJumping", false);
+        oldPos = newPos;
+        newPos = new Vector3(x, transform.position.y, z);
+    }
+	
+	public void Caer() {
+        photonView.RPC("EcharMapaRPC", RpcTarget.All);
+        photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
+    }
+    public void GetPowerUp()
+    {
+        if (Power_Up.NORMAL != this.power) return; //LO PILLAS PERO NO TE AFECTA YA QUE YA POSEES UN POWER 
+        Floor.Type t = actualFloor.GetPower();
+        SetPowerUp(actualFloor, Floor.Type.Vacio);
+        StartCoroutine(PowerUp());
+        photonView.RPC("GetPowerUpRPC", RpcTarget.All, t);
+    }
+    [PunRPC]
+    private void GetPowerUpRPC(Floor.Type t)
+    {
+        switch (t)
+        {
+            case Floor.Type.RitmoDuplicado:
+                this.power = Power_Up.RITMODUPLICADO;
+                break;
+            case Floor.Type.Escudo:
+                this.power = Power_Up.ESCUDO;
+                break;
+        }
+    }
+    private IEnumerator PowerUp()
+    {
+        yield return new WaitForSeconds(durationPowerUp);
+        this.power = Power_Up.NORMAL;
+    }
+    public void SetPowerUp(Floor f, Floor.Type type)
+    {
+        photonView.RPC("SetPowerUpRPC", RpcTarget.AllViaServer, f.row, f.index, type);
+    }
+    [PunRPC]
+    private void SetPowerUpRPC(int row, int index, Floor.Type type)
+    {
+        gameManager.casillas[row][index].SetPower(type);    
+    }
+    
     #endregion
 
     #region Colores
     private void SetNormalColor(Floor f) {
-        f.setColor(f.getColorN());
-        Floor[] casillasAdy = f.getAdyacentes();
+        f.SetColor(f.GetColorN());
+        Floor[] casillasAdy = f.GetAdyacentes();
         for (int i = 0; i < casillasAdy.Length; i++)
         {
             Floor floor = casillasAdy[i];
-            if (floor != null) floor.setColor(floor.getColorN());
+            if (floor != null) floor.SetColor(floor.GetColorN());
         }
     }
     private void SetAreaColor(Floor f)
     {
-        f.setColor(GameManager.casillaAct);
-        Floor[] casillasAdy = f.getAdyacentes();
+        f.SetColor(GameManager.casillaAct);
+        Floor[] casillasAdy = f.GetAdyacentes();
         for (int i = 0; i < casillasAdy.Length; i++) {
             Floor floor = casillasAdy[i];
-            if (floor != null) floor.setColor(GameManager.casillaAdy);
+            if (floor != null) floor.SetColor(GameManager.casillaAdy);
         }
     }
     #endregion
@@ -239,10 +469,10 @@ public class PlayerController : MonoBehaviourPun
     private HashSet<Floor> GetFloorAreaRange()
     {
         HashSet<Floor> casillas = new HashSet<Floor>();
-        Floor[] casillasAdy = actualFloor.getAdyacentes();
+        Floor[] casillasAdy = actualFloor.GetAdyacentes();
         foreach (Floor floorAdy in casillasAdy)
         {
-            Floor[] casillasArea = floorAdy.getAdyacentes();
+            Floor[] casillasArea = floorAdy.GetAdyacentes();
             foreach (Floor floorArea in casillasArea)
             {
                 casillas.Add(floorArea);
@@ -253,13 +483,39 @@ public class PlayerController : MonoBehaviourPun
 
     private void SetRangeColor(HashSet<Floor> casillas)
     {
-        actualFloor.setColor(GameManager.casillaAct);
+        actualFloor.SetColor(GameManager.casillaAct);
 
         foreach (Floor floor in casillas)
         {
-            if (floor != null) floor.setColor(GameManager.casillaAttack);
+            if (floor != null) floor.SetColor(GameManager.casillaAttack);
         }
     }
-
     #endregion
+
+    #region RPC Calls
+    [PunRPC]
+    private void SetPlayerCamera(int id)
+    {
+        FindObjectOfType<VirtualCameraController>().SetTarget(PhotonView.Find(id).transform);
+    }
+
+    [PunRPC]
+    private void UpdatePlayersRPC()
+    {
+        gameManager.UpdatePlayers();
+    }
+
+    [PunRPC]
+    private void DoExitPlayer()
+    {
+        FindObjectOfType<RemovePlayers>().ExitPlayer();
+    }
+
+    [PunRPC]
+    private void DoUpdateWinner(int num)
+    {
+        FindObjectOfType<PlayerSelector>().playerWinner = num;
+    }
+    #endregion
+
 }

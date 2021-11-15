@@ -8,6 +8,8 @@ public class VirtualCameraController : MonoBehaviour
 {
     public float mainDistance = 400f;
     public float mainAngle = 30f;
+    public bool invertVertical = false;
+    public bool invertHorizontal = false;
     private CinemachineTransposer transposer;
     private CinemachineTargetGroup target;
     private bool isMoving = false;
@@ -32,8 +34,10 @@ public class VirtualCameraController : MonoBehaviour
         StopAllCoroutines();
         if (timeToGet <= 0 && isMoving == false)
         {
-            transposer.m_FollowOffset.y = d * Mathf.Sin(Mathf.Deg2Rad * r);
-            transposer.m_FollowOffset.z = d * Mathf.Cos(Mathf.Deg2Rad * r);
+            if(!invertVertical) transposer.m_FollowOffset.y = d * Mathf.Sin(Mathf.Deg2Rad * r);
+            else transposer.m_FollowOffset.y = - d * Mathf.Sin(Mathf.Deg2Rad * r);
+            if (!invertHorizontal) transposer.m_FollowOffset.z = -d * Mathf.Cos(Mathf.Deg2Rad * r);
+            else transposer.m_FollowOffset.z = d * Mathf.Cos(Mathf.Deg2Rad * r);
         }
         else
         {
