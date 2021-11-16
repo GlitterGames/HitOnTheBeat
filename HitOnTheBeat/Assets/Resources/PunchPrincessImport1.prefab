@@ -428,6 +428,10 @@ MonoBehaviour:
   secondsCounter: 0
   secondsToCount: 0.4
   movimientoMarcado: 0
+  hitsStats: 0
+  jumpStats: 0
+  pushStats: 0
+  killsStats: 0
   power: 0
   durationPowerUp: 5
 --- !u!114 &7285398391901293338

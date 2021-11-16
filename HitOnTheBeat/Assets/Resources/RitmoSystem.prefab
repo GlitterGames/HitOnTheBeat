@@ -291,12 +291,13 @@ MonoBehaviour:
     fallo: {r: 1, g: 0.39999998, b: 0.39999998, a: 1}
   marcador: {fileID: 8925135898577463437}
   indicador: {fileID: 733187108676576993}
-  delay: 2
   successPercentaje: 0.8
+  delay: 2
   puedeClickear: 0
   beatDone: 0
   haFallado: 0
   haPulsado: 0
+  numBeats: 0
 --- !u!114 &2054704956636383506
 MonoBehaviour:
   m_ObjectHideFlags: 0

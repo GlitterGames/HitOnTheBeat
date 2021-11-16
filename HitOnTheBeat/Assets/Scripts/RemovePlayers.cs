@@ -21,8 +21,7 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
 
         if (gm.jugadores.Count == 1)
         {
-            FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoUpdateWinner", RpcTarget.AllViaServer, (int) gm.jugadores[0].tipoPersonaje);
-            FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoExitPlayer", RpcTarget.Others);
+            FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoEndGameRPC", RpcTarget.AllViaServer, (int) gm.jugadores[0].tipoPersonaje, FindObjectOfType<Ritmo>().numBeats);
             StartCoroutine(ExitMaster());
         }
     }
@@ -39,7 +38,7 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
 
     IEnumerator ExitMaster()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         ExitPlayer();
     }
 }

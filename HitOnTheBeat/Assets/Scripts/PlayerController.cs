@@ -47,10 +47,10 @@ public class PlayerController : MonoBehaviourPun
     public float secondsCounter = 0f;
     public float secondsToCount = 0.4f;
     public bool movimientoMarcado = false;
-    private int hitsStats = 0;  //Jugadores que ha golpeado
-    private int jumpStats = 0;  //Saltos que ha dado
-    private int pushStats = 0;  //Veces que ha sido golpeado
-    private int killsStats = 0; //Jugadores que ha sacado del ring
+    public int hitsStats = 0;  //Jugadores que ha golpeado
+    public int jumpStats = 0;  //Saltos que ha dado
+    public int pushStats = 0;  //Veces que ha sido golpeado
+    public int killsStats = 0; //Jugadores que ha sacado del ring
     private Vector3 pos = Vector3.zero;
     public Power_Up power = Power_Up.NORMAL;
     public float durationPowerUp = 5f;
@@ -192,7 +192,6 @@ public class PlayerController : MonoBehaviourPun
                 if (nextFloor != null)
                 {
                     movimientoMarcado = true;
-                    jumpStats++;
                     photonView.RPC("RegisterClickRPC", RpcTarget.MasterClient, (photonView.ViewID / 1000) - 1,
                         nextFloor.row, nextFloor.index, floorDir);
                 }
@@ -264,7 +263,8 @@ public class PlayerController : MonoBehaviourPun
     public void Golpear()
     {
         photonView.RPC("GolpearRPC", RpcTarget.AllViaServer);
-        hitsStats++;
+        photonView.RPC("HitRPC", photonView.Owner);
+
     }
 
     [PunRPC]
@@ -276,12 +276,37 @@ public class PlayerController : MonoBehaviourPun
 
     public void Kill()
     {
+        photonView.RPC("KillRPC", photonView.Owner);
+    }
+
+    [PunRPC]
+    public void KillRPC()
+    {
         killsStats++;
+    }
+
+    [PunRPC]
+    public void HitRPC()
+    {
+        hitsStats++;
+    }
+
+    [PunRPC]
+    public void PushRPC()
+    {
+        pushStats++;
+    }
+
+    [PunRPC]
+    public void JumpRPC()
+    {
+        jumpStats++;
     }
 
     public void Mover(Floor nextFloor, FloorDetectorType dir)
     {
         photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+        photonView.RPC("JumpRPC", photonView.Owner);
         photonView.RPC("MoverRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
         photonView.RPC("MoverServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
     }
@@ -325,7 +350,6 @@ public class PlayerController : MonoBehaviourPun
     {
         bool echado = false;
         Floor nextFloor = null;
-        pushStats++;
         for (int i = 0; i < max && !echado; i++)
         {
             nextFloor = actualFloor.GetFloor(dir);
@@ -351,11 +375,13 @@ public class PlayerController : MonoBehaviourPun
         if (!echado)
         {
             photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+            photonView.RPC("PushRPC", photonView.Owner);
             photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
             photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
         else
         {
+            photonView.RPC("PushRPC", photonView.Owner);
             photonView.RPC("EcharMapaRPC", RpcTarget.All);
             photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
         }
@@ -551,15 +577,16 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void DoExitPlayer()
+    private void DoEndGameRPC(int num, int numBeats)
     {
-        FindObjectOfType<RemovePlayers>().ExitPlayer();
-    }
-
-    [PunRPC]
-    private void DoUpdateWinner(int num)
-    {
+        PlayerController mpc = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
         FindObjectOfType<PlayerSelector>().playerWinner = num;
+        FindObjectOfType<PlayerSelector>().hitsStats = mpc.hitsStats;
+        FindObjectOfType<PlayerSelector>().killsStats = mpc.killsStats;
+        FindObjectOfType<PlayerSelector>().pushStats = mpc.pushStats;
+        FindObjectOfType<PlayerSelector>().jumpStats = mpc.jumpStats;
+        FindObjectOfType<PlayerSelector>().averageRhythmStats = (float) (mpc.jumpStats * 100 / numBeats) / 100;
+        if(!PhotonNetwork.IsMasterClient) PhotonNetwork.LeaveRoom(true);
     }
     #endregion
 

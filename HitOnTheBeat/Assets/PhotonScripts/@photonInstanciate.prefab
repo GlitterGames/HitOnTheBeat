@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8604858825495513080
+--- !u!1 &7393199628301082237
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1374245063812390105}
-  - component: {fileID: 2151071395870037005}
+  - component: {fileID: 207516311041541468}
+  - component: {fileID: 876326638838762888}
   m_Layer: 0
-  m_Name: '@photonInstanciate'
+  m_Name: '@PhotonInstanciate'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1374245063812390105
+--- !u!4 &207516311041541468
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8604858825495513080}
+  m_GameObject: {fileID: 7393199628301082237}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.455821, y: -4.553763, z: 16.808033}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,19 +31,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2151071395870037005
+--- !u!114 &876326638838762888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8604858825495513080}
+  m_GameObject: {fileID: 7393199628301082237}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11806a04fe56cdf43961089eaf94e2b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAvatar: {fileID: 1784523174532803008, guid: d73a9841283c89041833c85ae2d22013, type: 3}
+  playerAvatar:
+  - {fileID: 1784523174532803008, guid: d73a9841283c89041833c85ae2d22013, type: 3}
+  - {fileID: 1385504132329047271, guid: ed429d607ae00a24f8feb1395c455b41, type: 3}
+  - {fileID: 856494220921389532, guid: ea07a8eed03b68140a3c8331f18b592d, type: 3}
   f:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  my_player: {fileID: 0}
+  ritmo: {fileID: 3601274991278263997, guid: 7b26bab3c407e92449c63dc964099486, type: 3}

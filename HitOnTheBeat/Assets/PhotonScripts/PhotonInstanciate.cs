@@ -9,6 +9,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
 {
     public GameObject[] playerAvatar = new GameObject[2];
     public Floor[] f;
+    [HideInInspector]
     public GameObject my_player;
     public GameObject ritmo;
 
