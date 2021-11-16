@@ -363,7 +363,6 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharServerRPC(int row, int index)
     {
-        
         if (animator.GetBool("IsJumping"))
         {  
             StartCoroutine(AnimationsUpdate(row, index));
@@ -398,13 +397,29 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharMapaServerRPC(float x, float z)
     {
+        if (animator.GetBool("IsJumping"))
+        {
+            StartCoroutine(AnimationsUpdate(x, z));
+        }
+        else
+        {
+            animator.SetBool("IsFalling", true);
+            animator.SetBool("IsJumping", false);
+            oldPos = newPos;
+            newPos = new Vector3(x, transform.position.y, z);
+        }
+    }
+    IEnumerator AnimationsUpdate(float x, float z)
+    {
+        yield return new WaitForSeconds(0.7f);
         animator.SetBool("IsFalling", true);
         animator.SetBool("IsJumping", false);
         oldPos = newPos;
         newPos = new Vector3(x, transform.position.y, z);
     }
-	
-	public void Caer() {
+
+
+    public void Caer() {
         photonView.RPC("EcharMapaRPC", RpcTarget.All);
         photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
     }
