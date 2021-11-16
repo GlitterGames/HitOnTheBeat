@@ -590,11 +590,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.06297419
+      value: 0.06297418
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0212328
+      value: -0.021232797
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -654,11 +654,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4117320156741995903, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.06297419
+      value: 0.06297418
       objectReference: {fileID: 0}
     - target: {fileID: 4117320156741995903, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0212328
+      value: -0.021232797
       objectReference: {fileID: 0}
     - target: {fileID: 4117320157406309160, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7652,7 +7652,7 @@ PrefabInstance:
       objectReference: {fileID: 3601274991278263997, guid: 7b26bab3c407e92449c63dc964099486, type: 3}
     - target: {fileID: 2151071395870037005, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
       propertyPath: f.Array.size
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2151071395870037005, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
       propertyPath: f.Array.data[0]
@@ -7671,13 +7671,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 630375066}
     - target: {fileID: 2151071395870037005, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2151071395870037005, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
       propertyPath: playerAvatar.Array.data[0]
       value: 
-      objectReference: {fileID: 1784523174532803008, guid: d73a9841283c89041833c85ae2d22013, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 2151071395870037005, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
       propertyPath: playerAvatar.Array.data[1]
       value: 
-      objectReference: {fileID: 1385504132329047271, guid: ed429d607ae00a24f8feb1395c455b41, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 2151071395870037005, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
       propertyPath: playerAvatar.Array.data[2]
       value: 
