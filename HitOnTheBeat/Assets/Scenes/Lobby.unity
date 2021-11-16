@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.49306715, g: 0.49306715, b: 0.49306715, a: 1}
+  m_IndirectSpecularColor: {r: 0.49343294, g: 0.49343294, b: 0.49343294, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2784,8 +2784,8 @@ MonoBehaviour:
   playerSelector: {fileID: 7322513980058453232, guid: 44eef140b86067448b5dab04696dd702, type: 3}
   JoinRandomBtn: {fileID: 1233901355}
   Log: {fileID: 1841379277}
-  maxPlayersInRoom: 2
-  minPlayersInRoom: 2
+  maxPlayersInRoom: 1
+  minPlayersInRoom: 1
   PlayerCounter: {fileID: 655551216}
 --- !u!4 &1653187504
 Transform:
