@@ -6,15 +6,6 @@ using Photon.Pun;
 
 public class GameManager : MonoBehaviourPun
 {
-    #region Estructuras
-    public struct Movement
-    {
-        public PlayerController player;
-        public Floor nextFloor;
-        public FloorDetectorType dir;
-    }
-    #endregion
-
     #region Variables
     public static Color casillaAct = Color.blue;
     public static Color casillaAdy = Color.cyan;
@@ -27,6 +18,26 @@ public class GameManager : MonoBehaviourPun
     public List<PlayerController> jugadores = new List<PlayerController>();
     public Queue<Movement> movimientos = new Queue<Movement>();
     #endregion
+    #region Estructuras
+    public struct Movement
+    {
+        public PlayerController player;
+        public Floor nextFloor;
+        public FloorDetectorType dir;
+    }
+    public class Colisions 
+    {
+        public Floor floor;
+        public List<int> positions;
+        public Colisions(Floor f)
+        {
+            this.floor = f;
+            positions = new List<int>();
+        }
+    }
+    #endregion
+
+   
 
     void Awake()
     {
@@ -117,11 +128,11 @@ public class GameManager : MonoBehaviourPun
     {
         int i = Random.Range(0, casillas.Count);
         int j = Random.Range(0, casillas[i].Length);
-
-        Floor f = casillas[0][0];
-        Debug.Log("La casilla donde se dbería pintar es: " +f.row +" " +f.index);
-       
-        f.powertime = StartCoroutine(SetType(f, Floor.Type.RitmoDuplicado, time));
+        Floor f = casillas[i][j];
+        int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;
+        int k = Random.Range(1, num);
+        Debug.Log("La casilla donde se dbería pintar es: " + f.row + " " + f.index +" DE TIPO " + (Floor.Type)k);
+        f.powertime = StartCoroutine(SetType(f, (Floor.Type)k, time));
     }
     private IEnumerator SetType(Floor f, Floor.Type t, float time) {
         FindObjectOfType<PhotonInstanciate>().my_player.
@@ -143,62 +154,290 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
+    private int exists(List<Colisions> colisiones, Floor f) {
+        for(int i=0; i<colisiones.Count; i++)
+        {
+            if (colisiones[i].Equals(f)) return i;
+        }
+        return -1;
+    }
     private void PerformColision()
     {
-        for (int k = 0; k < jugadores.Count; k++)
+        bool bcolision = true; //En caso de que no se tengan que comprobar colisiones
+        while (bcolision)
         {
-            for (int i = k + 1; i < jugadores.Count; i++)
+            List<Colisions> colisiones = new List<Colisions>();
+            bcolision = false;
+            //Colision en caso de dos jugadores se intercambien casillas
+            for (int k = 0; k < jugadores.Count; k++)
             {
-                if (jugadores[k].actualFloor.Equals(jugadores[i].actualFloor))
+                for (int i = k + 1; i < jugadores.Count; i++)
                 {
-                    if (jugadores[k].fuerza == jugadores[i].fuerza)
+                    if (jugadores[k].actualFloor.Equals(jugadores[i].previousFloor)&&(jugadores[k].previousFloor.Equals(jugadores[i].actualFloor)))
                     {
-                        //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        FloorDetectorType aux = jugadores[k].floorDir;
-                        jugadores[k].Echar(jugadores[i].floorDir, 1);
-                        jugadores[i].Echar(aux, 1);
-
-                        //PIERDEN FUERZA
-                        jugadores[k].fuerza = 0;
-                        jugadores[i].fuerza = 0;
+                        Colisions colision = new Colisions(jugadores[i].actualFloor);
+                        colision.positions.Add(k);
+                        colision.positions.Add(i);
+                        colisiones.Add(colision);
                     }
-                    else if (jugadores[k].fuerza > jugadores[i].fuerza)
+                }
+            }
+                //eliminar jugadores que se hayan caido
+            for (int i = 0; i < colisiones.Count; i++)
+            {
+                List<int> players = PerformColision(false, colisiones[i]);
+                for (int j = 0; j < players.Count; j++)
+                {
+                    jugadores.RemoveAt(players[j]);
+                }
+            }
+            //Colision normal entre jugadores
+            colisiones = new List<Colisions>();
+            for (int k = 0; k < jugadores.Count; k++)
+            {
+                Debug.Log("fuerza de jugadores " +jugadores[k].fuerza);
+                for (int i = k + 1; i < jugadores.Count; i++)
+                {
+                    if (jugadores[k].actualFloor.Equals(jugadores[i].actualFloor))
                     {
-                        //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        jugadores[k].Golpear(); //SE MUEVE EL JUGADOR AL NEXT FLOOR
-                        //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
-                        int max = jugadores[k].fuerza - jugadores[i].fuerza;
-                        jugadores[k].fuerza = max;
-                        jugadores[i].fuerza = 0;
-                        //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
-                        bool echado = jugadores[i].Echar(jugadores[k].floorDir, max);
-                        if (echado)
+                        Debug.LogWarning("Hemos encontrado una colision");
+                        int pos = exists(colisiones, jugadores[k].actualFloor);
+                        if (pos == -1)
                         {
-                            jugadores[k].Kill();
-                            jugadores.RemoveAt(i);
-                            i--;
+                            Colisions colision = new Colisions(jugadores[k].actualFloor);
+                            colision.positions.Add(k);
+                            colision.positions.Add(i);
+                            colisiones.Add(colision);
                         }
-                    }
-                    else
-                    {
-                        //JUGADOR GANADOR SE QUEDA DONDE ESTABA ANTES
-                        jugadores[i].Golpear(); //SE MUEVE EL JUGADOR AL NEXT FLOOR
-                        //CUANTAS HAN DE PERDERSE, Y PIERDEN FUERZA
-                        int max = jugadores[i].fuerza - jugadores[k].fuerza;
-                        jugadores[k].fuerza = 0;
-                        jugadores[i].fuerza = max;
-                        //MOVER TANTAS CASILLAS COMO SEA NECESARIO AL PERDEDOR EN EL CHOQUE
-                        bool echado = jugadores[k].Echar(jugadores[i].floorDir, max);
-                        if (echado)
+                        else
                         {
-                            jugadores[i].Kill();
-                            jugadores.RemoveAt(k);
-                            i = k;
+                            colisiones[pos].positions.Add(i);
                         }
                     }
                 }
             }
+                //eliminar jugadores que se hayan caido
+            for (int i = 0; i < colisiones.Count; i++)
+            {
+                List<int> positions = PerformColision(true, colisiones[i]);
+                for (int j = 0; j < positions.Count; j++)
+                {
+                    Debug.LogWarning("Se debe eliminar un jugador");
+                    jugadores.RemoveAt(positions[j]);
+                }
+            }
+            //REALIZAR LOS MOVIMIENTOS POR CINETICAS
+            for (int i = 0; i < jugadores.Count; i++)
+            {
+                if (jugadores[i].colision == true) //En caso de que se acabe de dar una colision no se realizará una cinematica
+                {
+                    jugadores[i].colision = false;
+                    if (jugadores[i].fuerzaCinetica > 0)
+                    {
+                        bcolision = true;
+                    }
+                }
+                else if(jugadores[i].fuerzaCinetica>0)
+                {
+                    bool sameFloor = true;
+                    bool notCinematic = false;
+                    bool moreThanTwo = false;
+                    Debug.LogWarning("Fuerza cinetica 1");
+                    Debug.LogWarning("prev: Actual floor = " + jugadores[i].actualFloor.row + " " + jugadores[i].actualFloor.index);
+                    Debug.LogWarning("prev: Previos floor = " + jugadores[i].previousFloor.row + " " + jugadores[i].previousFloor.index);
+                    bool echado = jugadores[i].EcharOne(jugadores[i].floorDir, jugadores[i].fuerzaCinetica, moreThanTwo, notCinematic, sameFloor); 
+                    if (echado) jugadores.Remove(jugadores[i]);
+                    bcolision = true; //Se ha realizado un movimiento cinetico por lo que tendré que mirar si habra otra colisión
+                }
+            }
         }
+    }
+    public bool powers(bool sameFloor, Colisions c, out List<int> delete)
+    {
+        List<int> eliminados = new List<int>();
+        bool powers = false;
+        bool moreThanTwo = true;
+        bool notCinematic = true;
+        if (jugadores.Count == 2)
+        {
+            moreThanTwo = false;
+            if (jugadores[c.positions[0]].fuerzaCinetica > 0) jugadores[c.positions[0]].fuerza = jugadores[c.positions[0]].fuerzaCinetica;
+            if (jugadores[c.positions[1]].fuerzaCinetica > 0) jugadores[c.positions[1]].fuerza = jugadores[c.positions[1]].fuerzaCinetica;
+            if (jugadores[c.positions[0]].power == PlayerController.Power_Up.ESCUDO && jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
+            {
+                StopCoroutine(jugadores[c.positions[0]].powerCoroutine);
+                jugadores[c.positions[0]].UsePowerUp();
+                StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
+                jugadores[c.positions[1]].UsePowerUp();
+                powers = true;
+            }
+            else if (jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
+            {
+                StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
+                jugadores[c.positions[1]].UsePowerUp();
+                jugadores[c.positions[0]].fuerza = 0;
+                powers = true;
+            }
+            else if (jugadores[c.positions[0]].power == PlayerController.Power_Up.ESCUDO)
+            {
+                StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
+                jugadores[c.positions[0]].UsePowerUp();
+                jugadores[c.positions[1]].fuerza = 0;
+                powers = true;
+            }
+            if (powers)
+            {
+                bool echado = jugadores[c.positions[0]].EcharOne(jugadores[c.positions[1]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                if (echado) eliminados.Add(c.positions[0]);
+                echado = jugadores[c.positions[1]].EcharOne(jugadores[c.positions[0]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                if (echado) eliminados.Add(c.positions[1]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < c.positions.Count; i++)
+            {
+                if (jugadores[c.positions[i]].fuerzaCinetica > 0) jugadores[c.positions[i]].fuerza = jugadores[c.positions[i]].fuerzaCinetica;
+            }
+            List<int> fuerzas = new List<int>();
+            bool equal = false;
+            int maxFuerza = 0;
+            for (int i = 0; i < c.positions.Count; i++)
+            {
+                int fuerza = 0;
+                for (int j = 0; j < c.positions.Count; j++)
+                {
+                    if (i != j) fuerza += (int)Mathf.Ceil(jugadores[c.positions[j]].fuerza / c.positions.Count);
+                }
+                if (fuerza > maxFuerza)
+                {
+                    equal = false;
+                    maxFuerza = fuerza;
+                }
+                else if (fuerza == maxFuerza)
+                {
+                    equal = false;
+                }
+                fuerzas.Add(fuerza);
+            }
+            for (int i = 0; i < c.positions.Count; i++)
+            {
+                if(jugadores[c.positions[i]].power == PlayerController.Power_Up.ESCUDO)
+                {
+                    StopCoroutine(jugadores[c.positions[i]].powerCoroutine);
+                    jugadores[c.positions[i]].UsePowerUp();
+                    bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                    if (echado) eliminados.Add(c.positions[i]);
+                    powers = true;
+                }
+                else
+                {
+                    if (fuerzas[i] == maxFuerza && !equal)
+                    {
+                        jugadores[c.positions[i]].Golpear();
+                    }
+                    else if (fuerzas[i] == maxFuerza && equal)
+                    {
+                        jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                    }
+                    else
+                    {
+                        bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, fuerzas[i] - jugadores[c.positions[i]].fuerza, moreThanTwo, notCinematic, sameFloor);
+                        if (echado) eliminados.Add(i);
+                    }
+                    jugadores[c.positions[i]].fuerza = 0;
+                }
+            }
+        }
+        delete = eliminados;
+        return powers;
+    }
+    public List<int> PerformColision(bool sameFloor, Colisions c)
+    {
+        List<int> eliminados = new List<int>();
+        bool moreThanTwo = true;
+        bool notCinematic = true;
+        if (powers(sameFloor, c, out eliminados)) return eliminados;
+        if (jugadores.Count == 2)
+        {
+            moreThanTwo = false;
+            if (jugadores[c.positions[0]].fuerzaCinetica > 0) jugadores[c.positions[0]].fuerza = jugadores[c.positions[0]].fuerzaCinetica;
+            if (jugadores[c.positions[1]].fuerzaCinetica > 0) jugadores[c.positions[1]].fuerza = jugadores[c.positions[1]].fuerzaCinetica;
+            Debug.LogWarning("Realizar colision");
+            if (jugadores[c.positions[0]].fuerza == jugadores[c.positions[1]].fuerza)
+            {
+                bool echado = jugadores[c.positions[0]].EcharOne(jugadores[c.positions[1]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                if (echado) eliminados.Add(c.positions[0]);
+                echado = jugadores[c.positions[1]].EcharOne(jugadores[c.positions[0]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                if (echado) eliminados.Add(c.positions[1]);
+                Debug.LogWarning("CASO1");
+            }
+            else if (jugadores[c.positions[0]].fuerza > jugadores[c.positions[1]].fuerza)
+            {
+                jugadores[c.positions[0]].Golpear();
+                int max = jugadores[c.positions[0]].fuerza - jugadores[c.positions[1]].fuerza;
+                bool echado = jugadores[c.positions[1]].EcharOne(jugadores[c.positions[0]].floorDir, max, moreThanTwo, notCinematic, sameFloor);
+                if (echado) eliminados.Add(c.positions[1]);
+                Debug.LogWarning("CASO2");
+            }
+            else
+            {
+                jugadores[c.positions[1]].Golpear();
+                int max = jugadores[c.positions[1]].fuerza - jugadores[c.positions[0]].fuerza;
+                bool echado = jugadores[c.positions[0]].EcharOne(jugadores[c.positions[1]].floorDir, max, moreThanTwo, notCinematic, sameFloor);
+                if (echado) eliminados.Add(c.positions[0]);
+                Debug.LogWarning("CASO3");
+            }
+            jugadores[c.positions[0]].fuerza = 0;
+            jugadores[c.positions[1]].fuerza = 0;
+        }
+        else
+        {
+            for (int i = 0; i < c.positions.Count; i++)
+            {
+                if (jugadores[c.positions[i]].fuerzaCinetica > 0) jugadores[c.positions[i]].fuerza = jugadores[c.positions[i]].fuerzaCinetica;
+            }
+            List<int> fuerzas = new List<int>();
+            bool equal = false;
+            int maxFuerza = 0;
+            for (int i = 0; i < c.positions.Count; i++)
+            {
+                int fuerza = 0;
+                for (int j = 0; j < c.positions.Count; j++)
+                {
+                    if (i != j) fuerza += (int)Mathf.Ceil(jugadores[c.positions[j]].fuerza / c.positions.Count);
+                }
+                if (fuerza > maxFuerza)
+                {
+                    equal = false;
+                    maxFuerza = fuerza;
+                }
+                else if (fuerza == maxFuerza)
+                {
+                    equal = false;
+                }
+                fuerzas.Add(fuerza);
+            }
+            for (int i = 0; i < c.positions.Count; i++)
+            {
+                if (fuerzas[i] == maxFuerza && !equal)
+                {
+                    jugadores[c.positions[i]].Golpear();
+                }
+                else if (fuerzas[i] == maxFuerza && equal)
+                {
+                    jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                }
+                else
+                {
+                    bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, fuerzas[i] - jugadores[c.positions[i]].fuerza, moreThanTwo, notCinematic, sameFloor);
+                    if (echado) eliminados.Add(i);
+                }
+                jugadores[c.positions[i]].fuerza = 0;
+            }
+        }
+        return eliminados;
+
     }
     public void RegisterMovement(int id, int row, int index, FloorDetectorType dir)
     {

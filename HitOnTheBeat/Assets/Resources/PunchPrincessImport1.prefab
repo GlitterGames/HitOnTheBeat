@@ -421,6 +421,8 @@ MonoBehaviour:
   previousFloor: {fileID: 0}
   floorDir: 0
   fuerza: 0
+  fuerzaCinetica: 0
+  colision: 0
   fuerzaSinPulsar: 1
   speed: 2
   newPos: {x: 0, y: 0, z: 0}

@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviourPun
     public Floor previousFloor;
     public FloorDetectorType floorDir;
     public int fuerza;
+    public int fuerzaCinetica;
+    public bool colision;
     public int fuerzaSinPulsar = 1;
     private InputController my_input;
     private GameManager gameManager;
@@ -54,6 +56,7 @@ public class PlayerController : MonoBehaviourPun
     private Vector3 pos = Vector3.zero;
     public Power_Up power = Power_Up.NORMAL;
     public float durationPowerUp = 5f;
+    public Coroutine powerCoroutine = null;
     #endregion
 
     // Start is called before the first frame update
@@ -73,6 +76,8 @@ public class PlayerController : MonoBehaviourPun
         newPos = transform.position;
         oldPos = transform.position;
         fuerza = 0;
+        fuerzaCinetica = 0;
+        colision = false;
 
         animator = GetComponent<Animator>();
         gameManager = FindObjectOfType<GameManager>();
@@ -321,6 +326,63 @@ public class PlayerController : MonoBehaviourPun
         rb.useGravity = true;
     }
 
+    public bool EcharOne(FloorDetectorType dir, int max, bool moreThanTwo, bool notCinematic, bool sameFloor)
+    {
+        bool echado = false;
+        Floor nextFloor = null;
+        FloorDetectorType floordir = dir;
+        if(notCinematic == true)
+        {
+            this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
+        }
+        else
+        {
+            floorDir = dir; //Tu dirección es la última de la que has venido ya que estas en cinemática
+        }
+        if (sameFloor)
+        {
+            if (moreThanTwo) //SOLO DOS JUGADORES VAS A LA DIRECCIÓN INVERSA DE TU SITUACIÓN
+            {
+                nextFloor = actualFloor.GetInverseFloor(floordir);
+            }
+            else
+            {
+                nextFloor = actualFloor.GetFloor(floordir); //MÁS DE UN JUGADOR LA DIRECCIÓN ES LA INVERSA A LA TUYA
+            }
+        }
+        else
+        {
+            Debug.LogWarning("EN EL MISMO SITIO"); 
+            nextFloor = previousFloor.GetFloor(floordir); //MISMO FLOOR TIENES QUE PILLAR EL INVERSO DE TU PREVIOUS FLOOR
+        }
+        if (max > 0)
+        {
+            fuerzaCinetica = max - 1; 
+        }
+        if (nextFloor == null)
+        {
+            Floor inverse = actualFloor.GetInverseFloor(floordir);
+            Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x - inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z - inverse.GetFloorPosition().z);
+            pos = new Vector3(actualFloor.GetFloorPosition().x + diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z + diferencia.z);
+            echado = true;
+        }
+        if (!echado)
+        {
+            Debug.LogWarning("EN EL MAPA");
+            photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+            if (sameFloor) {photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
+            //En el caso en el que no la colision no fuera en la misma casilla la anterior y la posterior casillas serán la misma
+            else { photonView.RPC("EcharNotSameFloorRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
+            photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
+        }
+        else
+        {
+            Debug.LogWarning("SIN EL MAPA");
+            photonView.RPC("EcharMapaRPC", RpcTarget.All);
+            photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
+        }
+        return echado;
+    }
     public bool Echar(FloorDetectorType dir, int max)
     {
         bool echado = false;
@@ -369,6 +431,14 @@ public class PlayerController : MonoBehaviourPun
         Floor nextFloor = gameManager.casillas[row][index];
         previousFloor = actualFloor;
         actualFloor = nextFloor;
+        floorDir = dir;
+    }
+    [PunRPC]
+    private void EcharNotSameFloorRPC(int row, int index, FloorDetectorType dir)
+    {
+        Floor nextFloor = gameManager.casillas[row][index];
+        actualFloor = nextFloor;
+        previousFloor = actualFloor;
         floorDir = dir;
     }
 
@@ -440,9 +510,10 @@ public class PlayerController : MonoBehaviourPun
         if (Power_Up.NORMAL != this.power) return; //LO PILLAS PERO NO TE AFECTA YA QUE YA POSEES UN POWER 
         Floor.Type t = actualFloor.GetPower();
         SetPowerUp(actualFloor, Floor.Type.Vacio);
-        StartCoroutine(PowerUp());
+        powerCoroutine = StartCoroutine(PowerUp());
         photonView.RPC("GetPowerUpRPC", RpcTarget.All, t);
     }
+    
     [PunRPC]
     private void GetPowerUpRPC(Floor.Type t)
     {
@@ -456,10 +527,20 @@ public class PlayerController : MonoBehaviourPun
                 break;
         }
     }
+    public void UsePowerUp()
+    {
+        photonView.RPC("UsePowerUpRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    private void UsePowerUpRPC()
+    {
+        this.power = Power_Up.NORMAL;
+    }
+
     private IEnumerator PowerUp()
     {
         yield return new WaitForSeconds(durationPowerUp);
-        this.power = Power_Up.NORMAL;
+        photonView.RPC("UsePowerUpRPC", RpcTarget.All);
     }
     public void SetPowerUp(Floor f, Floor.Type type)
     {
