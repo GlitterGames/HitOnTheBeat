@@ -7,25 +7,59 @@ using Photon.Pun;
 public class GameManager : MonoBehaviourPun
 {
     #region Estructuras
+    [System.Serializable]
+    public struct ColoresAnillos
+    {
+        public Color anillo0;
+        public Color anillo1;
+        public Color anillo2;
+        public Color anillo3;
+        public Color anillo4;
+        public Color anillo5;
+    }
+    [System.Serializable]
+    public struct ColoresParpadeo
+    {
+        public Color ready;
+        public Color steady;  
+        public Color fall;     
+    }
+    [System.Serializable]
+    public struct ColoresEspeciales
+    {
+        public Color actual;
+        public Color adyacente;
+        public Color rangeXXColor;
+    }
     public struct Movement
     {
         public PlayerController player;
         public Floor nextFloor;
         public FloorDetectorType dir;
     }
+    public struct Ultimate
+    {
+        public PlayerController player;
+        public PlayerController.Ultimate type;
+        public Floor targetFloor;
+    }
     #endregion
 
     #region Variables
-    public static Color casillaAct = Color.blue;
-    public static Color casillaAdy = Color.cyan;
-    public static Color casillaAttack = Color.yellow;
+    public ColoresEspeciales coloresEspeciales;
+    public ColoresAnillos coloresAnillos;
+    public ColoresParpadeo coloresParpadeo;
+    [HideInInspector]
     public List<Color> color = new List<Color>();
+    [HideInInspector]
     public List<Color> colorBlink = new List<Color>();
     public Color backgroundColor;
     public GameObject[] background = new GameObject[6];
     public List<Floor[]> casillas = new List<Floor[]>();
+    [HideInInspector]
     public List<PlayerController> jugadores = new List<PlayerController>();
     public Queue<Movement> movimientos = new Queue<Movement>();
+    public Queue<Ultimate> ultimates = new Queue<Ultimate>();
     #endregion
 
     void Awake()
@@ -51,24 +85,25 @@ public class GameManager : MonoBehaviourPun
     //Se ejecuta cada vez que comienza un nuevo Beat.
     public void DoBeatActions()
     {
+        PerformUltimates();
         PerformMovements();
         PerformColision();
         ApplyEfectsFromFloor();
     }
 
     private void InitColor() {
-        color.Add(Color.black);
-        color.Add(Color.grey);
-        color.Add(Color.yellow);
-        color.Add(Color.yellow);
-        color.Add(Color.red);
-        color.Add(Color.red);
+        color.Add(coloresAnillos.anillo0);
+        color.Add(coloresAnillos.anillo1);
+        color.Add(coloresAnillos.anillo2);
+        color.Add(coloresAnillos.anillo3);
+        color.Add(coloresAnillos.anillo4);
+        color.Add(coloresAnillos.anillo5);
     }
     private void InitColorBlink()
     {
-        colorBlink.Add(Color.green);
-        colorBlink.Add(Color.yellow);
-        colorBlink.Add(Color.red);
+        colorBlink.Add(coloresParpadeo.ready);
+        colorBlink.Add(coloresParpadeo.steady);
+        colorBlink.Add(coloresParpadeo.fall);
     }
     private void InitBackground()
     {
@@ -200,10 +235,12 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
+    //Esta region podría mejorarse mediante la implementación de eventos.
+    #region PlayerControllerManagement
     public void RegisterMovement(int id, int row, int index, FloorDetectorType dir)
     {
         Movement move = new Movement();
-        move.player = jugadores.Find((player) => (player.photonView.ViewID / 1000 - 1) == id);
+        move.player = jugadores.Find((player) => player.GetIdPlayer() == id);
         move.nextFloor = casillas[row][index];
         move.dir = dir;
         movimientos.Enqueue(move);
@@ -217,6 +254,45 @@ public class GameManager : MonoBehaviourPun
             m.player.Mover(m.nextFloor, m.dir);
         }
     }
+
+    public void RegisterUltimate(int id, PlayerController.Ultimate type)
+    {
+        Ultimate ultimate = new Ultimate();
+        ultimate.player = jugadores.Find((player) => player.GetIdPlayer() == id);
+        ultimate.type = type;
+        ultimates.Enqueue(ultimate);
+    }
+
+    public void RegisterUltimate(int id, PlayerController.Ultimate type, int row, int index)
+    {
+        Ultimate ultimate = new Ultimate();
+        ultimate.player = jugadores.Find((player) => player.GetIdPlayer() == id);
+        ultimate.type = type;
+        ultimate.targetFloor = casillas[row][index];
+        ultimates.Enqueue(ultimate);
+    }
+
+    private void PerformUltimates()
+    {
+        while (ultimates.Count > 0)
+        {
+            Ultimate ul = ultimates.Dequeue();
+            switch (ul.type)
+            {
+                case PlayerController.Ultimate.MEGA_PUNCH:
+                    ul.player.PerformMegaPunch();
+                    break;
+                case PlayerController.Ultimate.BOMBA_COLOR:
+                    ul.player.PerformBombaColor(ul.targetFloor);
+                    break;
+                case PlayerController.Ultimate.INVISIBILITY:
+                    ul.player.PerformInvisibility();
+                    break;
+            }
+        }
+    }
+
+    #endregion
     public void DestroyRow(int row, float seg, int repeticiones) {
         foreach (Floor f in casillas[row])
         {
@@ -246,7 +322,7 @@ public class GameManager : MonoBehaviourPun
         f.GetComponentInChildren<Rigidbody>().isKinematic = false;
         f.GetComponentInChildren<Rigidbody>().useGravity = true;
         yield return new WaitForSeconds(0.5f);
-        f.gameObject.active = false;
+        f.gameObject.SetActive(false);
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         //LOS JUGADORES QUE SE ENCUENTREN EN ESAS CASILLAS SE CAERAN

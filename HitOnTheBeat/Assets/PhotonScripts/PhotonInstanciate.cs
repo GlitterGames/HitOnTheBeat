@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class PhotonInstanciate : MonoBehaviourPunCallbacks
 {
+    public static PhotonInstanciate instance;
     public GameObject[] playerAvatar = new GameObject[2];
     public Floor[] f;
     [HideInInspector]
@@ -18,6 +19,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Awake()
     {
+        instance = this;
         //instanciamos el main character.
         playerSelector = FindObjectOfType<PlayerSelector>();
         int typePlayer = playerSelector.selectedPlayer;
@@ -34,7 +36,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
 
         //Actualizamos la lista de jugadores del master.
         if (PhotonNetwork.IsMasterClient) FindObjectOfType<GameManager>().UpdatePlayers();
-        else my_player.GetPhotonView().RPC("UpdatePlayersRPC", PhotonNetwork.MasterClient);
+        else my_player.GetPhotonView().RPC("UpdatePlayersRPC", RpcTarget.All);
     }
     public void OnGoBack()
     {

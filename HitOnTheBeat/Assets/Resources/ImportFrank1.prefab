@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -1256142989137230780}
   - component: {fileID: -5908403386902053394}
   - component: {fileID: 1179876138081380157}
+  - component: {fileID: 779166704399699084}
   m_Layer: 0
   m_Name: ImportFrank1
   m_TagString: Untagged
@@ -109,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5af9335833fb8542946a855f9bd17eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipoPersonaje: 2
+  tipoUltimate: 2
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
@@ -122,6 +123,10 @@ MonoBehaviour:
   secondsCounter: 0
   secondsToCount: 0.4
   movimientoMarcado: 0
+  hitsStats: 0
+  jumpStats: 0
+  pushStats: 0
+  killsStats: 0
   power: 0
   durationPowerUp: 5
 --- !u!95 &-3009764564182704000
@@ -200,6 +205,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nametext: {fileID: 1804456535188311969}
+--- !u!114 &779166704399699084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 856494220921389532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a777440ec02394f929f3b6a3441f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_visible: 1
+  m_alpha: 1
+  objects:
+  - {fileID: 7522096869957199860}
+  uiObjects:
+  - {fileID: 2972092278407755902}
 --- !u!1 &1280615860731802637
 GameObject:
   m_ObjectHideFlags: 0
