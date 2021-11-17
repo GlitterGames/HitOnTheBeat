@@ -319,52 +319,55 @@ public class PlayerController : MonoBehaviourPun
     {
         bool echado = false;
         Floor nextFloor = null;
-        FloorDetectorType floordir = dir;
         if(notCinematic == true)
         {
             this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
-            nextFloor = actualFloor.GetFloor(floordir);
         }
-        else
         if (sameFloor)
         {
-            if (moreThanTwo) //SOLO DOS JUGADORES VAS A LA DIRECCIÓN INVERSA DE TU SITUACIÓN
+            //Si hay dos jugadores se coge el floor de la dirección de mi oponente
+            //Si hay más de dos se coge la inversa de mi dirección
+            if (moreThanTwo) 
             {
-                nextFloor = actualFloor.GetInverseFloor(floordir);
+                nextFloor = actualFloor.GetInverseFloor(dir);
+                //En caso de que tengamos más de un jugador mi nueva dirección sera
+                //la inversa de la que tenía para las fuerza cinética
+                dir = actualFloor.GetInverseDireccion(dir);
             }
             else
             {
-                nextFloor = actualFloor.GetInverseFloor(floordir); //MÁS DE UN JUGADOR LA DIRECCIÓN ES LA INVERSA A LA TUYA
+                nextFloor = actualFloor.GetFloor(dir); 
             }
         }
+        //Si estan en el aire, es decir no estan en la misma casilla
+        //Se cogera la dirección del jugador opuesto
         else
-        {
-            Debug.LogWarning("EN EL MISMO SITIO"); 
-            nextFloor = previousFloor.GetFloor(floordir); //MISMO FLOOR TIENES QUE PILLAR EL INVERSO DE TU PREVIOUS FLOOR
+        { 
+            nextFloor = previousFloor.GetFloor(dir); 
         }
+        //En caso de que haya más iteracciones por hacer, estas se pondrán como fuerzaCinética
+        //y se le restará una cada iteración hasta que sea mi fuerza cinética de 0
         if (max > 0)
         {
             fuerzaCinetica = max - 1; 
         }
         if (nextFloor == null)
         {
-            Floor inverse = actualFloor.GetInverseFloor(floordir);
+            Floor inverse = actualFloor.GetInverseFloor(dir);
             Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x - inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z - inverse.GetFloorPosition().z);
             pos = new Vector3(actualFloor.GetFloorPosition().x + diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z + diferencia.z);
             echado = true;
         }
         if (!echado)
         {
-            Debug.LogWarning("EN EL MAPA");
             photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
             if (sameFloor) {photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
-            //En el caso en el que no la colision no fuera en la misma casilla la anterior y la posterior casillas serán la misma
+            //En el caso en el que la colision no fuera en la misma casilla la anterior y la posterior casillas serán la misma
             else { photonView.RPC("EcharNotSameFloorRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
             photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
         else
         {
-            Debug.LogWarning("SIN EL MAPA");
             photonView.RPC("EcharMapaRPC", RpcTarget.All);
             photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
         }

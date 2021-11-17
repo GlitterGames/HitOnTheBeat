@@ -56,6 +56,25 @@ public class Floor : MonoBehaviour
         }
         return null;
     }
+    public FloorDetectorType GetInverseDireccion(FloorDetectorType type)
+    {
+        switch (type)
+        {
+            case FloorDetectorType.East:
+                return FloorDetectorType.West;
+            case FloorDetectorType.West:
+                return FloorDetectorType.East;
+            case FloorDetectorType.North_east:
+                return FloorDetectorType.South_west;
+            case FloorDetectorType.North_west:
+                return FloorDetectorType.South_east;
+            case FloorDetectorType.South_east:
+                return FloorDetectorType.North_west;
+            case FloorDetectorType.South_west:
+                return FloorDetectorType.North_east;
+        }
+        return FloorDetectorType.East;
+    }
     public Floor GetEast() {
         return adyacentes[0];
     }
