@@ -323,11 +323,9 @@ public class PlayerController : MonoBehaviourPun
         if(notCinematic == true)
         {
             this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
+            nextFloor = actualFloor.GetFloor(floordir);
         }
         else
-        {
-            floorDir = dir; //Tu dirección es la última de la que has venido ya que estas en cinemática
-        }
         if (sameFloor)
         {
             if (moreThanTwo) //SOLO DOS JUGADORES VAS A LA DIRECCIÓN INVERSA DE TU SITUACIÓN
@@ -336,7 +334,7 @@ public class PlayerController : MonoBehaviourPun
             }
             else
             {
-                nextFloor = actualFloor.GetFloor(floordir); //MÁS DE UN JUGADOR LA DIRECCIÓN ES LA INVERSA A LA TUYA
+                nextFloor = actualFloor.GetInverseFloor(floordir); //MÁS DE UN JUGADOR LA DIRECCIÓN ES LA INVERSA A LA TUYA
             }
         }
         else

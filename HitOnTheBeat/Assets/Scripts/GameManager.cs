@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviourPun
                         }
                         else
                         {
-                            colisiones[pos].positions.Add(i);
+                            colisiones[pos].positions.Add(i); //Añade un nuevo jugador a
                         }
                     }
                 }
@@ -246,8 +246,11 @@ public class GameManager : MonoBehaviourPun
                     Debug.LogWarning("prev: Actual floor = " + jugadores[i].actualFloor.row + " " + jugadores[i].actualFloor.index);
                     Debug.LogWarning("prev: Previos floor = " + jugadores[i].previousFloor.row + " " + jugadores[i].previousFloor.index);
                     bool echado = jugadores[i].EcharOne(jugadores[i].floorDir, jugadores[i].fuerzaCinetica, moreThanTwo, notCinematic, sameFloor); 
-                    if (echado) jugadores.Remove(jugadores[i]);
-                    bcolision = true; //Se ha realizado un movimiento cinetico por lo que tendré que mirar si habra otra colisión
+                    if (echado) jugadores.RemoveAt(i);
+                    if (jugadores[i].fuerzaCinetica > 0)
+                    {
+                        bcolision = true;
+                    }
                 }
             }
         }
