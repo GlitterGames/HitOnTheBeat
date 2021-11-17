@@ -149,15 +149,9 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
 <<<<<<< HEAD
-<<<<<<< HEAD
   - {fileID: 0}
 =======
 >>>>>>> parent of 5d3e03c7 (Merge branch 'colisions')
-=======
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
->>>>>>> parent of 7e54bc6c (Revert "Merge branch 'colisions'")
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1

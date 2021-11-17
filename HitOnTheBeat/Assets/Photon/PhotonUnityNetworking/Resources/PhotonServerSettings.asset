@@ -76,7 +76,6 @@ MonoBehaviour:
   - DoUpdateWinner
   - GetPowerUpRPC
 <<<<<<< HEAD
-<<<<<<< HEAD
   - KillRPC
   - HitRPC
   - JumpRPC
@@ -84,10 +83,6 @@ MonoBehaviour:
   - DoEndGameRPC
 =======
 >>>>>>> parent of 5d3e03c7 (Merge branch 'colisions')
-=======
-  - EcharNotSameFloorRPC
-  - UsePowerUpRPC
->>>>>>> parent of 7e54bc6c (Revert "Merge branch 'colisions'")
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
