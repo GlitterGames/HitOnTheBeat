@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviourPun
     public Floor previousFloor;
     public FloorDetectorType floorDir;
     public int fuerza;
+    public int fuerzaCinetica;
+    public bool colision;
     public int fuerzaSinPulsar = 1;
     private InputController my_input;
     private GameManager gameManager;
@@ -47,13 +49,10 @@ public class PlayerController : MonoBehaviourPun
     public float secondsCounter = 0f;
     public float secondsToCount = 0.4f;
     public bool movimientoMarcado = false;
-    public int hitsStats = 0;  //Jugadores que ha golpeado
-    public int jumpStats = 0;  //Saltos que ha dado
-    public int pushStats = 0;  //Veces que ha sido golpeado
-    public int killsStats = 0; //Jugadores que ha sacado del ring
     private Vector3 pos = Vector3.zero;
     public Power_Up power = Power_Up.NORMAL;
     public float durationPowerUp = 5f;
+    public Coroutine powerCoroutine = null;
     #endregion
 
     // Start is called before the first frame update
@@ -73,6 +72,8 @@ public class PlayerController : MonoBehaviourPun
         newPos = transform.position;
         oldPos = transform.position;
         fuerza = 0;
+        fuerzaCinetica = 0;
+        colision = false;
 
         animator = GetComponent<Animator>();
         gameManager = FindObjectOfType<GameManager>();
@@ -263,8 +264,6 @@ public class PlayerController : MonoBehaviourPun
     public void Golpear()
     {
         photonView.RPC("GolpearRPC", RpcTarget.AllViaServer);
-        photonView.RPC("HitRPC", photonView.Owner);
-
     }
 
     [PunRPC]
@@ -274,39 +273,9 @@ public class PlayerController : MonoBehaviourPun
         animator.SetBool("IsAttacking", true);
     }
 
-    public void Kill()
-    {
-        photonView.RPC("KillRPC", photonView.Owner);
-    }
-
-    [PunRPC]
-    public void KillRPC()
-    {
-        killsStats++;
-    }
-
-    [PunRPC]
-    public void HitRPC()
-    {
-        hitsStats++;
-    }
-
-    [PunRPC]
-    public void PushRPC()
-    {
-        pushStats++;
-    }
-
-    [PunRPC]
-    public void JumpRPC()
-    {
-        jumpStats++;
-    }
-
     public void Mover(Floor nextFloor, FloorDetectorType dir)
     {
         photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
-        photonView.RPC("JumpRPC", photonView.Owner);
         photonView.RPC("MoverRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
         photonView.RPC("MoverServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
     }
@@ -346,6 +315,63 @@ public class PlayerController : MonoBehaviourPun
         rb.useGravity = true;
     }
 
+    public bool EcharOne(FloorDetectorType dir, int max, bool moreThanTwo, bool notCinematic, bool sameFloor)
+    {
+        bool echado = false;
+        Floor nextFloor = null;
+        FloorDetectorType floordir = dir;
+        if(notCinematic == true)
+        {
+            this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
+        }
+        else
+        {
+            floorDir = dir; //Tu dirección es la última de la que has venido ya que estas en cinemática
+        }
+        if (sameFloor)
+        {
+            if (moreThanTwo) //SOLO DOS JUGADORES VAS A LA DIRECCIÓN INVERSA DE TU SITUACIÓN
+            {
+                nextFloor = actualFloor.GetInverseFloor(floordir);
+            }
+            else
+            {
+                nextFloor = actualFloor.GetFloor(floordir); //MÁS DE UN JUGADOR LA DIRECCIÓN ES LA INVERSA A LA TUYA
+            }
+        }
+        else
+        {
+            Debug.LogWarning("EN EL MISMO SITIO"); 
+            nextFloor = previousFloor.GetFloor(floordir); //MISMO FLOOR TIENES QUE PILLAR EL INVERSO DE TU PREVIOUS FLOOR
+        }
+        if (max > 0)
+        {
+            fuerzaCinetica = max - 1; 
+        }
+        if (nextFloor == null)
+        {
+            Floor inverse = actualFloor.GetInverseFloor(floordir);
+            Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x - inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z - inverse.GetFloorPosition().z);
+            pos = new Vector3(actualFloor.GetFloorPosition().x + diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z + diferencia.z);
+            echado = true;
+        }
+        if (!echado)
+        {
+            Debug.LogWarning("EN EL MAPA");
+            photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+            if (sameFloor) {photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
+            //En el caso en el que no la colision no fuera en la misma casilla la anterior y la posterior casillas serán la misma
+            else { photonView.RPC("EcharNotSameFloorRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
+            photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
+        }
+        else
+        {
+            Debug.LogWarning("SIN EL MAPA");
+            photonView.RPC("EcharMapaRPC", RpcTarget.All);
+            photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
+        }
+        return echado;
+    }
     public bool Echar(FloorDetectorType dir, int max)
     {
         bool echado = false;
@@ -375,13 +401,11 @@ public class PlayerController : MonoBehaviourPun
         if (!echado)
         {
             photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
-            photonView.RPC("PushRPC", photonView.Owner);
             photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
             photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
         else
         {
-            photonView.RPC("PushRPC", photonView.Owner);
             photonView.RPC("EcharMapaRPC", RpcTarget.All);
             photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
         }
@@ -397,29 +421,20 @@ public class PlayerController : MonoBehaviourPun
         actualFloor = nextFloor;
         floorDir = dir;
     }
+    [PunRPC]
+    private void EcharNotSameFloorRPC(int row, int index, FloorDetectorType dir)
+    {
+        Floor nextFloor = gameManager.casillas[row][index];
+        actualFloor = nextFloor;
+        previousFloor = actualFloor;
+        floorDir = dir;
+    }
 
     [PunRPC]
     private void EcharServerRPC(int row, int index)
     {
-        if (animator.GetBool("IsJumping"))
-        {  
-            StartCoroutine(AnimationsUpdate(row, index));
-        }
-        else
-        {
-            animator.SetBool("IsFalling", true);
-            Floor nextFloor = gameManager.casillas[row][index];
-            oldPos = newPos;
-            newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
-        }
-    }
-
-    IEnumerator AnimationsUpdate(int row, int index)
-    {
-        yield return new WaitForSeconds(0.7f);
-        SetAreaColor(actualFloor);
-        animator.SetBool("IsJumping", false);
         animator.SetBool("IsFalling", true);
+        animator.SetBool("IsJumping", false);
         Floor nextFloor = gameManager.casillas[row][index];
         oldPos = newPos;
         newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
@@ -435,29 +450,13 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharMapaServerRPC(float x, float z)
     {
-        if (animator.GetBool("IsJumping"))
-        {
-            StartCoroutine(AnimationsUpdate(x, z));
-        }
-        else
-        {
-            animator.SetBool("IsFalling", true);
-            animator.SetBool("IsJumping", false);
-            oldPos = newPos;
-            newPos = new Vector3(x, transform.position.y, z);
-        }
-    }
-    IEnumerator AnimationsUpdate(float x, float z)
-    {
-        yield return new WaitForSeconds(0.7f);
         animator.SetBool("IsFalling", true);
         animator.SetBool("IsJumping", false);
         oldPos = newPos;
         newPos = new Vector3(x, transform.position.y, z);
     }
-
-
-    public void Caer() {
+	
+	public void Caer() {
         photonView.RPC("EcharMapaRPC", RpcTarget.All);
         photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
     }
@@ -466,9 +465,10 @@ public class PlayerController : MonoBehaviourPun
         if (Power_Up.NORMAL != this.power) return; //LO PILLAS PERO NO TE AFECTA YA QUE YA POSEES UN POWER 
         Floor.Type t = actualFloor.GetPower();
         SetPowerUp(actualFloor, Floor.Type.Vacio);
-        StartCoroutine(PowerUp());
+        powerCoroutine = StartCoroutine(PowerUp());
         photonView.RPC("GetPowerUpRPC", RpcTarget.All, t);
     }
+    
     [PunRPC]
     private void GetPowerUpRPC(Floor.Type t)
     {
@@ -482,10 +482,20 @@ public class PlayerController : MonoBehaviourPun
                 break;
         }
     }
+    public void UsePowerUp()
+    {
+        photonView.RPC("UsePowerUpRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    private void UsePowerUpRPC()
+    {
+        this.power = Power_Up.NORMAL;
+    }
+
     private IEnumerator PowerUp()
     {
         yield return new WaitForSeconds(durationPowerUp);
-        this.power = Power_Up.NORMAL;
+        photonView.RPC("UsePowerUpRPC", RpcTarget.All);
     }
     public void SetPowerUp(Floor f, Floor.Type type)
     {
@@ -577,16 +587,15 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void DoEndGameRPC(int num, int numBeats)
+    private void DoExitPlayer()
     {
-        PlayerController mpc = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
+        FindObjectOfType<RemovePlayers>().ExitPlayer();
+    }
+
+    [PunRPC]
+    private void DoUpdateWinner(int num)
+    {
         FindObjectOfType<PlayerSelector>().playerWinner = num;
-        FindObjectOfType<PlayerSelector>().hitsStats = mpc.hitsStats;
-        FindObjectOfType<PlayerSelector>().killsStats = mpc.killsStats;
-        FindObjectOfType<PlayerSelector>().pushStats = mpc.pushStats;
-        FindObjectOfType<PlayerSelector>().jumpStats = mpc.jumpStats;
-        FindObjectOfType<PlayerSelector>().averageRhythmStats = (float) (mpc.jumpStats * 100 / numBeats) / 100;
-        if(!PhotonNetwork.IsMasterClient) PhotonNetwork.LeaveRoom(true);
     }
     #endregion
 
