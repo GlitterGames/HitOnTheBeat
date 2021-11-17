@@ -75,11 +75,14 @@ MonoBehaviour:
   - NoHaPulsadoRPC
   - DoUpdateWinner
   - GetPowerUpRPC
+<<<<<<< HEAD
   - KillRPC
   - HitRPC
   - JumpRPC
   - PushRPC
   - DoEndGameRPC
+=======
+>>>>>>> parent of 5d3e03c7 (Merge branch 'colisions')
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
