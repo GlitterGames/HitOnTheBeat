@@ -43,8 +43,19 @@ public class GameManager : MonoBehaviourPun
         public PlayerController.Ultimate type;
         public Floor targetFloor;
     }
+    public class Colisions
+    {
+        public Floor floor;
+        public List<int> positions;
+        public Colisions(Floor f)
+        {
+            this.floor = f;
+            positions = new List<int>();
+        }
+    }
+
     #endregion
-	
+
     #region Variables
     public ColoresEspeciales coloresEspeciales;
     public ColoresAnillos coloresAnillos;
@@ -61,26 +72,6 @@ public class GameManager : MonoBehaviourPun
     public Queue<Movement> movimientos = new Queue<Movement>();
     public Queue<Ultimate> ultimates = new Queue<Ultimate>();
     #endregion
-    #region Estructuras
-    public struct Movement
-    {
-        public PlayerController player;
-        public Floor nextFloor;
-        public FloorDetectorType dir;
-    }
-    public class Colisions 
-    {
-        public Floor floor;
-        public List<int> positions;
-        public Colisions(Floor f)
-        {
-            this.floor = f;
-            positions = new List<int>();
-        }
-    }
-    #endregion
-
-   
 
     void Awake()
     {
