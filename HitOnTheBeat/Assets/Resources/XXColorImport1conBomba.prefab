@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 3210013009723443861}
   - component: {fileID: 2379994769809511016}
   - component: {fileID: -6770505090747296211}
+  - component: {fileID: 8762264631290537268}
   m_Layer: 0
   m_Name: XXColorImport1conBomba
   m_TagString: Untagged
@@ -193,11 +194,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tipoUltimate: 1
+  ULTIMATE_MAX_BEAT_DURATION: 2
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
   floorDir: 0
-  fuerza: 0
+  m_fuerza: 0
   fuerzaCinetica: 0
   colision: 0
   fuerzaSinPulsar: 1
@@ -240,6 +242,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 2
     Name: IsFalling
+  - Type: 9
+    SynchronizeType: 0
+    Name: Special
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
@@ -270,6 +275,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nametext: {fileID: 5283561587296507749}
+--- !u!114 &8762264631290537268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385504132329047271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d3f7664e038614ab2f7009dd66cabe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bomba: {fileID: 5323589712393485303}
+  target: {fileID: 0}
 --- !u!1 &1680449387539638804
 GameObject:
   m_ObjectHideFlags: 0

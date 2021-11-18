@@ -3232,7 +3232,8 @@ MonoBehaviour:
     anillo0: {r: 1, g: 0, b: 0, a: 0}
     anillo1: {r: 1, g: 0.48424333, b: 0, a: 0}
     anillo2: {r: 1, g: 0.8536654, b: 0, a: 0}
-    selectedFloor: {r: 0.5224643, g: 0, b: 1, a: 0}
+    selectedFloor0: {r: 0.5235014, g: 0, b: 1, a: 1}
+    selectedFloor1: {r: 0.24977903, g: 0, b: 0.4339623, a: 1}
   coloresAnillos:
     anillo0: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 0}
     anillo1: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 0}
@@ -6787,6 +6788,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3bf1d3a10a7274e8fbd013ab087317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ULTIMATES_MAX_BEATS: 000000000000000000000000
   ultimate: {fileID: 192020157446226644}
 --- !u!114 &192020157287099646
 MonoBehaviour:

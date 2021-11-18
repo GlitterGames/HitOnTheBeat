@@ -22,6 +22,9 @@ public class HUDManager : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    public int DurationUltimate { get; set; }
+
     private void Awake()
     {
         instance = this;
@@ -31,6 +34,7 @@ public class HUDManager : MonoBehaviour
     void Start()
     {
         ultimate.onClick.AddListener(() => DoUltimate());
+        DurationUltimate = -1;
     }
 
     private void DoUltimate()

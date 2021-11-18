@@ -24,7 +24,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
         playerSelector = FindObjectOfType<PlayerSelector>();
         int typePlayer = playerSelector.selectedPlayer;
         int id = PhotonNetwork.LocalPlayer.ActorNumber - 1;
-        Vector3 pos = new Vector3(f[id].transform.position.x, 0.6f, f[id].transform.position.z);
+        Vector3 pos = new Vector3(f[id].transform.position.x, 0.4f, f[id].transform.position.z);
         my_player = PhotonNetwork.Instantiate(playerAvatar[typePlayer].name, pos, Quaternion.Euler(0,180,0));
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.Instantiate(ritmo.name, pos, Quaternion.identity);
     }

@@ -416,11 +416,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tipoUltimate: 0
+  ULTIMATE_MAX_BEAT_DURATION: 10
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
   floorDir: 0
-  fuerza: 0
+  m_fuerza: 0
   fuerzaCinetica: 0
   colision: 0
   fuerzaSinPulsar: 1
