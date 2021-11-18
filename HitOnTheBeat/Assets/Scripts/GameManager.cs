@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class GameManager : MonoBehaviourPun
 {
+
+    
     #region Estructuras
     [System.Serializable]
     public struct ColoresAnillos
@@ -62,8 +64,8 @@ public class GameManager : MonoBehaviourPun
     }
 
     #endregion
-
     #region Variables
+    public float TIME = 0.25f;
     public ColoresMovimiento coloresEspeciales;
     public ColoresBombaColor coloresBombaColor;
     public ColoresAnillos coloresAnillos;
@@ -99,6 +101,7 @@ public class GameManager : MonoBehaviourPun
         InitColorBlink();
         InitCasillas();
         InitBackground();
+        AnimateFloors();
     }
 
     //Se ejecuta cada vez que comienza un nuevo Beat.
@@ -206,6 +209,24 @@ public class GameManager : MonoBehaviourPun
         }
         return -1;
     }
+    //Esta clase cambia los ID de los eliminados después de realizarse una eliminación
+    //ya que su posición en el array variará
+    private List<int> reordenar(int pos, List<int> eliminados)
+    {
+        List<int> reordenados = new List<int>();
+        for (int i = 0; i < eliminados.Count; i++) {
+            //En el caso de que el eliminado este en una posición mayor de la que se ha
+            //eliminado, la posicion de este eliminado será en una unidad menor
+            if (eliminados[i] > pos)
+            {
+                reordenados[i] = eliminados[i] - 1;
+            }
+            else {
+                reordenados[i] = eliminados[i];
+            }
+        }
+        return reordenados;
+    }
     private void PerformColision()
     {
         bool bcolision = true; //En caso de que no se tengan que comprobar colisiones
@@ -230,10 +251,12 @@ public class GameManager : MonoBehaviourPun
                 //eliminar jugadores que se hayan caido
             for (int i = 0; i < colisiones.Count; i++)
             {
-                List<int> players = PerformColision(false, colisiones[i]);
-                for (int j = 0; j < players.Count; j++)
+                List<int> positions = PerformColision(false, colisiones[i]);
+                for (int j = 0; j < positions.Count; j++)
                 {
-                    jugadores.RemoveAt(players[j]);
+                    jugadores.RemoveAt(positions[j]);
+                    positions = reordenar(positions[j], positions);
+
                 }
             }
             //Colision normal entre jugadores
@@ -271,6 +294,7 @@ public class GameManager : MonoBehaviourPun
                 {
                     Debug.LogWarning("Se debe eliminar un jugador");
                     jugadores.RemoveAt(positions[j]);
+                    positions = reordenar(positions[j], positions);
                 }
             }
             //Cinemáticas
@@ -294,9 +318,9 @@ public class GameManager : MonoBehaviourPun
                     bool moreThanTwo = false; //Se moverá en mi dirección
                     //Se le echará a la misma dirreción a la que iba
                     //con una fuerza de la fuerza cinética que tiene
-                    bool echado = jugadores[i].EcharOne(jugadores[i].floorDir, jugadores[i].fuerzaCinetica, moreThanTwo, notCinematic, sameFloor); 
-                    if (echado) jugadores.RemoveAt(i);
-                    if (jugadores[i].fuerzaCinetica > 0)
+                    bool echado = jugadores[i].EcharOne(jugadores[i].floorDir, jugadores[i].fuerzaCinetica, moreThanTwo, notCinematic, sameFloor);
+                    if (echado) { jugadores.RemoveAt(i);}
+                    else if (jugadores[i].fuerzaCinetica > 0)
                     {
                         bcolision = true;
                     }
@@ -653,6 +677,30 @@ public class GameManager : MonoBehaviourPun
         
         background[row].SetActive(false);
         yield return new WaitForEndOfFrame();
+    }
+    private IEnumerator DestroyRows()
+    {
+        for(int i = 5; i>=0; i++)
+        {
+            yield return new WaitForSeconds(TIME / 5);
+            DestroyRow(i, 3f, 5);
+        }
+        
+    }
+    private IEnumerator SpawnPowerUps()
+    {
+        //Tiempo de espera entre el spawn de otro power up
+        float espera = 15f; 
+        for(int i = 0; i<TIME/espera; i++)
+        {
+            yield return new WaitForSeconds(espera);
+            SpawnPowerUp(7f);
+        }
+    }
+    private void AnimateFloors()
+    {
+        StartCoroutine(DestroyRows());
+        StartCoroutine(SpawnPowerUps());
     }
     public void Update()
     {
