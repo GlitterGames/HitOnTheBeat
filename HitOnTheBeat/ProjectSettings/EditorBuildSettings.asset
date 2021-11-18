@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Gemas.unity
     guid: 66d6297e1d238c84d862fbc379267473
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 92cfff7686feb7941aedde13816da7d0
   m_configObjects: {}

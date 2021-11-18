@@ -86,6 +86,6 @@ public class Lobby : MonoBehaviourPunCallbacks
 
         public void GoSettings()
     {
-         FindObjectOfType<SceneTransitioner>().StartTransition(5, 0.5f);;
+         FindObjectOfType<SceneTransitioner>().StartTransition(7, 0.5f);;
     }
 }
