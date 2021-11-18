@@ -7,8 +7,15 @@ using Photon.Pun;
 public class GameManager : MonoBehaviourPun
 {
 
-    
+
     #region Estructuras
+    [System.Serializable]
+    public struct Materiales
+    {
+        public Material normal;
+        public Material X2;
+        public Material escudo;
+    }
     [System.Serializable]
     public struct ColoresAnillos
     {
@@ -65,7 +72,8 @@ public class GameManager : MonoBehaviourPun
 
     #endregion
     #region Variables
-    public float TIME = 0.25f;
+    public float TIME = 0.5f * 60;
+    public Materiales materiales;
     public ColoresMovimiento coloresEspeciales;
     public ColoresBombaColor coloresBombaColor;
     public ColoresAnillos coloresAnillos;
@@ -177,7 +185,6 @@ public class GameManager : MonoBehaviourPun
         Floor f = casillas[i][j];
         int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;
         int k = Random.Range(1, num);
-        Debug.Log("La casilla donde se dbería pintar es: " + f.row + " " + f.index +" DE TIPO " + (Floor.Type)k);
         f.powertime = StartCoroutine(SetType(f, (Floor.Type)k, time));
     }
     private IEnumerator SetType(Floor f, Floor.Type t, float time) {
@@ -645,12 +652,15 @@ public class GameManager : MonoBehaviourPun
         yield return new WaitForEndOfFrame();
         //LOS JUGADORES QUE SE ENCUENTREN EN ESAS CASILLAS SE CAERAN
         if (PhotonNetwork.IsMasterClient) {
-            foreach (PlayerController jugador in jugadores) {
-                if (jugador.actualFloor.Equals(f))
+            for(int i = 0; i<jugadores.Count; i++)
+            {
+                if (jugadores[i].actualFloor.Equals(f))
                 {
-                    jugador.Caer(); 
-                    jugadores.Remove(jugador);
+                    jugadores[i].Caer();
+                    jugadores.RemoveAt(i);
+                    i--;
                 }
+
             }
             casillas[f.row][f.index] = null;
         }
@@ -680,9 +690,10 @@ public class GameManager : MonoBehaviourPun
     }
     private IEnumerator DestroyRows()
     {
-        for(int i = 5; i>=0; i++)
+        yield return new WaitForSeconds(5f);
+        for (int i = 5; i>=0; i--)
         {
-            yield return new WaitForSeconds(TIME / 5);
+            yield return new WaitForSeconds(10f);
             DestroyRow(i, 3f, 5);
         }
         
@@ -691,7 +702,7 @@ public class GameManager : MonoBehaviourPun
     {
         //Tiempo de espera entre el spawn de otro power up
         float espera = 15f; 
-        for(int i = 0; i<TIME/espera; i++)
+        for(int i = 0; i<(TIME/espera); i++)
         {
             yield return new WaitForSeconds(espera);
             SpawnPowerUp(7f);

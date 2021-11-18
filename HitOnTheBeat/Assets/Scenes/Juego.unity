@@ -677,11 +677,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.06297419
+      value: 0.06297422
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0212328
+      value: -0.021232812
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -741,11 +741,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4117320156741995903, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.06297419
+      value: 0.06297422
       objectReference: {fileID: 0}
     - target: {fileID: 4117320156741995903, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0212328
+      value: -0.021232812
       objectReference: {fileID: 0}
     - target: {fileID: 4117320157406309160, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3225,6 +3225,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd99bd99a14c22d4bbf383a1e6892891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TIME: 0.25
+  materiales:
+    normal: {fileID: 2100000, guid: d46b2aaaa33c0534aa3c33aec38f6d87, type: 2}
+    X2: {fileID: 2100000, guid: 37400f1e399d9fd40a2b63843381cde7, type: 2}
+    escudo: {fileID: 2100000, guid: 21e618f46f6befa47b9070ee8633de09, type: 2}
   coloresEspeciales:
     actual: {r: 1, g: 0.834173, b: 0.48627448, a: 0}
     adyacente: {r: 0, g: 0.53399444, b: 1, a: 0}
@@ -8181,10 +8186,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3778422877799793901, guid: 9a6df1051c1565b4994c93add7af5e08, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d46b2aaaa33c0534aa3c33aec38f6d87, type: 2}
     - target: {fileID: 6859973685957062327, guid: 9a6df1051c1565b4994c93add7af5e08, type: 3}
       propertyPath: m_Name
       value: Casillas Hexagono
       objectReference: {fileID: 0}
+    - target: {fileID: 8496914768541049716, guid: 9a6df1051c1565b4994c93add7af5e08, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d46b2aaaa33c0534aa3c33aec38f6d87, type: 2}
     - target: {fileID: 8875986948798946783, guid: 9a6df1051c1565b4994c93add7af5e08, type: 3}
       propertyPath: m_RootOrder
       value: 3

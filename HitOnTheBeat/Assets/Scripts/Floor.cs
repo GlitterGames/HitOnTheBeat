@@ -127,16 +127,21 @@ public class Floor : MonoBehaviour
     }
     public void SetPower(Type t)
     {
+        Material m = FindObjectOfType<GameManager>().materiales.normal;
         this.type = t;
         switch (t)
         {
             case Type.Vacio:
-                SetColor(Color.green);
+                m = FindObjectOfType<GameManager>().materiales.normal;
                 break;
             case Type.RitmoDuplicado:
-                SetColor(Color.red);
+                m = FindObjectOfType<GameManager>().materiales.X2;
+                break;
+            case Type.Escudo:
+                m = FindObjectOfType<GameManager>().materiales.escudo;
                 break;
         }
+        this.GetComponent<Renderer>().material = m;
     }
     public Type GetPower()
     {
