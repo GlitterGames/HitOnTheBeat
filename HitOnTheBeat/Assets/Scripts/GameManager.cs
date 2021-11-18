@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviourPun
     #endregion
 	
     #region Variables
-    public float TIME = 0.5f * 60;
+    public float TIME;
     public Materiales materiales;
     public ColoresMovimiento coloresEspeciales;
     public ColoresBombaColor coloresBombaColor;
@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviourPun
 
     void Awake()
     {
+        TIME = 30f;
         //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
         casillas.Add(new Floor[1]);
         casillas.Add(new Floor[6]);
@@ -184,22 +185,6 @@ public class GameManager : MonoBehaviourPun
         }
     }
 
-    public void SpawnPowerUp(float time)
-    {
-        int i = Random.Range(0, casillas.Count);
-        int j = Random.Range(0, casillas[i].Length);
-        Floor f = casillas[i][j];
-        int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;
-        int k = Random.Range(1, num);
-        f.powertime = StartCoroutine(SetType(f, (Floor.Type)k, time));
-    }
-    private IEnumerator SetType(Floor f, Floor.Type t, float time) {
-        FindObjectOfType<PhotonInstanciate>().my_player.
-            GetComponent<PlayerController>().SetPowerUp(f, t);
-        yield return new WaitForSeconds(time);
-        FindObjectOfType<PhotonInstanciate>().my_player.
-            GetComponent<PlayerController>().SetPowerUp(f, Floor.Type.Vacio);
-    }
     public void ApplyEfectsFromFloor() {
         if (PhotonNetwork.IsMasterClient)
         {
@@ -666,7 +651,7 @@ public class GameManager : MonoBehaviourPun
                 }
 
             }
-            casillas[f.row][f.index] = null;
+            //casillas[f.row][f.index] = null;
         }
     }
     private IEnumerator BlinkBackground(int row, float seg, int repeticiones)
@@ -695,10 +680,9 @@ public class GameManager : MonoBehaviourPun
 	
     private IEnumerator DestroyRows()
     {
-        yield return new WaitForSeconds(5f);
         for (int i = 5; i>=0; i--)
         {
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(TIME/5);
             DestroyRow(i, 3f, 5);
         }
         
@@ -706,17 +690,37 @@ public class GameManager : MonoBehaviourPun
     private IEnumerator SpawnPowerUps()
     {
         //Tiempo de espera entre el spawn de otro power up
-        float espera = 15f; 
-        for(int i = 0; i<(TIME/espera); i++)
+        float espera = 1f;
+        float numRep = TIME / (int)espera;
+        Debug.LogWarning("N:" + numRep);
+        for(int i = 0; i<numRep; i++)
         {
             yield return new WaitForSeconds(espera);
-            SpawnPowerUp(7f);
+            SpawnPowerUp(5f);
         }
     }
     private void AnimateFloors()
     {
-        StartCoroutine(DestroyRows());
-        StartCoroutine(SpawnPowerUps());
+        //StartCoroutine(DestroyRows());
+        //StartCoroutine(SpawnPowerUps());
+        //StartCoroutine(PruebaPowerUps());
+    }
+    public void SpawnPowerUp(float time)
+    {
+        int i = Random.Range(0, casillas.Count);
+        int j = Random.Range(0, casillas[i].Length);
+        Floor f = casillas[i][j];
+        int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;
+        int k = Random.Range(1, num);
+        f.powertime = StartCoroutine(SetType(f, (Floor.Type)k, time));
+    }
+    private IEnumerator SetType(Floor f, Floor.Type t, float time)
+    {
+        FindObjectOfType<PhotonInstanciate>().my_player.
+            GetComponent<PlayerController>().SetPowerUp(f, t);
+        yield return new WaitForSeconds(time);
+        if(f!=null)FindObjectOfType<PhotonInstanciate>().my_player.
+            GetComponent<PlayerController>().SetPowerUp(f, Floor.Type.Vacio);
     }
     public void Update()
     {
