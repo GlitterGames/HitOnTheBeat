@@ -29,7 +29,7 @@ public class Volumen : MonoBehaviour
     
     public void ChangeSliderEfectos(float valor)
     {
-        PlayerPrefs.SetFloat("volumenAudio", valor);
+        PlayerPrefs.SetFloat("volumenEfectos", valor);
         masterMixer.SetFloat("SoundEffects", valor);
         RevisarSiEstoyMuteEfectos(valor);
     }
