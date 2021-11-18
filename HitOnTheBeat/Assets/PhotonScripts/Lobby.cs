@@ -83,4 +83,9 @@ public class Lobby : MonoBehaviourPunCallbacks
         base.OnDisconnected(cause);
         FindObjectOfType<SceneTransitioner>().StartTransition(0, 0);
     }
+
+        public void GoSettings()
+    {
+         FindObjectOfType<SceneTransitioner>().StartTransition(5, 0.5f);;
+    }
 }

@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Settings.unity
-    guid: 92cfff7686feb7941aedde13816da7d0
-  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: fe07fc90d8ea6e34a82e8c9e9838d1a1
   - enabled: 1
@@ -23,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Victoria.unity
     guid: 3297eeb87d4dbd5469991160f6b67c84
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 92cfff7686feb7941aedde13816da7d0
   m_configObjects: {}
