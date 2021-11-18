@@ -142,6 +142,7 @@ public class Floor : MonoBehaviour
                 break;
         }
         this.GetComponent<Renderer>().material = m;
+        if(t == Type.Vacio) { SetColor(GetColor()); }
     }
     public Type GetPower()
     {

@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviourPun
         PerformUltimates();
         PerformMovements();
         PerformColision();
-        ApplyEfectsFromFloor();
+        //ApplyEfectsFromFloor();
     }
 
     private void InitColor() {
@@ -527,13 +527,13 @@ public class GameManager : MonoBehaviourPun
                 //Si eres la mayor fuerza pero alguien te iguala te caes una para atrás en la dirección opuesta que llevabas
                 else if (fuerzas[i] == maxFuerza && equal)
                 {
-                    jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                    jugadores[c.positions[i]].EcharOne(jugadores[c.positions[i]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
                 }
                 //Si no eras la mayor fuerza te caes para atras a dirección opuesta de la que llevabas con la diferencia entre
                 //la máxima fuerza y la tuya
                 else
                 {
-                    bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, maxFuerza - fuerzas[i], moreThanTwo, notCinematic, sameFloor);
+                    bool echado = jugadores[c.positions[i]].EcharOne(jugadores[c.positions[i]].floorDir, maxFuerza - fuerzas[i], moreThanTwo, notCinematic, sameFloor);
                     if (echado) eliminados.Add(i);
                 }
                 //Todos los participantes reinician su fuerza
@@ -625,8 +625,10 @@ public class GameManager : MonoBehaviourPun
             for (int i = 0; i < repeticiones; i++)
             {
                 f.SetColor(c1);
+                f.SetColorN(c1);
                 yield return new WaitForSeconds(seg/repeticiones);
                 f.SetColor(c2);
+                f.SetColorN(c2);
                 yield return new WaitForSeconds(seg/repeticiones);
             }
         }

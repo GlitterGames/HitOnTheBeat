@@ -386,7 +386,7 @@ public class PlayerController : MonoBehaviourPun
             //Si hay más de dos se coge la inversa de mi dirección
             if (moreThanTwo) 
             {
-                nextFloor = actualFloor.GetInverseFloor(dir);
+                nextFloor = previousFloor;
                 //En caso de que tengamos más de un jugador mi nueva dirección sera
                 //la inversa de la que tenía para las fuerza cinética
                 dir = actualFloor.GetInverseDireccion(dir);
