@@ -90,6 +90,12 @@ MonoBehaviour:
   - PerformMegaPunchServerRPC
   - RegisterUltimateRPC
   - CancelUltimateRPC
+  - PerformBombaColorOwnerRPC
+  - PerformInvisibilityOwnerRPC
+  - PerformMegaPunchOwnerRPC
+  - UpdateUltimateTimeRPC
+  - ChangeStateRPC
+  - BombaColorExplosion
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

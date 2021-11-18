@@ -18,7 +18,8 @@ public class PlayerController : MonoBehaviourPun
     {
         NORMAL = 0,
         COLOR_RANGE = 1,
-        ULTIMATE = 2
+        ULTIMATE = 2,
+        EXECUTING = 3
     }
     public enum Power_Up
     {
@@ -30,11 +31,30 @@ public class PlayerController : MonoBehaviourPun
 
     #region Atributes
     public Ultimate tipoUltimate = Ultimate.MEGA_PUNCH;
+    public int ULTIMATE_MAX_BEAT_DURATION = 5;
+    [HideInInspector]
     public Estado estadoActual = Estado.NORMAL;
     public Floor actualFloor;
     public Floor previousFloor;
     public FloorDetectorType floorDir;
-    public int fuerza;
+    public int m_fuerza;
+    public int Fuerza
+    {
+        get
+        {
+            if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.MEGA_PUNCH) return GameManager.MAX_STRENGHT * 2;
+            else return m_fuerza;
+        }
+        set
+        {
+            if (estadoActual != Estado.EXECUTING || tipoUltimate != Ultimate.MEGA_PUNCH)
+            {
+                m_fuerza = value;
+                if (m_fuerza > GameManager.MAX_STRENGHT) m_fuerza = GameManager.MAX_STRENGHT;
+                else if (m_fuerza < 0) m_fuerza = 0;
+            }
+        }
+    }
     public int fuerzaCinetica;
     public bool colision;
     public int fuerzaSinPulsar = 1;
@@ -76,7 +96,7 @@ public class PlayerController : MonoBehaviourPun
         previousFloor = actualFloor;
         newPos = transform.position;
         oldPos = transform.position;
-        fuerza = 0;
+        Fuerza = 0;
         fuerzaCinetica = 0;
         colision = false;
 
@@ -210,7 +230,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     if (GetFloorAreaRange(actualFloor).Contains(targetFloor))
                     {
-                        estadoActual = Estado.ULTIMATE;
+                        photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.ULTIMATE);
                         SetBombaColorUltimate(targetFloor);
                     }
                 }
@@ -267,15 +287,14 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void FalloRPC()
     {
-        fuerza--;
-        if (fuerza < 0) fuerza = 0;
+        Fuerza--;
     }
 
     [PunRPC]
     public void NoHaPulsadoRPC()
     {
-        this.fuerza -= fuerzaSinPulsar;
-        if (fuerza < 0) fuerza = 0;
+        this.Fuerza -= fuerzaSinPulsar;
+        if (Fuerza < 0) Fuerza = 0;
         fuerzaSinPulsar++;
     }
 
@@ -288,8 +307,19 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void GolpearRPC()
     {
+        //Si la boxeadora realiza un golpe, gasta la ultimate.
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsAttacking", true);
+        if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.MEGA_PUNCH)
+        {
+            ChangeStateRPC(Estado.NORMAL);
+            HUDManager.instance.DurationUltimate = 1;
+        }
+        if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.INVISIBILITY)
+        {
+            ChangeStateRPC(Estado.NORMAL);
+            HUDManager.instance.DurationUltimate = 1;
+        }
     }
 
     public void Mover(Floor nextFloor, FloorDetectorType dir)
@@ -303,9 +333,9 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void MoverRPC(int row, int index, FloorDetectorType dir)
     {
-        fuerza++;
+        Fuerza++;
         if (Power_Up.RITMODUPLICADO == power) {
-            fuerza++;
+            Fuerza++;
         }
         Floor nextFloor = gameManager.casillas[row][index];
         movimientoMarcado = false;
@@ -341,6 +371,13 @@ public class PlayerController : MonoBehaviourPun
         Floor nextFloor = null;
         if(notCinematic == true)
         {
+            //Se vuelve a ver al fantasma cuando recibe un golpe.
+            if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.INVISIBILITY)
+            {
+                ChangeStateRPC(Estado.NORMAL);
+                HUDManager.instance.DurationUltimate = 1;
+            }
+            photonView.RPC("PushRPC", photonView.Owner);
             this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
         }
         if (sameFloor)
@@ -440,6 +477,7 @@ public class PlayerController : MonoBehaviourPun
     private void EcharRPC(int row, int index, FloorDetectorType dir)
     {
         Floor nextFloor = gameManager.casillas[row][index];
+        SetNormalColor(actualFloor);
         previousFloor = actualFloor;
         actualFloor = nextFloor;
         floorDir = dir;
@@ -448,6 +486,7 @@ public class PlayerController : MonoBehaviourPun
     private void EcharNotSameFloorRPC(int row, int index, FloorDetectorType dir)
     {
         Floor nextFloor = gameManager.casillas[row][index];
+        SetNormalColor(actualFloor);
         actualFloor = nextFloor;
         previousFloor = actualFloor;
         floorDir = dir;
@@ -472,7 +511,7 @@ public class PlayerController : MonoBehaviourPun
     IEnumerator AnimationsUpdate(int row, int index)
     {
         yield return new WaitForSeconds(0.7f);
-        SetAreaColor(actualFloor);
+        if(actualFloor) SetAreaColor(actualFloor);
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsFalling", true);
         Floor nextFloor = gameManager.casillas[row][index];
@@ -483,6 +522,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharMapaRPC()
     {
+        SetNormalColor(actualFloor);
         previousFloor = actualFloor;
         actualFloor = null;
     }
@@ -583,6 +623,28 @@ public class PlayerController : MonoBehaviourPun
             if (floor != null) floor.SetColor(gameManager.coloresEspeciales.adyacente);
         }
     }
+
+    public void SetAreaBombaColor(Floor f)
+    {
+        f.SetColor(gameManager.coloresBombaColor.selectedFloor0);
+        Floor[] casillasAdy = f.GetAdyacentes();
+        for (int i = 0; i < casillasAdy.Length; i++)
+        {
+            Floor floor = casillasAdy[i];
+            if (floor != null) floor.SetColor(gameManager.coloresBombaColor.selectedFloor1);
+        }
+    }
+
+    public void SetAreaBombaColorNormal(Floor f)
+    {
+        f.SetColor(f.GetColorN());
+        Floor[] casillasAdy = f.GetAdyacentes();
+        for (int i = 0; i < casillasAdy.Length; i++)
+        {
+            Floor floor = casillasAdy[i];
+            if (floor != null) floor.SetColor(floor.GetColorN());
+        }
+    }
     #endregion
 
     #region  Ultimates
@@ -593,15 +655,15 @@ public class PlayerController : MonoBehaviourPun
         switch (tipoUltimate)
         {
             case Ultimate.MEGA_PUNCH:
-                estadoActual = Estado.ULTIMATE;
+                photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.ULTIMATE);
                 photonView.RPC("RegisterUltimateRPC", RpcTarget.MasterClient, GetIdPlayer(), tipoUltimate);
                 break;
             case Ultimate.BOMBA_COLOR:
-                estadoActual = Estado.COLOR_RANGE;
+                photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.COLOR_RANGE);
                 SetRangeColor(actualFloor);
                 break;
             case Ultimate.INVISIBILITY:
-                estadoActual = Estado.ULTIMATE;
+                photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.ULTIMATE);
                 photonView.RPC("RegisterUltimateRPC", RpcTarget.MasterClient, GetIdPlayer(), tipoUltimate);
                 break;
         }
@@ -610,7 +672,13 @@ public class PlayerController : MonoBehaviourPun
     {
         photonView.RPC("RegisterUltimateRPC", RpcTarget.MasterClient, GetIdPlayer(), tipoUltimate, f.row, f.index);
         SetRangeColorNormal(GetFloorAreaRange(actualFloor));
-        f.SetColor(gameManager.coloresBombaColor.selectedFloor);
+        SetAreaBombaColor(f);
+    }
+
+    [PunRPC]
+    public void ChangeStateRPC(Estado state)
+    {
+        estadoActual = state;
     }
 
     public void CancelUltimate()
@@ -621,10 +689,13 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void CancelUltimateRPC()
     {
-        estadoActual = Estado.NORMAL;
-        SetRangeColorNormal(GetFloorAreaRange(actualFloor));
-        SetAreaColor(actualFloor);
-        HUDManager.instance.AddUltimateCharge(HUDManager.ULTIMATE_MAX_CHARGE);
+        if (estadoActual == Estado.COLOR_RANGE)
+        {
+            photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.NORMAL);
+            SetRangeColorNormal(GetFloorAreaRange(actualFloor));
+            SetAreaColor(actualFloor);
+            HUDManager.instance.AddUltimateCharge(HUDManager.ULTIMATE_MAX_CHARGE);
+        }
     }
 
     [PunRPC]
@@ -641,89 +712,261 @@ public class PlayerController : MonoBehaviourPun
 
     #region Mega Puño
     //Gestiona la ultimate Mega Punch.
-    public void PerformMegaPunch()
+    public void PerformMegaPunch(bool start)
     {
-        photonView.RPC("PerformMegaPunchRPC", RpcTarget.All);
-        photonView.RPC("PerformMegaPunchServerRPC", RpcTarget.AllViaServer);
+        photonView.RPC("PerformMegaPunchRPC", RpcTarget.All, start);
+        photonView.RPC("PerformMegaPunchServerRPC", RpcTarget.AllViaServer, start);
     }
 
-    //Lógica master del MegaPuño.
+    //Lógica master del MegaPuño al iniciarla y al apagarla.
     [PunRPC]
-    public void PerformMegaPunchRPC()
+    public void PerformMegaPunchRPC(bool start)
     {
-        estadoActual = Estado.NORMAL;
+        if (start)
+        {
+            ChangeStateRPC(Estado.EXECUTING);
+        }
+        else
+        {
+            ChangeStateRPC(Estado.NORMAL);
+        }
     }
 
-    //Animaciones del MegaPuño.
+    //Animaciones del MegaPuño al iniciarla y al apagarla.
     [PunRPC]
-    public void PerformMegaPunchServerRPC()
+    public void PerformMegaPunchServerRPC(bool start)
     {
-        Debug.Log("Mega Puño ejecutado");
+        if (start)
+        {
+            animator.SetBool("IsSpecial", true);
+            animator.SetTrigger("Special");
+            if (photonView.IsMine)
+            {
+                //Añadir efectos de la boxeadora.
+                HUDManager.instance.DurationUltimate = ULTIMATE_MAX_BEAT_DURATION;
+            }
+        }
+        else
+        {
+            //Parar efectos de la boxeadora.
+            animator.SetBool("IsSpecial", false);
+        }
     }
     #endregion
 
     #region Bomba Color
     //Gestiona la ultimate Bomba Color cuando se selecciona dónde lanzará la bomba.
-    public void PerformBombaColor(Floor f)
+    public void PerformBombaColor(bool start, Floor f)
     {
-        photonView.RPC("PerformBombaColorRPC", RpcTarget.All, f.row, f.index);
-        photonView.RPC("PerformBombaColorServerRPC", RpcTarget.AllViaServer, f.row, f.index);
+        photonView.RPC("PerformBombaColorRPC", RpcTarget.All, start, f.row, f.index);
+        photonView.RPC("PerformBombaColorServerRPC", RpcTarget.AllViaServer, start, f.row, f.index);
     }
     //Animación y ejecución de la Bomba Color.
     [PunRPC]
-    public void PerformBombaColorRPC(int row, int index)
+    public void PerformBombaColorRPC(bool start, int row, int index)
     {
-        estadoActual = Estado.NORMAL;
+        //Se lanza la bomba
+        if (start)
+        {
+            ChangeStateRPC(Estado.EXECUTING);
+        }
+        //Explota la bomba
+        else
+        {
+            ChangeStateRPC(Estado.NORMAL);
+            photonView.RPC("BombaColorExplosion", RpcTarget.MasterClient, row, index);
+        }
+    }
+
+    [PunRPC]
+    public void BombaColorExplosion(int row, int index)
+    {
+        List<Floor> suelos = new List<Floor>();
+        Floor target = gameManager.casillas[row][index];
+        Floor[] adyacentes = target.adyacentes;
+        if (target)
+        {
+            suelos.Add(target);
+            foreach(Floor f in adyacentes)
+            {
+                if (f)
+                {
+                    suelos.Add(f);
+                }
+            }
+        }
+        foreach(PlayerController pc in gameManager.jugadores)
+        {
+            if (pc.actualFloor.Equals(target))
+            {
+                pc.EcharOne(pc.actualFloor.GetInverseDireccion(pc.floorDir), Fuerza, true, false, false);
+            }
+            else if (suelos.Contains(pc.actualFloor))
+            {
+                FloorDetectorType fdt;
+                suelos.Remove(pc.actualFloor);
+                if (pc.actualFloor.Equals(target.GetNorth_west()))
+                {
+                    fdt = FloorDetectorType.North_west;
+                }
+                else if (pc.actualFloor.Equals(target.GetNorth_east()))
+                {
+                    fdt = FloorDetectorType.North_east;
+                }
+                else if (pc.actualFloor.Equals(target.GetWest()))
+                {
+                    fdt = FloorDetectorType.West;
+                }
+                else if (pc.actualFloor.Equals(target.GetEast()))
+                {
+                    fdt = FloorDetectorType.East;
+                }
+                else if (pc.actualFloor.Equals(target.GetSouth_west()))
+                {
+                    fdt = FloorDetectorType.South_west;
+                }
+                else
+                {
+                    fdt = FloorDetectorType.South_east;
+                }
+                pc.EcharOne(fdt, Fuerza, true, false, false);
+            }
+        }
     }
 
     //Animación y ejecución de la Bomba Color.
     [PunRPC]
-    public void PerformBombaColorServerRPC(int row, int index)
+    public void PerformBombaColorServerRPC(bool start, int row, int index)
     {
-        SetAreaColor(actualFloor);
-        gameManager.casillas[row][index].SetColor(gameManager.color[row]);
-        Debug.Log("Bomba Color ejecutado");
+        if (start)
+        {
+            animator.SetTrigger("Special");
+            if (photonView.IsMine)
+            {
+                BombaColorManager bcm = GetComponent<BombaColorManager>();
+                if (bcm)
+                {
+                    bcm.StartAnimation(gameManager.casillas[row][index], ULTIMATE_MAX_BEAT_DURATION * Ritmo.instance.delay);
+                }
+                else
+                {
+                    Debug.LogWarning("Esta Ultimate requiere del componente BombaColorManager");
+                }
+                HUDManager.instance.DurationUltimate = ULTIMATE_MAX_BEAT_DURATION;
+                SetAreaColor(actualFloor);
+            }
+            Debug.Log("Bomba Color ejecutado");
+        }
     }
     #endregion
 
     #region Invisibility
     //Gestiona la ultimate de Invisibilidad.
-    public void PerformInvisibility()
+    public void PerformInvisibility(bool start)
     {
-        photonView.RPC("PerformInvisibilityRPC", RpcTarget.All);
-        photonView.RPC("PerformInvisibilityServerRPC", RpcTarget.AllViaServer);
-    }
-
-    //Lógica de la Invisibilidad.
-    [PunRPC]
-    public void PerformInvisibilityRPC()
-    {
-        estadoActual = Estado.NORMAL;
+        photonView.RPC("PerformInvisibilityRPC", RpcTarget.All, start);
+        photonView.RPC("PerformInvisibilityServerRPC", RpcTarget.AllViaServer, start);
     }
 
     //Animación y ejecución de la Invisibilidad.
     [PunRPC]
-    public void PerformInvisibilityServerRPC()
+    public void PerformInvisibilityRPC(bool start)
     {
-        Debug.Log("Invisibilidad ejecutado");
-        //Si Frank pertecene al que ejecutó la ultimate.
-        //Lo ve transparente.
-        VisibilityManager vm = GetComponent<VisibilityManager>();
-        if (vm)
+        if (start)
         {
-            if (photonView.IsMine)
+            ChangeStateRPC(Estado.EXECUTING);
+        }
+        else
+        {
+            ChangeStateRPC(Estado.NORMAL);
+        }
+    }
+
+    [PunRPC]
+    public void PerformInvisibilityServerRPC(bool start)
+    {
+        if (start)
+        {
+            animator.SetTrigger("Special");
+            //Si Frank pertecene al que ejecutó la ultimate.
+            //Lo ve transparente.
+            VisibilityManager vm = GetComponent<VisibilityManager>();
+            if (vm)
             {
-                vm.Alpha = 0.5f;
+                if (photonView.IsMine)
+                {
+                    vm.Alpha = 0.5f;
+                    HUDManager.instance.DurationUltimate = ULTIMATE_MAX_BEAT_DURATION;
+                }
+                //Si Frank pertenece a otro jugador.
+                //Deja de verlo.
+                else
+                {
+                    vm.Visible = false;
+                }
             }
-            //Si Frank pertenece a otro jugador.
-            //Deja de verlo.
             else
             {
-                vm.Visible = false;
+                Debug.LogWarning("Esta Ultimate requiere del componente VisibilityManager");
+            }
+        }
+        else
+        {
+            VisibilityManager vm = GetComponent<VisibilityManager>();
+            if (vm)
+            {
+                if (photonView.IsMine)
+                {
+                    vm.Alpha = 1f;
+                    HUDManager.instance.DurationUltimate = ULTIMATE_MAX_BEAT_DURATION;
+                }
+                else
+                {
+                    vm.Visible = true;
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Esta Ultimate requiere del componente VisibilityManager");
             }
         }
     }
     #endregion
+
+    public void UpdateUltimateTime()
+    {
+        photonView.RPC("UpdateUltimateTimeRPC", photonView.Owner);
+    }
+
+    [PunRPC]
+    public void UpdateUltimateTimeRPC()
+    {
+        //Si está ejecutando una ultimate.
+        if (HUDManager.instance.DurationUltimate >= 0)
+        {
+            if (HUDManager.instance.DurationUltimate > 0)
+            {
+                HUDManager.instance.DurationUltimate -= 1;
+            }
+            //Se termina la ejecución de la ultimate.
+            if(HUDManager.instance.DurationUltimate == 0)
+            {
+                switch (tipoUltimate)
+                {
+                    case Ultimate.MEGA_PUNCH:
+                        PerformMegaPunch(false);
+                        break;
+                    case Ultimate.BOMBA_COLOR:
+                        PerformBombaColor(false, GetComponent<BombaColorManager>().target);
+                        break;
+                    case Ultimate.INVISIBILITY:
+                        PerformInvisibility(false);
+                        break;
+                }
+                HUDManager.instance.DurationUltimate = -1;
+            }
+        }
+    }
 
     private HashSet<Floor> GetFloorAreaRange(Floor target)
     {
