@@ -68,5 +68,17 @@ public class SceneTransitioner : MonoBehaviour
         this.level = 4;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
+    public void GoToShopScene(float delay)
+    {
+        anim.SetTrigger("Activate");
+        this.level = 5;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
+    public void GoToGemsScene(float delay)
+    {
+        anim.SetTrigger("Activate");
+        this.level = 6;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
     #endregion
 }
