@@ -512,8 +512,11 @@ public class PlayerController : MonoBehaviourPun
     }
 
     public void Caer() {
+        pos.x = transform.position.x;
+        pos.y = transform.position.y;
+        pos.z = transform.position.z;
         photonView.RPC("EcharMapaRPC", RpcTarget.All);
-        photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
+        photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, transform.position.x, transform.position.z);
     }
     public void GetPowerUp()
     {

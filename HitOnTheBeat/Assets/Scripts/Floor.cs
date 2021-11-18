@@ -164,7 +164,7 @@ public class Floor : MonoBehaviour
         return (Vector3.right * transform.position.x + Vector3.forward * transform.position.z);
     }
     public void SetColor(Color c) {
-        r.material.color = c;
+        r.material.SetColor("_BaseColor", c);
     }
     public void SetColorN(Color c)
     {
