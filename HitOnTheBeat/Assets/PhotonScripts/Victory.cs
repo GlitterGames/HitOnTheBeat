@@ -22,6 +22,6 @@ public class Victory : MonoBehaviour
         jumpText.SetText("Saltos: " + inGameData.jumpStats);
         pushText.SetText("Golpes recibidos: " + inGameData.pushStats);
         killsText.SetText("Bajas: " + inGameData.killsStats);
-        averageRhythmText.SetText("Ritmo medio: " + inGameData.averageRhythmStats);
+        averageRhythmText.SetText("Ritmo ratio: " + inGameData.averageRhythmStats + "%");
     }
 }

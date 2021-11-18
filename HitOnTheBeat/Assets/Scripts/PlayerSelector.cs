@@ -10,5 +10,5 @@ public class PlayerSelector : MonoBehaviour
     public int jumpStats;
     public int pushStats;
     public int killsStats;
-    public float averageRhythmStats;
+    public int averageRhythmStats;
 }

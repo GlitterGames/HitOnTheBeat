@@ -415,12 +415,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5af9335833fb8542946a855f9bd17eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipoPersonaje: 0
+  tipoUltimate: 0
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
   floorDir: 0
   fuerza: 0
+  fuerzaCinetica: 0
+  colision: 0
   fuerzaSinPulsar: 1
   speed: 2
   newPos: {x: 0, y: 0, z: 0}
@@ -428,12 +430,12 @@ MonoBehaviour:
   secondsCounter: 0
   secondsToCount: 0.4
   movimientoMarcado: 0
+  power: 0
+  durationPowerUp: 5
   hitsStats: 0
   jumpStats: 0
   pushStats: 0
   killsStats: 0
-  power: 0
-  durationPowerUp: 5
 --- !u!114 &7285398391901293338
 MonoBehaviour:
   m_ObjectHideFlags: 0

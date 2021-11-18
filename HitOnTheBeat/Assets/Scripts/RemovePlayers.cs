@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class RemovePlayers : MonoBehaviourPunCallbacks
 {
     public GameManager gm;
+    public bool endGame = false;
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
@@ -28,17 +29,16 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        SceneManager.LoadScene(4);
-    }
-
-    public void ExitPlayer()
-    {
-        PhotonNetwork.LeaveRoom(true);
+        if(endGame)
+            FindObjectOfType<SceneTransitioner>().GoToVictoryScene(0);
+        else
+            FindObjectOfType<SceneTransitioner>().GoToLobbyScene(0);
     }
 
     IEnumerator ExitMaster()
     {
         yield return new WaitForSeconds(2);
-        ExitPlayer();
+
+        PhotonNetwork.LeaveRoom(true);
     }
 }

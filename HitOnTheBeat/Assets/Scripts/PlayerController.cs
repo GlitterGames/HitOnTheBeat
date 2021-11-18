@@ -52,6 +52,12 @@ public class PlayerController : MonoBehaviourPun
     public Power_Up power = Power_Up.NORMAL;
     public float durationPowerUp = 5f;
     public Coroutine powerCoroutine = null;
+
+    //stats
+    public int hitsStats = 0;  //Jugadores que ha golpeado
+    public int jumpStats = 0;  //Saltos que ha dado
+    public int pushStats = 0;  //Veces que ha sido golpeado
+    public int killsStats = 0; //Jugadores que ha sacado del ring
     #endregion
 
     // Start is called before the first frame update
@@ -276,6 +282,7 @@ public class PlayerController : MonoBehaviourPun
     public void Golpear()
     {
         photonView.RPC("GolpearRPC", RpcTarget.AllViaServer);
+        photonView.RPC("HitRPC", photonView.Owner);
     }
 
     [PunRPC]
@@ -288,6 +295,7 @@ public class PlayerController : MonoBehaviourPun
     public void Mover(Floor nextFloor, FloorDetectorType dir)
     {
         photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+        photonView.RPC("JumpRPC", photonView.Owner);
         photonView.RPC("MoverRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
         photonView.RPC("MoverServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
     }
@@ -414,11 +422,13 @@ public class PlayerController : MonoBehaviourPun
         if (!echado)
         {
             photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+            photonView.RPC("PushRPC", photonView.Owner);
             photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
             photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
         else
         {
+            photonView.RPC("PushRPC", photonView.Owner);
             photonView.RPC("EcharMapaRPC", RpcTarget.All);
             photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
         }
@@ -446,8 +456,25 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharServerRPC(int row, int index)
     {
-        animator.SetBool("IsFalling", true);
+        if (animator.GetBool("IsJumping"))
+        {
+            StartCoroutine(AnimationsUpdate(row, index));
+        }
+        else
+        {
+            animator.SetBool("IsFalling", true);
+            Floor nextFloor = gameManager.casillas[row][index];
+            oldPos = newPos;
+            newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
+        }
+    }
+
+    IEnumerator AnimationsUpdate(int row, int index)
+    {
+        yield return new WaitForSeconds(0.7f);
+        SetAreaColor(actualFloor);
         animator.SetBool("IsJumping", false);
+        animator.SetBool("IsFalling", true);
         Floor nextFloor = gameManager.casillas[row][index];
         oldPos = newPos;
         newPos = new Vector3(nextFloor.GetFloorPosition().x, transform.position.y, nextFloor.GetFloorPosition().z);
@@ -463,13 +490,28 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharMapaServerRPC(float x, float z)
     {
+        if (animator.GetBool("IsJumping"))
+        {
+            StartCoroutine(AnimationsUpdate(x, z));
+        }
+        else
+        {
+            animator.SetBool("IsFalling", true);
+            animator.SetBool("IsJumping", false);
+            oldPos = newPos;
+            newPos = new Vector3(x, transform.position.y, z);
+        }
+    }
+    IEnumerator AnimationsUpdate(float x, float z)
+    {
+        yield return new WaitForSeconds(0.7f);
         animator.SetBool("IsFalling", true);
         animator.SetBool("IsJumping", false);
         oldPos = newPos;
         newPos = new Vector3(x, transform.position.y, z);
     }
-	
-	public void Caer() {
+
+    public void Caer() {
         photonView.RPC("EcharMapaRPC", RpcTarget.All);
         photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
     }
@@ -556,7 +598,7 @@ public class PlayerController : MonoBehaviourPun
                 break;
             case Ultimate.BOMBA_COLOR:
                 estadoActual = Estado.COLOR_RANGE;
-                SetRangeColor(GetFloorAreaRange(actualFloor));
+                SetRangeColor(actualFloor);
                 break;
             case Ultimate.INVISIBILITY:
                 estadoActual = Estado.ULTIMATE;
@@ -568,6 +610,21 @@ public class PlayerController : MonoBehaviourPun
     {
         photonView.RPC("RegisterUltimateRPC", RpcTarget.MasterClient, GetIdPlayer(), tipoUltimate, f.row, f.index);
         SetRangeColorNormal(GetFloorAreaRange(actualFloor));
+        f.SetColor(gameManager.coloresBombaColor.selectedFloor);
+    }
+
+    public void CancelUltimate()
+    {
+        photonView.RPC("CancelUltimateRPC", photonView.Owner);
+    }
+
+    [PunRPC]
+    public void CancelUltimateRPC()
+    {
+        estadoActual = Estado.NORMAL;
+        SetRangeColorNormal(GetFloorAreaRange(actualFloor));
+        SetAreaColor(actualFloor);
+        HUDManager.instance.AddUltimateCharge(HUDManager.ULTIMATE_MAX_CHARGE);
     }
 
     [PunRPC]
@@ -609,20 +666,22 @@ public class PlayerController : MonoBehaviourPun
     //Gestiona la ultimate Bomba Color cuando se selecciona dónde lanzará la bomba.
     public void PerformBombaColor(Floor f)
     {
-        photonView.RPC("PerformBombaColorRPC", RpcTarget.All);
-        photonView.RPC("PerformBombaColorServerRPC", RpcTarget.AllViaServer);
+        photonView.RPC("PerformBombaColorRPC", RpcTarget.All, f.row, f.index);
+        photonView.RPC("PerformBombaColorServerRPC", RpcTarget.AllViaServer, f.row, f.index);
     }
     //Animación y ejecución de la Bomba Color.
     [PunRPC]
-    public void PerformBombaColorRPC()
+    public void PerformBombaColorRPC(int row, int index)
     {
         estadoActual = Estado.NORMAL;
     }
 
     //Animación y ejecución de la Bomba Color.
     [PunRPC]
-    public void PerformBombaColorServerRPC()
+    public void PerformBombaColorServerRPC(int row, int index)
     {
+        SetAreaColor(actualFloor);
+        gameManager.casillas[row][index].SetColor(gameManager.color[row]);
         Debug.Log("Bomba Color ejecutado");
     }
     #endregion
@@ -672,27 +731,49 @@ public class PlayerController : MonoBehaviourPun
         Floor[] casillasAdy = target.GetAdyacentes();
         foreach (Floor floorAdy in casillasAdy)
         {
-            Floor[] casillasArea = floorAdy.GetAdyacentes();
-            foreach (Floor floorArea in casillasArea)
+            if (floorAdy)
             {
-                casillas.Add(floorArea);
+                Floor[] casillasArea = floorAdy.GetAdyacentes();
+                foreach (Floor floorArea in casillasArea)
+                {
+                    if (floorArea) casillas.Add(floorArea);
+                }
             }
         }
         return casillas;
     }
 
-    private void SetRangeColor(HashSet<Floor> casillas)
+    private void SetRangeColor(Floor target)
     {
-        foreach (Floor floor in casillas)
+        HashSet<Floor> casillas = new HashSet<Floor>();
+        casillas.Add(target);
+        target.SetColor(gameManager.coloresBombaColor.anillo0);
+        Floor[] casillasAdy = target.GetAdyacentes();
+        foreach (Floor floorAdy in casillasAdy)
         {
-            if (floor != null) floor.SetColor(gameManager.coloresEspeciales.rangeXXColor);
+            if (floorAdy)
+            {
+                Floor[] casillasArea = floorAdy.GetAdyacentes();
+                foreach (Floor floorArea in casillasArea)
+                {
+                    if (floorArea)
+                    {
+                        if (casillas.Add(floorArea))
+                        {
+                            floorArea.SetColor(gameManager.coloresBombaColor.anillo2);
+                        }
+                    }
+                }
+                casillas.Add(floorAdy);
+                floorAdy.SetColor(gameManager.coloresBombaColor.anillo1);
+            }
         }
     }
     private void SetRangeColorNormal(HashSet<Floor> casillas)
     {
         foreach (Floor floor in casillas)
         {
-            if (floor != null) floor.SetColor(gameManager.color[floor.row]);
+            floor.SetColor(gameManager.color[floor.row]);
         }
     }
     #endregion
@@ -703,6 +784,37 @@ public class PlayerController : MonoBehaviourPun
         return (photonView.ViewID / 1000) - 1;
     }
 
+    #endregion
+
+    #region Stats
+    public void Kill()
+    {
+        photonView.RPC("KillRPC", photonView.Owner);
+    }
+
+    [PunRPC]
+    public void KillRPC()
+    {
+        killsStats++;
+    }
+
+    [PunRPC]
+    public void HitRPC()
+    {
+        hitsStats++;
+    }
+
+    [PunRPC]
+    public void PushRPC()
+    {
+        pushStats++;
+    }
+
+    [PunRPC]
+    public void JumpRPC()
+    {
+        jumpStats++;
+    }
     #endregion
 
     #region RPC Calls
@@ -719,15 +831,19 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void DoExitPlayer()
+    private void DoEndGameRPC(int num, int numBeats)
     {
-        FindObjectOfType<RemovePlayers>().ExitPlayer();
-    }
+        PlayerController mpc = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
+        PlayerSelector ps = FindObjectOfType<PlayerSelector>();
+        ps.playerWinner = num;
+        ps.hitsStats = mpc.hitsStats;
+        ps.killsStats = mpc.killsStats;
+        ps.pushStats = mpc.pushStats;
+        ps.jumpStats = mpc.jumpStats;
+        ps.averageRhythmStats = mpc.jumpStats * 100 / numBeats;
 
-    [PunRPC]
-    private void DoUpdateWinner(int num)
-    {
-        FindObjectOfType<PlayerSelector>().playerWinner = num;
+        FindObjectOfType<RemovePlayers>().endGame = true;
+        PhotonNetwork.LeaveRoom(true);
     }
     #endregion
 

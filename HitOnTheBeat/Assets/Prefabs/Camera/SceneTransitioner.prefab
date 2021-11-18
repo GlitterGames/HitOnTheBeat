@@ -322,6 +322,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 7199852669707196260}
+  onFinish:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8294066251560243588
 GameObject:
   m_ObjectHideFlags: 0

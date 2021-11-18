@@ -25,11 +25,18 @@ public class GameManager : MonoBehaviourPun
         public Color fall;     
     }
     [System.Serializable]
-    public struct ColoresEspeciales
+    public struct ColoresMovimiento
     {
         public Color actual;
         public Color adyacente;
-        public Color rangeXXColor;
+    }
+    [System.Serializable]
+    public struct ColoresBombaColor
+    {
+        public Color anillo0;
+        public Color anillo1;
+        public Color anillo2;
+        public Color selectedFloor;
     }
     public struct Movement
     {
@@ -57,7 +64,8 @@ public class GameManager : MonoBehaviourPun
     #endregion
 
     #region Variables
-    public ColoresEspeciales coloresEspeciales;
+    public ColoresMovimiento coloresEspeciales;
+    public ColoresBombaColor coloresBombaColor;
     public ColoresAnillos coloresAnillos;
     public ColoresParpadeo coloresParpadeo;
     [HideInInspector]
@@ -296,7 +304,7 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
-    public bool powers(bool sameFloor, Colisions c, out List<int> delete)
+    public bool Powers(bool sameFloor, Colisions c, out List<int> delete)
     {
         //Aray con las posiciones de los que se hayan caido
         List<int> eliminados = new List<int>();
@@ -418,7 +426,7 @@ public class GameManager : MonoBehaviourPun
         bool moreThanTwo = true; //Solo se cambiará en caso de que los jugadores sean 2
         bool notCinematic = true; //Si llama a este método no es cinemática
         //Si alguno de los dos tiene el poder de escudo las colisiones se realizan en este método
-        if (powers(sameFloor, c, out eliminados)) return eliminados;
+        if (Powers(sameFloor, c, out eliminados)) return eliminados;
         //Colision entre dos jugadores
         if (jugadores.Count == 2)
         {
@@ -568,6 +576,14 @@ public class GameManager : MonoBehaviourPun
                     break;
             }
         }
+        foreach(PlayerController pc in jugadores)
+        {
+            //Si XXColor no ha tenido el tiempo suficiente para lanzar la ulti, se resetea.
+            if (pc.estadoActual == PlayerController.Estado.COLOR_RANGE)
+            {
+                pc.CancelUltimate();
+            }
+        }
     }
 
     #endregion
@@ -635,7 +651,7 @@ public class GameManager : MonoBehaviourPun
         }
         yield return new WaitForSeconds(seg);
         
-        background[row].active = false;
+        background[row].SetActive(false);
         yield return new WaitForEndOfFrame();
     }
     public void Update()

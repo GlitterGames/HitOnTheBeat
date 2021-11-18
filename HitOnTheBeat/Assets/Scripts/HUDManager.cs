@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class HUDManager : MonoBehaviour
 {
     public static HUDManager instance;
-
+    public const int ULTIMATE_MAX_CHARGE = 100;
     //Ultimates
     public Button ultimate;
     private int m_ultimateCharge;
@@ -18,7 +18,7 @@ public class HUDManager : MonoBehaviour
         set
         {
             m_ultimateCharge = value;
-            if (m_ultimateCharge > 100) m_ultimateCharge = 100;
+            if (m_ultimateCharge > ULTIMATE_MAX_CHARGE) m_ultimateCharge = ULTIMATE_MAX_CHARGE;
         }
     }
 

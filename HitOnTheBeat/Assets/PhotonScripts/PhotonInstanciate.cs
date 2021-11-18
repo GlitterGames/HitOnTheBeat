@@ -40,7 +40,6 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     }
     public void OnGoBack()
     {
-        FindObjectOfType<SceneTransitioner>().StartTransition(0, 1);
-        PhotonNetwork.LeaveRoom(true);
+        FindObjectOfType<SceneTransitioner>().GoToLobbyScene(0);
     }
 }
