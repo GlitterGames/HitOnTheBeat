@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviourPun
 
     #region Atributes
     public Ultimate tipoUltimate = Ultimate.MEGA_PUNCH;
-    public int ULTIMATE_MAX_BEAT_DURATION = 5;
+    public int ULTIMATE_MAX_BEAT_DURATION = 15;
     [HideInInspector]
     public Estado estadoActual = Estado.NORMAL;
     public Floor actualFloor;
@@ -575,27 +575,24 @@ public class PlayerController : MonoBehaviourPun
         photonView.RPC("EcharMapaRPC", RpcTarget.All);
         photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, transform.position.x, transform.position.z);
     }
+    #endregion
+
+    #region Power Ups
     public void GetPowerUp()
     {
+        //Si ya tienes un power up no puedes tener otro, pero el que
+        //estaba se pone a 0
         if (Power_Up.NORMAL != this.power) {
-            SetPowerUp(actualFloor, Floor.Type.Vacio);
-            return; //LO PILLAS PERO NO TE AFECTA YA QUE YA POSEES UN POWER
+            SetPowerUpFloor(actualFloor, Floor.Type.Vacio);
+            return;
         }
         Floor.Type t = actualFloor.GetPower();
-        SetPowerUp(actualFloor, Floor.Type.Vacio);
+        SetPowerUpFloor(actualFloor, Floor.Type.Vacio);
         powerCoroutine = StartCoroutine(PowerUp());
         photonView.RPC("GetPowerUpRPC", RpcTarget.All, t);
     }
     
-    public void SetEscudo(bool activated)
-    {
-        Debug.Log("ESCUDO " + activated);
-        photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, activated);
-    }
-    public void SetHit(bool activated)
-    {
-        photonView.RPC("HitRPC", RpcTarget.AllViaServer, activated);
-    }
+    
     [PunRPC]
     private void GetPowerUpRPC(Floor.Type t)
     {
@@ -612,6 +609,16 @@ public class PlayerController : MonoBehaviourPun
                 break;
         }
     }
+    //Escudo y Hit
+    public void SetEscudo(bool activated)
+    {
+        Debug.Log("ESCUDO " + activated);
+        photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, activated);
+    }
+    public void SetHit(bool activated)
+    {
+        photonView.RPC("HitRPC", RpcTarget.AllViaServer, activated);
+    }
     [PunRPC]
     public void EscudoRPC(bool activated)
     {
@@ -622,12 +629,13 @@ public class PlayerController : MonoBehaviourPun
     {
         escudo.SetActive(activated);
     }
-    public void UsePowerUp()
+    //End of the use of the PowerUp
+    public void EndPowerUp()
     {
-        photonView.RPC("UsePowerUpRPC", RpcTarget.All);
+        photonView.RPC("EndPowerUpRPC", RpcTarget.All);
     }
     [PunRPC]
-    private void UsePowerUpRPC()
+    private void EndPowerUpRPC()
     {
         this.power = Power_Up.NORMAL;
         photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, false);
@@ -636,14 +644,15 @@ public class PlayerController : MonoBehaviourPun
     private IEnumerator PowerUp()
     {
         yield return new WaitForSeconds(durationPowerUp);
-        photonView.RPC("UsePowerUpRPC", RpcTarget.All);
+        photonView.RPC("EndPowerUpRPC", RpcTarget.All);
     }
-    public void SetPowerUp(Floor f, Floor.Type type)
+    //FLOOR
+    public void SetPowerUpFloor(Floor f, Floor.Type type)
     {
-        photonView.RPC("SetPowerUpRPC", RpcTarget.AllViaServer, f.row, f.index, type);
+        photonView.RPC("SetPowerUpFloorRPC", RpcTarget.AllViaServer, f.row, f.index, type);
     }
     [PunRPC]
-    private void SetPowerUpRPC(int row, int index, Floor.Type type)
+    private void SetPowerUpFloorRPC(int row, int index, Floor.Type type)
     {
         gameManager.casillas[row][index].SetPower(type);    
     }
