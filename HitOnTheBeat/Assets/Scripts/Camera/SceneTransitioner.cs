@@ -68,5 +68,11 @@ public class SceneTransitioner : MonoBehaviour
         this.level = 4;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
+    public void GoToPrivateRoomScene(float delay)
+    {
+        GameObject.Find("Animation").GetComponent<Animator>().SetTrigger("Activate");
+        this.level = 5;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
     #endregion
 }
