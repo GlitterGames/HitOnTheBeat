@@ -14,7 +14,8 @@ public class Floor : MonoBehaviour
     public Floor[] adyacentes = new Floor[6];
     public enum Type {
         Vacio,
-        DobleRitmo
+        RitmoDuplicado,
+        Escudo
     }
     private Type type = Type.Vacio;
     public Coroutine powertime = null;
@@ -54,6 +55,25 @@ public class Floor : MonoBehaviour
                 return adyacentes[2];
         }
         return null;
+    }
+    public FloorDetectorType GetInverseDireccion(FloorDetectorType type)
+    {
+        switch (type)
+        {
+            case FloorDetectorType.East:
+                return FloorDetectorType.West;
+            case FloorDetectorType.West:
+                return FloorDetectorType.East;
+            case FloorDetectorType.North_east:
+                return FloorDetectorType.South_west;
+            case FloorDetectorType.North_west:
+                return FloorDetectorType.South_east;
+            case FloorDetectorType.South_east:
+                return FloorDetectorType.North_west;
+            case FloorDetectorType.South_west:
+                return FloorDetectorType.North_east;
+        }
+        return FloorDetectorType.East;
     }
     public Floor GetEast() {
         return adyacentes[0];
@@ -107,16 +127,22 @@ public class Floor : MonoBehaviour
     }
     public void SetPower(Type t)
     {
+        Material m = FindObjectOfType<GameManager>().materiales.normal;
         this.type = t;
         switch (t)
         {
             case Type.Vacio:
-                SetColor(Color.white);
+                m = FindObjectOfType<GameManager>().materiales.normal;
                 break;
-            case Type.DobleRitmo:
-                SetColor(Color.black);
+            case Type.RitmoDuplicado:
+                m = FindObjectOfType<GameManager>().materiales.X2;
+                break;
+            case Type.Escudo:
+                m = FindObjectOfType<GameManager>().materiales.escudo;
                 break;
         }
+        this.GetComponent<Renderer>().material = m;
+        if(t == Type.Vacio) { SetColor(GetColor()); }
     }
     public Type GetPower()
     {
@@ -139,7 +165,7 @@ public class Floor : MonoBehaviour
         return (Vector3.right * transform.position.x + Vector3.forward * transform.position.z);
     }
     public void SetColor(Color c) {
-        r.material.color = c;
+        r.material.SetColor("_BaseColor", c);
     }
     public void SetColorN(Color c)
     {

@@ -74,6 +74,28 @@ MonoBehaviour:
   - FalloRPC
   - NoHaPulsadoRPC
   - DoUpdateWinner
+  - GetPowerUpRPC
+  - KillRPC
+  - HitRPC
+  - JumpRPC
+  - PushRPC
+  - DoEndGameRPC
+  - EcharNotSameFloorRPC
+  - UsePowerUpRPC
+  - PerformBombaColorRPC
+  - PerformBombaColorServerRPC
+  - PerformInvisibilityRPC
+  - PerformInvisibilityServerRPC
+  - PerformMegaPunchRPC
+  - PerformMegaPunchServerRPC
+  - RegisterUltimateRPC
+  - CancelUltimateRPC
+  - PerformBombaColorOwnerRPC
+  - PerformInvisibilityOwnerRPC
+  - PerformMegaPunchOwnerRPC
+  - UpdateUltimateTimeRPC
+  - ChangeStateRPC
+  - BombaColorExplosion
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
