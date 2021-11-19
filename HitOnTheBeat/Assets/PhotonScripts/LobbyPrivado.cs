@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 public class LobbyPrivado : MonoBehaviourPunCallbacks
 {
     public GameObject playerSelector;
-    public byte maxPlayersInRoom = 2;
+    public byte maxPlayersInRoom ;
     public byte minPlayersInRoom = 2;
     private int playerCount = 0;
     private bool IsLoading = false;
@@ -19,11 +19,16 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     public int roomSize;
     public GameObject roomListingPrefab;
     public Transform roomsPanel;
-    
+    public Button buscarPartida;
+    public Button crearSala;
+    public Button unirseSala;
+    public Button empezarPartida;
 
-    
+
+
     public void Start()
     {
+
         if (!FindObjectOfType<PlayerSelector>()) DontDestroyOnLoad(Instantiate(playerSelector,
              playerSelector.transform.position, playerSelector.transform.rotation));
 
@@ -36,6 +41,9 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
+        buscarPartida.interactable = false;
+        unirseSala.interactable = false;
+
         RoomOptions roomOps = new RoomOptions()
         {
             IsVisible = true,
@@ -59,46 +67,45 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
 
 
     }
-  /*  public override void OnRoomListUpdate(List<RoomInfo> roomList)
+  public void JoinRandom()
     {
-        base.OnRoomListUpdate(roomList);
-        RemoveRoomListings();
-        foreach (RoomInfo room in roomList)
+        crearSala.interactable = false;
+        unirseSala.interactable = false;
+        if (!PhotonNetwork.JoinRandomRoom())
         {
-            ListRoom(room);
+            Debug.Log("Fallo al unirse a la sala");
         }
     }
-    public void RemoveRoomListings()
-    {
-        while (roomsPanel.childCount != 0)
-        {
-            Destroy(roomsPanel.GetChild(0).gameObject);
-        }
-    }
-    void ListRoom(RoomInfo room)
-    {
-        if (room.IsOpen && room.IsVisible)
-        {
-            GameObject tempListing = Instantiate(roomListingPrefab, roomsPanel);
-            RoomButton tempButton = tempListing.GetComponent<RoomButton>();
-            tempButton.roomName = room.Name;
-            tempButton.roomSize = room.MaxPlayers;
-            tempButton.SetRoom();
 
-        }
-    }*/
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log( "No existen salas a las que unirse, creando una nueva...");
+        if (PhotonNetwork.CreateRoom(null, new Photon.Realtime.RoomOptions()
+         {MaxPlayers = maxPlayersInRoom}))
+         {
+           Debug.Log("Sala creada con éxito");
+         }
+         else
+         {
+            Debug.Log( "Fallo al crear la sala");
+         }
+    }
     public void OnRoomNameChanged(string nameIn)
     {
         roomName = nameIn;
+
     }
     public void OnRoomSizeChanged(string sizeIn)
     {
         roomSize = int.Parse(sizeIn);
+        maxPlayersInRoom = (byte)roomSize;
 
     }
 
     public void JoinLobbyOnClick()
     {
+        buscarPartida.interactable = false;
+        crearSala.interactable = false;
         PhotonNetwork.JoinRoom(roomName);
     }
     #endregion
@@ -110,12 +117,12 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
             
             if (!IsLoading && playerCount >= minPlayersInRoom)
             {
-                LoadMap();
+                empezarPartida.interactable = true;
             }
         }
     }
    
-    private void LoadMap()
+    public void LoadMap()
     {
         IsLoading = true;
         FindObjectOfType<SceneTransitioner>().StartTransition(2, 0.5f);
