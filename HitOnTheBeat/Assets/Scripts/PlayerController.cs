@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviourPun
     private Vector3 pos = Vector3.zero;
     public Power_Up power = Power_Up.NORMAL;
     public float durationPowerUp = 15f;
-    public Coroutine powerCoroutine = null;
+    public Coroutine powerCoroutine;
 
     //stats
     public int hitsStats = 0;  //Jugadores que ha golpeado
@@ -86,7 +86,8 @@ public class PlayerController : MonoBehaviourPun
 
     void Awake()
     {
-        my_input = new InputController();
+        powerCoroutine = null;
+    my_input = new InputController();
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
@@ -115,7 +116,7 @@ public class PlayerController : MonoBehaviourPun
     void Start()
     {
         if (photonView.IsMine) StartCoroutine(PrimerPintado());
-        SetEscudo(false);
+        StartCoroutine(SetEscudo(false));
     }
 
     IEnumerator PrimerPintado()
@@ -588,7 +589,7 @@ public class PlayerController : MonoBehaviourPun
         }
         Floor.Type t = actualFloor.GetPower();
         SetPowerUpFloor(actualFloor, Floor.Type.Vacio);
-        powerCoroutine = StartCoroutine(PowerUp());
+        powerCoroutine = gameManager.StartCoroutine(this);
         photonView.RPC("GetPowerUpRPC", RpcTarget.All, t);
     }
     
@@ -610,9 +611,10 @@ public class PlayerController : MonoBehaviourPun
         }
     }
     //Escudo y Hit
-    public void SetEscudo(bool activated)
+    public IEnumerator SetEscudo(bool activated)
     {
         Debug.Log("ESCUDO " + activated);
+        yield return new WaitForSeconds(0.5f);
         photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, activated);
     }
     public void SetHit(bool activated)
@@ -637,11 +639,12 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EndPowerUpRPC()
     {
+        Debug.Log("Quitar escudo");
         this.power = Power_Up.NORMAL;
         photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, false);
     }
 
-    private IEnumerator PowerUp()
+    public IEnumerator PowerUp()
     {
         yield return new WaitForSeconds(durationPowerUp);
         photonView.RPC("EndPowerUpRPC", RpcTarget.All);

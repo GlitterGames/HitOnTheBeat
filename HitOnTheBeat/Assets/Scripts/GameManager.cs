@@ -326,6 +326,10 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
+    public Coroutine StartCoroutine(PlayerController p)
+    {
+        return StartCoroutine(p.PowerUp());
+    }
     public bool Powers(bool sameFloor, Colisions c, out List<int> delete)
     {
         //Aray con las posiciones de los que se hayan caido
@@ -342,16 +346,18 @@ public class GameManager : MonoBehaviourPun
 
             if (jugadores[c.positions[0]].power == PlayerController.Power_Up.ESCUDO && jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
             {
-                StopCoroutine(jugadores[c.positions[0]].powerCoroutine);
+                Debug.Log("LOS DOS ESCUDO");
+                if (jugadores[c.positions[0]].powerCoroutine != null) StopCoroutine(jugadores[c.positions[0]].powerCoroutine);
                 jugadores[c.positions[0]].EndPowerUp();
-                StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
+                if (jugadores[c.positions[1]].powerCoroutine != null) StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
                 jugadores[c.positions[1]].EndPowerUp();
                 powers = true;
             }
             else if (jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
             {
+                Debug.Log("UNO ESCUDO");
                 //Para la corutina para que esta no le quite otro poder en el futuro
-                StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
+                if (jugadores[c.positions[1]].powerCoroutine != null) StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
                 //Y llama a la RPC que utiliza su poder
                 jugadores[c.positions[1]].EndPowerUp();
                 //Solo el que pierde acaba con fuerza 0
@@ -360,8 +366,9 @@ public class GameManager : MonoBehaviourPun
             }
             else if (jugadores[c.positions[0]].power == PlayerController.Power_Up.ESCUDO)
             {
+                Debug.Log("UNO ESCUDO");
                 //Para la corutina para que esta no le quite otro poder en el futuro
-                StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
+                if (jugadores[c.positions[0]].powerCoroutine != null) StopCoroutine(jugadores[c.positions[0]].powerCoroutine);
                 //Y llama a la RPC que utiliza su poder
                 jugadores[c.positions[0]].EndPowerUp();
                 //Solo el que pierde acaba con fuerza 0
@@ -423,7 +430,7 @@ public class GameManager : MonoBehaviourPun
                     //Se realizan las colisiones
                     if (jugadores[c.positions[i]].power == PlayerController.Power_Up.ESCUDO)
                     {
-                        StopCoroutine(jugadores[c.positions[i]].powerCoroutine);
+                        if (jugadores[c.positions[i]].powerCoroutine != null) StopCoroutine(jugadores[c.positions[i]].powerCoroutine);
                         jugadores[c.positions[i]].EndPowerUp();
                         bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
                         if (echado) eliminados.Add(c.positions[i]);
@@ -465,7 +472,7 @@ public class GameManager : MonoBehaviourPun
         bool moreThanTwo = true; //Solo se cambiará en caso de que los jugadores sean 2
         bool notCinematic = true; //Si llama a este método no es cinemática
         //Si alguno de los dos tiene el poder de escudo las colisiones se realizan en este método
-        //if (Powers(sameFloor, c, out eliminados)) return eliminados;
+        if (Powers(sameFloor, c, out eliminados)) return eliminados;
         //Colision entre dos jugadores
         if (c.positions.Count == 2)
         {
@@ -732,9 +739,18 @@ public class GameManager : MonoBehaviourPun
     }
     public void SpawnPowerUp(float time)
     {
-        int i = Random.Range(0, numRows);
-        int j = Random.Range(0, casillas[i].Length);
-        Floor f = casillas[i][j];
+        bool seguir = true;
+        Floor f = null;
+        while (seguir) { 
+            seguir = false;
+            int i = Random.Range(0, numRows);
+            int j = Random.Range(0, casillas[i].Length);
+            f = casillas[i][j];
+            for (int a = 0; a < jugadores.Count; a++)
+            {
+                if (jugadores[i].actualFloor.Equals(f)) seguir = true;
+            }
+        }
         int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;
         int k = Random.Range(1, num);
         f.powertime = StartCoroutine(SetType(f, (Floor.Type)k, time));

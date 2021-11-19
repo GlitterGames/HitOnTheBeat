@@ -18,7 +18,7 @@ public class Floor : MonoBehaviour
         Escudo
     }
     private Type type = Type.Vacio;
-    public Coroutine powertime = null;
+    public Coroutine powertime;
     public Floor GetFloor(FloorDetectorType type) {
         switch (type)
         {
@@ -153,6 +153,7 @@ public class Floor : MonoBehaviour
     void Awake()
     {
         r = this.GetComponentInChildren<Renderer>();
+        powertime = null;
     }
 
     // Update is called once per frame
