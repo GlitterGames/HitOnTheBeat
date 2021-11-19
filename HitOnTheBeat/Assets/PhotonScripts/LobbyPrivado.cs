@@ -23,6 +23,8 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     public Button crearSala;
     public Button unirseSala;
     public Button empezarPartida;
+    public Text PlayerCounter;
+    
 
 
 
@@ -43,6 +45,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     {
         buscarPartida.interactable = false;
         unirseSala.interactable = false;
+        crearSala.interactable = false;
 
         RoomOptions roomOps = new RoomOptions()
         {
@@ -69,8 +72,9 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     }
   public void JoinRandom()
     {
-        crearSala.interactable = false;
+        buscarPartida.interactable = false;
         unirseSala.interactable = false;
+        crearSala.interactable = false;
         if (!PhotonNetwork.JoinRandomRoom())
         {
             Debug.Log("Fallo al unirse a la sala");
@@ -105,6 +109,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     public void JoinLobbyOnClick()
     {
         buscarPartida.interactable = false;
+        unirseSala.interactable = false;
         crearSala.interactable = false;
         PhotonNetwork.JoinRoom(roomName);
     }
@@ -114,14 +119,32 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
         if (PhotonNetwork.CurrentRoom != null)
         {
             playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-            
+            PlayerCounter.text = playerCount.ToString();
+
+
             if (!IsLoading && playerCount >= minPlayersInRoom)
             {
-                empezarPartida.interactable = true;
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    empezarPartida.interactable = true;
+                }
             }
         }
+        
     }
    
+    public void EnviarEmpezarPartida()
+    {
+        Debug.Log("Enviando mensaje ");
+        photonView.RPC("EnviarEmpezarPartidaRPC", RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    public void EnviarEmpezarPartidaRPC()
+    {
+        Debug.Log("Mensaje RPC");
+        LoadMap();
+    }
     public void LoadMap()
     {
         IsLoading = true;

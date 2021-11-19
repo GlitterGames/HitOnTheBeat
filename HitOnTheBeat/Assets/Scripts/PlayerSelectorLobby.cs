@@ -16,13 +16,17 @@ public class PlayerSelectorLobby : MonoBehaviour
     [TextArea(1, 10)]
     public string[] info;
     public GameObject[] playerDemo;
+    public bool personajeSeleccionado = false;
 
     public void OnChangeCharacter(int type)
     {
-
-        if (!selected) boton.interactable = true;
-        if (!selected) boton2.interactable = true;
-        if (!selected) boton3.interactable = true;
+        if (!personajeSeleccionado)
+        {
+            personajeSeleccionado = true;
+            if (!selected) boton.interactable = true;
+            if (!selected) boton2.interactable = true;
+            if (!selected) boton3.interactable = true;
+        }
         playerDemo[FindObjectOfType<PlayerSelector>().selectedPlayer].SetActive(false);
         playerDemo[type].SetActive(true);
         nombreText.text = nombre[type];
