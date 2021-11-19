@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviourPun
 	
     #region Variables
     public float TIME;
+    public int numRows;
     public Materiales materiales;
     public ColoresMovimiento coloresEspeciales;
     public ColoresBombaColor coloresBombaColor;
@@ -100,6 +101,7 @@ public class GameManager : MonoBehaviourPun
     void Awake()
     {
         TIME = 30f;
+        numRows = 5;
         //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
         casillas.Add(new Floor[1]);
         casillas.Add(new Floor[6]);
@@ -125,7 +127,7 @@ public class GameManager : MonoBehaviourPun
         PerformUltimates();
         PerformMovements();
         PerformColision();
-        //ApplyEfectsFromFloor();
+        ApplyEfectsFromFloor();
     }
 
     private void InitColor() {
@@ -192,6 +194,7 @@ public class GameManager : MonoBehaviourPun
             {
                 if (jugador.actualFloor.GetPower() != Floor.Type.Vacio)
                 {
+                    Debug.Log("HE PILLADO UN POWE UP");
                     jugador.GetPowerUp();
                     StopCoroutine(jugador.actualFloor.powertime);
                 }
@@ -329,7 +332,7 @@ public class GameManager : MonoBehaviourPun
         bool moreThanTwo = true; //Solo se cambiará en caso de que los jugadores sean 2
         bool notCinematic = true; //Si llama a este método no es cinemática
         bool powers = false; //Si ningún jugador tiene poderes se realizará la colision normal
-        if (jugadores.Count == 2)
+        if (c.positions.Count == 2)
         {
             moreThanTwo = false;
             //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
@@ -346,9 +349,9 @@ public class GameManager : MonoBehaviourPun
             }
             else if (jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
             {
-
+                //Para la corutina para que esta no le quite otro poder en el futuro
                 StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
-
+                //Y llama a la RPC que utiliza su poder
                 jugadores[c.positions[1]].UsePowerUp();
                 //Solo el que pierde acaba con fuerza 0
                 jugadores[c.positions[0]].Fuerza = 0;
@@ -366,11 +369,13 @@ public class GameManager : MonoBehaviourPun
             }
             if (powers)
             {
+                FloorDetectorType dir0 = jugadores[c.positions[0]].floorDir;
+                FloorDetectorType dir1 = jugadores[c.positions[1]].floorDir;
                 //Los dos jugadores dan la dirección del otro jugador
                 //como dirección a la que tienen que ir con uno de fuerza
-                bool echado = jugadores[c.positions[0]].EcharOne(jugadores[c.positions[1]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                bool echado = jugadores[c.positions[0]].EcharOne(dir1, 1, moreThanTwo, notCinematic, sameFloor);
                 if (echado) eliminados.Add(c.positions[0]);
-                echado = jugadores[c.positions[1]].EcharOne(jugadores[c.positions[0]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                echado = jugadores[c.positions[1]].EcharOne(dir0, 1, moreThanTwo, notCinematic, sameFloor);
                 if (echado) eliminados.Add(c.positions[1]);
             }
         }
@@ -379,60 +384,75 @@ public class GameManager : MonoBehaviourPun
             //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
             for (int i = 0; i < c.positions.Count; i++)
             {
-                if (jugadores[c.positions[i]].fuerzaCinetica > 0) jugadores[c.positions[i]].Fuerza = jugadores[c.positions[i]].fuerzaCinetica;
+                if (jugadores[c.positions[i]].power == PlayerController.Power_Up.ESCUDO) powers = true;
             }
-            List<int> fuerzas = new List<int>();
-            bool equal = false;
-            int maxFuerza = 0;
-            //Se recorren todos los jugadores viendo que fuerza es la mayor
-            for (int i = 0; i < c.positions.Count; i++)
+            if(powers == true)
             {
-                //Tu fuerza es equivalente a la mayor posible divida entre los que colisionas
-                //redondeada hacia arriba
-                int fuerza = (int)Mathf.Ceil(jugadores[c.positions[i]].Fuerza / (c.positions.Count - 1));
-                //Si hay uno con mayor fuerza la sobreescribe y dice que no hay nadie con su misma fuerza
-                if (fuerza > maxFuerza)
+                //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
+                for (int i = 0; i < c.positions.Count; i++)
                 {
-                    equal = false;
-                    maxFuerza = fuerza;
+                    if (jugadores[c.positions[i]].fuerzaCinetica > 0) jugadores[c.positions[i]].Fuerza = jugadores[c.positions[i]].fuerzaCinetica;
                 }
-                //Si hay uno con igual fuerza dice que hay nadie con su misma fuerza
-                else if (fuerza == maxFuerza)
+                List<int> fuerzas = new List<int>();
+                bool equal = false;
+                int maxFuerza = 0;
+                //Se recorren todos los jugadores viendo que fuerza es la mayor
+                for (int i = 0; i < c.positions.Count; i++)
                 {
-                    equal = false;
-                }
-                //finalmente añado la fuerza con la que pego al array de fuerzas
-                fuerzas.Add(fuerza);
-            }
-            //Se realizan las colisiones
-            for (int i = 0; i < c.positions.Count; i++)
-            {
-                if(jugadores[c.positions[i]].power == PlayerController.Power_Up.ESCUDO)
-                {
-                    StopCoroutine(jugadores[c.positions[i]].powerCoroutine);
-                    jugadores[c.positions[i]].UsePowerUp();
-                    bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
-                    if (echado) eliminados.Add(c.positions[i]);
-                    powers = true;
-                }
-                else
-                {
-                    if (fuerzas[i] == maxFuerza && !equal)
+                    //Tu fuerza es equivalente a la mayor posible divida entre los que colisionas
+                    //redondeada hacia arriba
+                    int fuerza = (int)Mathf.Ceil(jugadores[c.positions[i]].Fuerza / (c.positions.Count - 1));
+                    //Si hay uno con mayor fuerza la sobreescribe y dice que no hay nadie con su misma fuerza
+                    if (fuerza > maxFuerza)
                     {
-                        jugadores[c.positions[i]].Golpear();
+                        equal = false;
+                        maxFuerza = fuerza;
                     }
-                    else if (fuerzas[i] == maxFuerza && equal)
+                    //Si hay uno con igual fuerza dice que hay nadie con su misma fuerza
+                    else if (fuerza == maxFuerza)
                     {
-                        jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                        equal = false;
+                    }
+                    //finalmente añado la fuerza con la que pego al array de fuerzas
+                    fuerzas.Add(fuerza);
+                }
+                //Se realizan las colisiones
+                for (int i = 0; i < c.positions.Count; i++)
+                {
+                    //Se realizan las colisiones
+                    if (jugadores[c.positions[i]].power == PlayerController.Power_Up.ESCUDO)
+                    {
+                        StopCoroutine(jugadores[c.positions[i]].powerCoroutine);
+                        jugadores[c.positions[i]].UsePowerUp();
+                        bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                        if (echado) eliminados.Add(c.positions[i]);
                     }
                     else
                     {
-                        bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, fuerzas[i] - jugadores[c.positions[i]].Fuerza, moreThanTwo, notCinematic, sameFloor);
-                        if (echado) eliminados.Add(i);
+                        //Si eres la mayor fuerza y nadie te iguala golpeas
+                        if (fuerzas[i] == maxFuerza && !equal)
+                        {
+                            jugadores[c.positions[i]].Golpear();
+                        }
+                        //Si eres la mayor fuerza pero alguien te iguala te caes una para atrás en la dirección opuesta que llevabas
+                        else
+                        if (fuerzas[i] == maxFuerza)
+                        {
+                            jugadores[c.positions[i]].EcharOne(jugadores[c.positions[i]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                        }
+                        //Si no eras la mayor fuerza te caes para atras a dirección opuesta de la que llevabas con la diferencia entre
+                        //la máxima fuerza y la tuya
+                        else
+                        {
+                            bool echado = jugadores[c.positions[i]].EcharOne(jugadores[c.positions[i]].floorDir, maxFuerza - fuerzas[i], moreThanTwo, notCinematic, sameFloor);
+                            if (echado) eliminados.Add(i);
+                        }
+                        //Todos los participantes reinician su fuerza
+                        jugadores[c.positions[i]].Fuerza = 0;
                     }
-                    jugadores[c.positions[i]].Fuerza = 0;
                 }
             }
+            
         }
         delete = eliminados;
         return powers;
@@ -681,10 +701,11 @@ public class GameManager : MonoBehaviourPun
 	
     private IEnumerator DestroyRows()
     {
-        for (int i = 5; i>=0; i--)
+        for (int i = numRows; i>=0; i--)
         {
             yield return new WaitForSeconds(TIME/5);
             DestroyRow(i, 3f, 5);
+            numRows = i;
         }
         
     }
@@ -693,22 +714,24 @@ public class GameManager : MonoBehaviourPun
         //Tiempo de espera entre el spawn de otro power up
         float espera = 1f;
         float numRep = TIME / (int)espera;
-        Debug.LogWarning("N:" + numRep);
-        for(int i = 0; i<numRep; i++)
+        while (true)
         {
-            yield return new WaitForSeconds(espera);
-            SpawnPowerUp(5f);
+            for (int i = 0; i < numRep; i++)
+            {
+                yield return new WaitForSeconds(espera);
+                SpawnPowerUp(15f);
+            }
         }
     }
     private void AnimateFloors()
     {
         //StartCoroutine(DestroyRows());
-        //StartCoroutine(SpawnPowerUps());
+        StartCoroutine(SpawnPowerUps());
         //StartCoroutine(PruebaPowerUps());
     }
     public void SpawnPowerUp(float time)
     {
-        int i = Random.Range(0, casillas.Count);
+        int i = Random.Range(0, numRows);
         int j = Random.Range(0, casillas[i].Length);
         Floor f = casillas[i][j];
         int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;
