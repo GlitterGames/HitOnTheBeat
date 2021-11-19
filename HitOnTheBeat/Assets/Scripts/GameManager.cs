@@ -196,7 +196,8 @@ public class GameManager : MonoBehaviourPun
                 {
                     Debug.Log("HE PILLADO UN POWE UP");
                     jugador.GetPowerUp();
-                    StopCoroutine(jugador.actualFloor.powertime);
+                    if(jugador.actualFloor.powertime!=null) StopCoroutine(jugador.actualFloor.powertime);
+                    else Debug.Log("No tiene corutina de power up");
                 }
             }
         }
@@ -342,9 +343,9 @@ public class GameManager : MonoBehaviourPun
             if (jugadores[c.positions[0]].power == PlayerController.Power_Up.ESCUDO && jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
             {
                 StopCoroutine(jugadores[c.positions[0]].powerCoroutine);
-                jugadores[c.positions[0]].UsePowerUp();
+                jugadores[c.positions[0]].EndPowerUp();
                 StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
-                jugadores[c.positions[1]].UsePowerUp();
+                jugadores[c.positions[1]].EndPowerUp();
                 powers = true;
             }
             else if (jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
@@ -352,7 +353,7 @@ public class GameManager : MonoBehaviourPun
                 //Para la corutina para que esta no le quite otro poder en el futuro
                 StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
                 //Y llama a la RPC que utiliza su poder
-                jugadores[c.positions[1]].UsePowerUp();
+                jugadores[c.positions[1]].EndPowerUp();
                 //Solo el que pierde acaba con fuerza 0
                 jugadores[c.positions[0]].Fuerza = 0;
                 powers = true;
@@ -362,7 +363,7 @@ public class GameManager : MonoBehaviourPun
                 //Para la corutina para que esta no le quite otro poder en el futuro
                 StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
                 //Y llama a la RPC que utiliza su poder
-                jugadores[c.positions[0]].UsePowerUp();
+                jugadores[c.positions[0]].EndPowerUp();
                 //Solo el que pierde acaba con fuerza 0
                 jugadores[c.positions[1]].Fuerza = 0;
                 powers = true;
@@ -423,7 +424,7 @@ public class GameManager : MonoBehaviourPun
                     if (jugadores[c.positions[i]].power == PlayerController.Power_Up.ESCUDO)
                     {
                         StopCoroutine(jugadores[c.positions[i]].powerCoroutine);
-                        jugadores[c.positions[i]].UsePowerUp();
+                        jugadores[c.positions[i]].EndPowerUp();
                         bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
                         if (echado) eliminados.Add(c.positions[i]);
                     }
@@ -712,7 +713,7 @@ public class GameManager : MonoBehaviourPun
     private IEnumerator SpawnPowerUps()
     {
         //Tiempo de espera entre el spawn de otro power up
-        float espera = 1f;
+        float espera = 5f;
         float numRep = TIME / (int)espera;
         while (true)
         {
@@ -741,10 +742,10 @@ public class GameManager : MonoBehaviourPun
     private IEnumerator SetType(Floor f, Floor.Type t, float time)
     {
         FindObjectOfType<PhotonInstanciate>().my_player.
-            GetComponent<PlayerController>().SetPowerUp(f, t);
+            GetComponent<PlayerController>().SetPowerUpFloor(f, t);
         yield return new WaitForSeconds(time);
         if(f!=null)FindObjectOfType<PhotonInstanciate>().my_player.
-            GetComponent<PlayerController>().SetPowerUp(f, Floor.Type.Vacio);
+            GetComponent<PlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
     }
     public void Update()
     {
