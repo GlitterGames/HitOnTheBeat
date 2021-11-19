@@ -237,11 +237,11 @@ RectTransform:
   m_Father: {fileID: 2022408402}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.95}
-  m_AnchorMax: {x: 0.2, y: 1}
-  m_AnchoredPosition: {x: 1479.1, y: -65}
-  m_SizeDelta: {x: 51, y: 8.889984}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 64, y: -51}
+  m_SizeDelta: {x: 435, y: 62.889984}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &6288390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -863,11 +863,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2452114811308096173, guid: c216c4fb684db134c9cdf8441b831f9f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -4
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 2452114811308096173, guid: c216c4fb684db134c9cdf8441b831f9f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 104
+      value: -182.06
       objectReference: {fileID: 0}
     - target: {fileID: 2452114811308096173, guid: c216c4fb684db134c9cdf8441b831f9f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1225,11 +1225,11 @@ RectTransform:
   m_Father: {fileID: 2022408402}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 711.95, y: 359}
-  m_SizeDelta: {x: 436.7, y: 67.04}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 64, y: -150}
+  m_SizeDelta: {x: 436.7, y: 67.03998}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1119576518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1565,7 +1565,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1795554676}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1031493624}
+        m_TargetAssemblyTypeName: SceneTransitioner, Assembly-CSharp
+        m_MethodName: GoToShopScene
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1795554676
 MonoBehaviour:
   m_ObjectHideFlags: 0
