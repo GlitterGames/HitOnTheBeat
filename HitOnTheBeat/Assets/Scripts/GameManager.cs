@@ -203,13 +203,13 @@ public class GameManager : MonoBehaviourPun
     private int Exists(List<Colisions> colisiones, Floor f) {
         for(int i=0; i<colisiones.Count; i++)
         {
-            if (colisiones[i].Equals(f)) return i;
+            if (colisiones[i].floor.Equals(f)) return i;
         }
         return -1;
     }
     //Esta clase cambia los ID de los eliminados después de realizarse una eliminación
     //ya que su posición en el array variará
-    private List<int> reordenar(int pos, List<int> eliminados)
+    private List<int> Reordenar(int pos, List<int> eliminados)
     {
         List<int> reordenados = new List<int>();
         for (int i = 0; i < eliminados.Count; i++) {
@@ -217,10 +217,10 @@ public class GameManager : MonoBehaviourPun
             //eliminado, la posicion de este eliminado será en una unidad menor
             if (eliminados[i] > pos)
             {
-                reordenados[i] = eliminados[i] - 1;
+                reordenados.Add(eliminados[i] - 1);
             }
             else {
-                reordenados[i] = eliminados[i];
+                reordenados.Add(eliminados[i]);
             }
         }
         return reordenados;
@@ -239,6 +239,7 @@ public class GameManager : MonoBehaviourPun
                 {
                     if (jugadores[k].actualFloor.Equals(jugadores[i].previousFloor)&&(jugadores[k].previousFloor.Equals(jugadores[i].actualFloor)))
                     {
+                        Debug.Log("DETECTADO");
                         Colisions colision = new Colisions(jugadores[i].actualFloor);
                         colision.positions.Add(k);
                         colision.positions.Add(i);
@@ -249,11 +250,12 @@ public class GameManager : MonoBehaviourPun
                 //eliminar jugadores que se hayan caido
             for (int i = 0; i < colisiones.Count; i++)
             {
+                Debug.Log("hacer perform");
                 List<int> positions = PerformColision(false, colisiones[i]);
                 for (int j = 0; j < positions.Count; j++)
                 {
                     jugadores.RemoveAt(positions[j]);
-                    positions = reordenar(positions[j], positions);
+                    positions = Reordenar(positions[j], positions);
 
                 }
             }
@@ -261,12 +263,10 @@ public class GameManager : MonoBehaviourPun
             colisiones = new List<Colisions>();
             for (int k = 0; k < jugadores.Count; k++)
             {
-                Debug.Log("fuerza de jugadores " +jugadores[k].Fuerza);
                 for (int i = k + 1; i < jugadores.Count; i++)
                 {
                     if (jugadores[k].actualFloor.Equals(jugadores[i].actualFloor))
                     {
-                        Debug.LogWarning("Hemos encontrado una colision");
                         int pos = Exists(colisiones, jugadores[k].actualFloor);
                         if (pos == -1)
                         {
@@ -290,9 +290,8 @@ public class GameManager : MonoBehaviourPun
                 List<int> positions = PerformColision(true, colisiones[i]);
                 for (int j = 0; j < positions.Count; j++)
                 {
-                    Debug.LogWarning("Se debe eliminar un jugador");
                     jugadores.RemoveAt(positions[j]);
-                    positions = reordenar(positions[j], positions);
+                    positions = Reordenar(positions[j], positions);
                 }
             }
             //Cinemáticas
@@ -318,10 +317,7 @@ public class GameManager : MonoBehaviourPun
                     //con una fuerza de la fuerza cinética que tiene
                     bool echado = jugadores[i].EcharOne(jugadores[i].floorDir, jugadores[i].fuerzaCinetica, moreThanTwo, notCinematic, sameFloor);
                     if (echado) { jugadores.RemoveAt(i);}
-                    else if (jugadores[i].fuerzaCinetica > 0)
-                    {
-                        bcolision = true;
-                    }
+                    bcolision = true;
                 }
             }
         }
@@ -448,9 +444,9 @@ public class GameManager : MonoBehaviourPun
         bool moreThanTwo = true; //Solo se cambiará en caso de que los jugadores sean 2
         bool notCinematic = true; //Si llama a este método no es cinemática
         //Si alguno de los dos tiene el poder de escudo las colisiones se realizan en este método
-        if (Powers(sameFloor, c, out eliminados)) return eliminados;
+        //if (Powers(sameFloor, c, out eliminados)) return eliminados;
         //Colision entre dos jugadores
-        if (jugadores.Count == 2)
+        if (c.positions.Count == 2)
         {
             moreThanTwo = false;
             //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
@@ -460,9 +456,11 @@ public class GameManager : MonoBehaviourPun
             //Si los dos jugadores tienen la misma fuerza se echan uno para atrás
             if (jugadores[c.positions[0]].Fuerza == jugadores[c.positions[1]].Fuerza)
             {
-                bool echado = jugadores[c.positions[0]].EcharOne(jugadores[c.positions[1]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                FloorDetectorType dir0 = jugadores[c.positions[0]].floorDir;
+                FloorDetectorType dir1 = jugadores[c.positions[1]].floorDir;
+                bool echado = jugadores[c.positions[0]].EcharOne(dir1, 1, moreThanTwo, notCinematic, sameFloor);
                 if (echado) eliminados.Add(c.positions[0]);
-                echado = jugadores[c.positions[1]].EcharOne(jugadores[c.positions[0]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
+                echado = jugadores[c.positions[1]].EcharOne(dir0, 1, moreThanTwo, notCinematic, sameFloor);
                 if (echado) eliminados.Add(c.positions[1]);
             }
             //Si los dos jugadores tienen distinta fuerza se echan la diferencia para atrás
@@ -525,7 +523,8 @@ public class GameManager : MonoBehaviourPun
                     jugadores[c.positions[i]].Golpear();
                 }
                 //Si eres la mayor fuerza pero alguien te iguala te caes una para atrás en la dirección opuesta que llevabas
-                else if (fuerzas[i] == maxFuerza && equal)
+                else 
+                if (fuerzas[i] == maxFuerza)
                 {
                     jugadores[c.positions[i]].EcharOne(jugadores[c.positions[i]].floorDir, 1, moreThanTwo, notCinematic, sameFloor);
                 }

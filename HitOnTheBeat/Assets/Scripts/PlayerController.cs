@@ -302,6 +302,7 @@ public class PlayerController : MonoBehaviourPun
     {
         photonView.RPC("GolpearRPC", RpcTarget.AllViaServer);
         photonView.RPC("HitRPC", photonView.Owner);
+        fuerzaCinetica = 0;
     }
 
     [PunRPC]
@@ -379,17 +380,21 @@ public class PlayerController : MonoBehaviourPun
             }
             photonView.RPC("PushRPC", photonView.Owner);
             this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
+            fuerzaCinetica = 0;
         }
-        if (sameFloor)
+        if (!notCinematic) {
+            nextFloor = actualFloor.GetFloor(dir);
+        } 
+        else if (sameFloor)
         {
             //Si hay dos jugadores se coge el floor de la dirección de mi oponente
             //Si hay más de dos se coge la inversa de mi dirección
             if (moreThanTwo) 
             {
-                nextFloor = previousFloor;
                 //En caso de que tengamos más de un jugador mi nueva dirección sera
                 //la inversa de la que tenía para las fuerza cinética
                 dir = actualFloor.GetInverseDireccion(dir);
+                nextFloor = actualFloor.GetFloor(dir);
             }
             else
             {
@@ -399,7 +404,7 @@ public class PlayerController : MonoBehaviourPun
         //Si estan en el aire, es decir no estan en la misma casilla
         //Se cogera la dirección del jugador opuesto
         else
-        { 
+        {
             nextFloor = previousFloor.GetFloor(dir); 
         }
         //En caso de que haya más iteracciones por hacer, estas se pondrán como fuerzaCinética
@@ -418,9 +423,11 @@ public class PlayerController : MonoBehaviourPun
         if (!echado)
         {
             photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
-            if (sameFloor) {photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
+            //if (sameFloor) {photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
             //En el caso en el que la colision no fuera en la misma casilla la anterior y la posterior casillas serán la misma
-            else { photonView.RPC("EcharNotSameFloorRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
+            //else {
+            photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); 
+            //}
             photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
         else
@@ -480,6 +487,7 @@ public class PlayerController : MonoBehaviourPun
         SetNormalColor(actualFloor);
         previousFloor = actualFloor;
         actualFloor = nextFloor;
+        Debug.LogWarning("DIR: " +dir.ToString());
         floorDir = dir;
     }
     [PunRPC]
@@ -487,8 +495,8 @@ public class PlayerController : MonoBehaviourPun
     {
         Floor nextFloor = gameManager.casillas[row][index];
         SetNormalColor(actualFloor);
-        actualFloor = nextFloor;
         previousFloor = actualFloor;
+        actualFloor = nextFloor;
         floorDir = dir;
     }
 
