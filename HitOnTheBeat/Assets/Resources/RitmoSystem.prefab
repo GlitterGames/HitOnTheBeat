@@ -263,7 +263,7 @@ MonoBehaviour:
   marcador: {fileID: 8925135898577463437}
   indicador: {fileID: 733187108676576993}
   successPercentaje: 1
-  delay: 2
+  delay: 0.5
   puedeClickear: 0
   beatDone: 0
   haFallado: 0
