@@ -695,7 +695,7 @@ public class PlayerController : MonoBehaviourPun
         bool cogido = false;
         bool soyYo = photonView.IsMine;
         if (f.Equals(actualFloor)) cogido = true;
-        photonView.RPC("SetPowerUpFloorRPC", RpcTarget.AllViaServer, f.row, f.index, type, cogido);
+        photonView.RPC("SetPowerUpFloorRPC", RpcTarget.AllViaServer, f.row, f.index, type, cogido, soyYo);
         if(type==Floor.Type.Vacio && cogido) photonView.RPC("SetPowerUpColorRPC", photonView.Owner, f.row, f.index);
     }
     [PunRPC]
