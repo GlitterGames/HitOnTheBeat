@@ -8,7 +8,7 @@ using Photon;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class NetworkController : MonoBehaviourPunCallbacks
+public class NCPrivada : MonoBehaviourPunCallbacks
 {
     //[SerializeField] private UIManager _uiManager;
     public GameObject conectando;
@@ -17,7 +17,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         Debug.Log("Start");
     }
-    [SerializeField] private InputField _name;
+    
 
     public void Awake()
     {
@@ -27,9 +27,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     // Update is called once per frame
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.NickName = _name.text;
-        Debug.Log(_name + "estás conectado al servidor de la región: " + PhotonNetwork.CloudRegion);
-        PhotonNetwork.JoinLobby();
+      PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
@@ -43,28 +41,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         public void Connect ()
     {
         Debug.Log("Botón de connect pulsado");
-        st.StartTransition(1);
-        if (!PhotonNetwork.IsConnected)
-        {
-            if (PhotonNetwork.ConnectUsingSettings())
-            {
-                Debug.Log("\nEstamos conectados al servidor");
-            }
-            else
-            {
-                 Debug.Log("\nError al conectar al servidor");
-                st.EndTransition();
-            }
-        }
-        else
-        {
-            Debug.Log("\nYa conectado");
-        }
-    }
-    public void Connect2()
-    {
-        Debug.Log("Botón de connect pulsado");
-        st.StartTransition(5);
+       
         if (!PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.ConnectUsingSettings())
@@ -74,7 +51,6 @@ public class NetworkController : MonoBehaviourPunCallbacks
             else
             {
                 Debug.Log("\nError al conectar al servidor");
-                st.EndTransition();
             }
         }
         else
