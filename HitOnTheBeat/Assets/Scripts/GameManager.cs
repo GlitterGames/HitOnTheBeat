@@ -742,9 +742,9 @@ public class GameManager : MonoBehaviourPun
             int i = Random.Range(0, numRows);
             int j = Random.Range(0, casillas[i].Length);
             f = casillas[i][j];
-            for (int a = 0; a < jugadores.Count; a++)
+            for (int a = 0; a < jugadores.Count && !seguir; a++)
             {
-                if (jugadores[i].actualFloor.Equals(f)) seguir = true;
+                if (jugadores[a].actualFloor.Equals(f)) seguir = true;
             }
         }
         int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;

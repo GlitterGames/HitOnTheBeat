@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviourPun
 
     IEnumerator PrimerPintado()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.7f);
         SetAreaColor(actualFloor);
     }
 
@@ -407,6 +407,12 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
+    private void NoColorearRPC()
+    {
+        SetNormalColor(actualFloor);
+    }
+
+    [PunRPC]
     private void UseGravityRPC()
     {
         rb.useGravity = true;
@@ -478,6 +484,8 @@ public class PlayerController : MonoBehaviourPun
         }
         else
         {
+
+            photonView.RPC("NoColorearRPC", photonView.Owner);
             photonView.RPC("EcharMapaRPC", RpcTarget.All);
             photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
         }
@@ -530,7 +538,6 @@ public class PlayerController : MonoBehaviourPun
     private void EcharRPC(int row, int index, FloorDetectorType dir)
     {
         Floor nextFloor = gameManager.casillas[row][index];
-        SetNormalColor(actualFloor);
         previousFloor = actualFloor;
         actualFloor = nextFloor;
         Debug.LogWarning("DIR: " +dir.ToString());
@@ -540,7 +547,6 @@ public class PlayerController : MonoBehaviourPun
     private void EcharNotSameFloorRPC(int row, int index, FloorDetectorType dir)
     {
         Floor nextFloor = gameManager.casillas[row][index];
-        SetNormalColor(actualFloor);
         previousFloor = actualFloor;
         actualFloor = nextFloor;
         floorDir = dir;
@@ -565,7 +571,6 @@ public class PlayerController : MonoBehaviourPun
     IEnumerator AnimationsUpdate(int row, int index)
     {
         yield return new WaitForSeconds(0.7f);
-        if(actualFloor) SetAreaColor(actualFloor);
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsFalling", true);
         Floor nextFloor = gameManager.casillas[row][index];
@@ -687,14 +692,22 @@ public class PlayerController : MonoBehaviourPun
     //FLOOR
     public void SetPowerUpFloor(Floor f, Floor.Type type)
     {
-        photonView.RPC("SetPowerUpFloorRPC", RpcTarget.AllViaServer, f.row, f.index, type);
+        bool cogido = false;
+        if (f.Equals(actualFloor)) cogido = true;
+        photonView.RPC("SetPowerUpFloorRPC", RpcTarget.AllViaServer, f.row, f.index, type, cogido);
+        if(type==Floor.Type.Vacio && cogido) photonView.RPC("SetPowerUpColorRPC", photonView.Owner, f.row, f.index);
     }
     [PunRPC]
-    private void SetPowerUpFloorRPC(int row, int index, Floor.Type type)
+    private void SetPowerUpFloorRPC(int row, int index, Floor.Type type, bool cogido)
     {
-        gameManager.casillas[row][index].SetPower(type);    
+        gameManager.casillas[row][index].SetPower(type, cogido);    
     }
-    
+    [PunRPC]
+    private void SetPowerUpColorRPC(int row, int index)
+    {
+        gameManager.casillas[row][index].SetColor(gameManager.coloresEspeciales.actual);
+    }
+
     #endregion
 
     #region Colores
@@ -704,7 +717,10 @@ public class PlayerController : MonoBehaviourPun
         for (int i = 0; i < casillasAdy.Length; i++)
         {
             Floor floor = casillasAdy[i];
-            if (floor != null) floor.SetColor(floor.GetColorN());
+            if (floor != null)
+            {
+                if(floor.GetPower()==Floor.Type.Vacio) floor.SetColor(floor.GetColorN());
+            }
         }
     }
     private void SetAreaColor(Floor f)
@@ -713,7 +729,10 @@ public class PlayerController : MonoBehaviourPun
         Floor[] casillasAdy = f.GetAdyacentes();
         for (int i = 0; i < casillasAdy.Length; i++) {
             Floor floor = casillasAdy[i];
-            if (floor != null) floor.SetColor(gameManager.coloresEspeciales.adyacente);
+            if (floor != null)
+            {
+                if(floor.GetPower()==Floor.Type.Vacio) floor.SetColor(gameManager.coloresEspeciales.adyacente);
+            }
         }
     }
 
@@ -862,11 +881,21 @@ public class PlayerController : MonoBehaviourPun
         if (start)
         {
             ChangeStateRPC(Estado.EXECUTING);
+            BombaColorManager bcm = GetComponent<BombaColorManager>();
+            if (bcm)
+            {
+                bcm.StartAnimation(gameManager.casillas[row][index], ULTIMATE_MAX_BEAT_DURATION * Ritmo.instance.delay);
+            }
+            else
+            {
+                Debug.LogWarning("Esta Ultimate requiere del componente BombaColorManager");
+            }
         }
         //Explota la bomba
         else
         {
             ChangeStateRPC(Estado.NORMAL);
+            SetAreaBombaColorNormal(GetComponent<BombaColorManager>().target);
             photonView.RPC("BombaColorExplosion", RpcTarget.MasterClient, row, index);
         }
     }
@@ -890,9 +919,10 @@ public class PlayerController : MonoBehaviourPun
         }
         foreach(PlayerController pc in gameManager.jugadores)
         {
+            int fuerzaUsada = GetComponent<BombaColorManager>().fuerzaEmpleada;
             if (pc.actualFloor.Equals(target))
             {
-                pc.EcharOne(pc.actualFloor.GetInverseDireccion(pc.floorDir), Fuerza, true, false, false);
+                pc.EcharOne(pc.actualFloor.GetInverseDireccion(pc.floorDir), fuerzaUsada, true, false, false);
             }
             else if (suelos.Contains(pc.actualFloor))
             {
@@ -922,7 +952,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     fdt = FloorDetectorType.South_east;
                 }
-                pc.EcharOne(fdt, Fuerza, true, false, false);
+                pc.EcharOne(fdt, fuerzaUsada, true, false, false);
             }
         }
     }
@@ -936,15 +966,6 @@ public class PlayerController : MonoBehaviourPun
             animator.SetTrigger("Special");
             if (photonView.IsMine)
             {
-                BombaColorManager bcm = GetComponent<BombaColorManager>();
-                if (bcm)
-                {
-                    bcm.StartAnimation(gameManager.casillas[row][index], ULTIMATE_MAX_BEAT_DURATION * Ritmo.instance.delay);
-                }
-                else
-                {
-                    Debug.LogWarning("Esta Ultimate requiere del componente BombaColorManager");
-                }
                 HUDManager.instance.durationUltimate = ULTIMATE_MAX_BEAT_DURATION;
                 SetAreaColor(actualFloor);
             }

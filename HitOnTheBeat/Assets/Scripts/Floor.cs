@@ -125,7 +125,7 @@ public class Floor : MonoBehaviour
     public Floor[] GetAdyacentes() {
         return adyacentes;
     }
-    public void SetPower(Type t)
+    public void SetPower(Type t, bool cogido)
     {
         Material m = FindObjectOfType<GameManager>().materiales.normal;
         this.type = t;
@@ -142,7 +142,7 @@ public class Floor : MonoBehaviour
                 break;
         }
         this.GetComponent<Renderer>().material = m;
-        if(t == Type.Vacio) { SetColor(GetColorN()); }
+        if(t == Type.Vacio && !cogido) { SetColor(GetColorN()); }
     }
     public Type GetPower()
     {
@@ -156,11 +156,6 @@ public class Floor : MonoBehaviour
         powertime = null;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public Vector3 GetFloorPosition()
     {
         return (Vector3.right * transform.position.x + Vector3.forward * transform.position.z);

@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class BombaColorManager : MonoBehaviour
+public class BombaColorManager : MonoBehaviourPun
 {
-    public GameObject bomba;
+    public GameObject bombaNoUsable;
+    public GameObject bombaUsable;
     [HideInInspector]
     public Floor target;
+    [HideInInspector]
+    public int fuerzaEmpleada;
     private Vector3 localPos;
     private Vector3 initialPos;
     private float currentTime;
@@ -15,9 +19,19 @@ public class BombaColorManager : MonoBehaviour
     public void StartAnimation(Floor target, float delay)
     {
         this.target = target;
-        GetComponent<PlayerController>().SetAreaBombaColor(target);
-        localPos = bomba.transform.localPosition;
-        initialPos = bomba.transform.position;
+        bombaNoUsable.SetActive(false);
+        bombaUsable.SetActive(true);
+        bombaUsable.GetComponent<Animator>().speed = 1f / (Ritmo.instance.delay * GetComponent<PlayerController>().ULTIMATE_MAX_BEAT_DURATION -1f);
+        if (photonView.IsMine)
+        {
+            GetComponent<PlayerController>().SetAreaBombaColor(target);
+            localPos = bombaUsable.transform.localPosition;
+            initialPos = bombaUsable.transform.position;
+        }
+        PlayerController personaje = GetComponent<PlayerController>();
+        fuerzaEmpleada = personaje.Fuerza;
+        personaje.Fuerza = 0;
+
         StartCoroutine(LanzarBomba(delay));
     }
 
@@ -25,13 +39,20 @@ public class BombaColorManager : MonoBehaviour
     {
         while(currentTime < delay)
         {
-            bomba.transform.position = Vector3.Lerp(initialPos, target.transform.position, currentTime/delay);
+            if (photonView.IsMine)
+            {
+                bombaUsable.transform.position = Vector3.Lerp(initialPos, target.transform.position, currentTime / delay);
+            }
             currentTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
 
         }
         currentTime = 0;
-        bomba.transform.position = transform.TransformPoint(localPos);
-        GetComponent<PlayerController>().SetAreaBombaColorNormal(target);
+        bombaNoUsable.SetActive(true);
+        bombaUsable.SetActive(false);
+        if (photonView.IsMine)
+        {
+            bombaUsable.transform.position = transform.TransformPoint(localPos);
+        }
     }
 }
