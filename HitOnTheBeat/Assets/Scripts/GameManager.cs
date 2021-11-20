@@ -761,4 +761,12 @@ public class GameManager : MonoBehaviourPun
         if(f!=null)FindObjectOfType<PhotonInstanciate>().my_player.
             GetComponent<PlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
     }
+
+    public void ChangeAnimationSpeedOnAllPlayers(int bpm)
+    {
+        for (int i = 0; i < jugadores.Count; i++)
+            {
+                jugadores[i].ChangeAnimationSpeed(bpm);
+            }
+    }
 }

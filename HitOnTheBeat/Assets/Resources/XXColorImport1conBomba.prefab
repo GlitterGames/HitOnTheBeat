@@ -219,6 +219,7 @@ MonoBehaviour:
   jumpStats: 0
   pushStats: 0
   killsStats: 0
+  AnimVelocity: 0
 --- !u!114 &3210013009723443861
 MonoBehaviour:
   m_ObjectHideFlags: 0
