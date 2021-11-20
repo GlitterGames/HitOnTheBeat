@@ -220,6 +220,7 @@ MonoBehaviour:
   pushStats: 0
   killsStats: 0
   AnimVelocity: 0
+  AnimVelocityCollision: 0.7
 --- !u!114 &3210013009723443861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,6 +251,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 2
     Name: Special
+  - Type: 1
+    SynchronizeType: 0
+    Name: AnimMultiplier
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
@@ -2294,7 +2298,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2138951718239698953, guid: 2b5bb0d22333d824f80d4a911aef6ab9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 2138951718239698953, guid: 2b5bb0d22333d824f80d4a911aef6ab9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2382,6 +2386,18 @@ PrefabInstance:
     - target: {fileID: 5398660376114238920, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
       propertyPath: m_RootOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5398660376114238920, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5398660376114238920, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5398660376114238920, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5398660376114238920, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
       propertyPath: m_LocalPosition.x

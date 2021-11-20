@@ -15,7 +15,8 @@ public class Floor : MonoBehaviour
     public enum Type {
         Vacio,
         RitmoDuplicado,
-        Escudo
+        Escudo,
+        Parpadeando
     }
     private Type type = Type.Vacio;
     public Coroutine powertime;
