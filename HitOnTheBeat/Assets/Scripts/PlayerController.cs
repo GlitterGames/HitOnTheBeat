@@ -700,11 +700,12 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void SetPowerUpFloorRPC(int row, int index, Floor.Type type, bool cogido)
     {
-        gameManager.casillas[row][index].SetPower(type, cogido);    
+        gameManager.casillas[row][index].SetPower(type, cogido, photonView.IsMine);    
     }
     [PunRPC]
     private void SetPowerUpColorRPC(int row, int index)
     {
+        gameManager.casillas[row][index].GetComponent<Renderer>().material = gameManager.materiales.normal;
         gameManager.casillas[row][index].SetColor(gameManager.coloresEspeciales.actual);
     }
 
