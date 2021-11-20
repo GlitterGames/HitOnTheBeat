@@ -363,7 +363,7 @@ public class PlayerController : MonoBehaviourPun
             ChangeStateRPC(Estado.NORMAL);
             HUDManager.instance.durationUltimate = 1;
         }
-        StartCoroutine(HitCoroutine(3f));
+        StartCoroutine(HitCoroutine(1f));
     }
     public IEnumerator HitCoroutine(float t)
     {
@@ -673,7 +673,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void HitRPC(bool activated)
     {
-        escudo.SetActive(activated);
+        hit.SetActive(activated);
     }
     //End of the use of the PowerUp
     public void EndPowerUp()
