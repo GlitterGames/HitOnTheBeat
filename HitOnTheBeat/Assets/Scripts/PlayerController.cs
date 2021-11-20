@@ -693,14 +693,15 @@ public class PlayerController : MonoBehaviourPun
     public void SetPowerUpFloor(Floor f, Floor.Type type)
     {
         bool cogido = false;
+        bool soyYo = photonView.IsMine;
         if (f.Equals(actualFloor)) cogido = true;
         photonView.RPC("SetPowerUpFloorRPC", RpcTarget.AllViaServer, f.row, f.index, type, cogido);
         if(type==Floor.Type.Vacio && cogido) photonView.RPC("SetPowerUpColorRPC", photonView.Owner, f.row, f.index);
     }
     [PunRPC]
-    private void SetPowerUpFloorRPC(int row, int index, Floor.Type type, bool cogido)
+    private void SetPowerUpFloorRPC(int row, int index, Floor.Type type, bool cogido, bool soyYo)
     {
-        gameManager.casillas[row][index].SetPower(type, cogido, photonView.IsMine);    
+        gameManager.casillas[row][index].SetPower(type, cogido, soyYo);    
     }
     [PunRPC]
     private void SetPowerUpColorRPC(int row, int index)
