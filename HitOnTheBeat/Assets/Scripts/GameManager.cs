@@ -705,6 +705,7 @@ public class GameManager : MonoBehaviourPun
 	
     private IEnumerator DestroyRows()
     {
+        if (!PhotonNetwork.IsMasterClient) yield return new WaitForEndOfFrame();
         for (int i = numRows; i>=0; i--)
         {
             yield return new WaitForSeconds(TIME/5);
@@ -728,11 +729,11 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
+    //Cuando se cambie el master deberán ejecutarse estos métodos con valores actualizados.
     private void AnimateFloors()
     {
         //StartCoroutine(DestroyRows());
         StartCoroutine(SpawnPowerUps());
-        //StartCoroutine(PruebaPowerUps());
     }
     public void SpawnPowerUp(float time)
     {
