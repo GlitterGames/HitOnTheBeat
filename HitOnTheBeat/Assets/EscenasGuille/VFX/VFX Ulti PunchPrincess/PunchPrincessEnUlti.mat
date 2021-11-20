@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
-  m_Shader: {fileID: -6465566751694194690, guid: cced8b54519a2104d971245d0115ce9b, type: 3}
+  m_Name: PunchPrincessEnUlti
+  m_Shader: {fileID: -6465566751694194690, guid: 27cd4673555225a43a9b46fb4f72a489, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,12 +19,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Texture2D_e1eea71568d9442785e039e9b7105a2b:
-        m_Texture: {fileID: 2800000, guid: 2c9e7efa70cc6fc4fa88c83f9d52c4db, type: 3}
+    - Texture2D_27dbf66f844c4196be9220a7c1f79c0b:
+        m_Texture: {fileID: 2800000, guid: eccda47f82b635641ac5554da81c82ad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: eccda47f82b635641ac5554da81c82ad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: eccda47f82b635641ac5554da81c82ad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -80,11 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_2e9c6e83bbcc41dd97a2c3d33bbe2297: 8.3
-    - Vector1_6af622c85a5d4499b2984fbfa8f7cf6a: 1
-    - Vector1_78669f918dbd473dae575d9ef2e00174: 25
-    - Vector1_b1d40ac5b36349c7aeeb893209486d96: 40
-    - Vector1_eb953434358d4179894fc3ed5e15304d: 3
+    - Vector1_8f8716d737a946fa9bc3f69d9c56f2bf: 1.28
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -112,14 +108,13 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_44e2ae14283442ce9aea334a6e7239e1: {r: 0, g: 1.003922, b: 2, a: 0}
-    - Color_9b691543c08b4510b54491e2df9d72e4: {r: 0, g: 0, b: 0, a: 0}
+    - Color_32dced78c95748f7ac4a0b37db9de6c7: {r: 2, g: 0, b: 1.254902, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &526485824893265560
+--- !u!114 &7672249735941761688
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
