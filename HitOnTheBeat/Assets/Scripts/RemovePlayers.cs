@@ -26,7 +26,7 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
             StartCoroutine(ExitMaster());
         }
     }
-
+    
     public override void OnLeftRoom()
     {
         if(endGame)

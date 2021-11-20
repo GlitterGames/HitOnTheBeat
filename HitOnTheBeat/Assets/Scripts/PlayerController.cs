@@ -30,8 +30,12 @@ public class PlayerController : MonoBehaviourPun
     #endregion
 
     #region Atributes
-    public Ultimate tipoUltimate = Ultimate.MEGA_PUNCH;
+    //Constantes
+    public static int MAX_STRENGHT = 10;
     public int ULTIMATE_MAX_BEAT_DURATION = 15;
+
+    //Editor
+    public Ultimate tipoUltimate = Ultimate.MEGA_PUNCH;
     [HideInInspector]
     public Estado estadoActual = Estado.NORMAL;
     public Floor actualFloor;
@@ -40,11 +44,12 @@ public class PlayerController : MonoBehaviourPun
     public int m_fuerza;
     public GameObject escudo;
     public GameObject hit;
+
     public int Fuerza
     {
         get
         {
-            if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.MEGA_PUNCH) return GameManager.MAX_STRENGHT * 2;
+            if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.MEGA_PUNCH) return MAX_STRENGHT * 2;
             else return m_fuerza;
         }
         set
@@ -52,9 +57,24 @@ public class PlayerController : MonoBehaviourPun
             if (estadoActual != Estado.EXECUTING || tipoUltimate != Ultimate.MEGA_PUNCH)
             {
                 m_fuerza = value;
-                if (m_fuerza > GameManager.MAX_STRENGHT) m_fuerza = GameManager.MAX_STRENGHT;
+                if (m_fuerza > MAX_STRENGHT) m_fuerza = MAX_STRENGHT;
                 else if (m_fuerza < 0) m_fuerza = 0;
+                //Se actualiza la propia interfaz
+                if (photonView.IsMine)
+                {
+                    HUDManager.instance.SetFuerza(m_fuerza);
+                }
             }
+            else
+            {
+                //Se actualiza la propia interfaz
+                if (photonView.IsMine)
+                {
+                    HUDManager.instance.SetFuerza(MAX_STRENGHT);
+                }
+            }
+
+            
         }
     }
     public int fuerzaCinetica;
@@ -71,7 +91,23 @@ public class PlayerController : MonoBehaviourPun
     public float secondsToCount = 0.4f;
     public bool movimientoMarcado = false;
     private Vector3 pos = Vector3.zero;
-    public Power_Up power = Power_Up.NORMAL;
+    private Power_Up m_power = Power_Up.NORMAL;
+    public Power_Up Power
+    {
+        get
+        {
+            return m_power;
+        }
+        set
+        {
+            m_power = value;
+            //Se actualiza la propia interfaz
+            if (photonView.IsMine)
+            {
+                HUDManager.instance.SetPowerUp((int) m_power);
+            }
+        }
+    }
     public float durationPowerUp = 15f;
     public Coroutine powerCoroutine;
 
@@ -318,12 +354,12 @@ public class PlayerController : MonoBehaviourPun
         if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.MEGA_PUNCH)
         {
             ChangeStateRPC(Estado.NORMAL);
-            HUDManager.instance.DurationUltimate = 1;
+            HUDManager.instance.durationUltimate = 1;
         }
         if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.INVISIBILITY)
         {
             ChangeStateRPC(Estado.NORMAL);
-            HUDManager.instance.DurationUltimate = 1;
+            HUDManager.instance.durationUltimate = 1;
         }
         StartCoroutine(HitCoroutine(3f));
     }
@@ -345,7 +381,7 @@ public class PlayerController : MonoBehaviourPun
     private void MoverRPC(int row, int index, FloorDetectorType dir)
     {
         Fuerza++;
-        if (Power_Up.RITMODUPLICADO == power) {
+        if (Power_Up.RITMODUPLICADO == Power) {
             Fuerza++;
         }
         Floor nextFloor = gameManager.casillas[row][index];
@@ -386,7 +422,7 @@ public class PlayerController : MonoBehaviourPun
             if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.INVISIBILITY)
             {
                 ChangeStateRPC(Estado.NORMAL);
-                HUDManager.instance.DurationUltimate = 1;
+                HUDManager.instance.durationUltimate = 1;
             }
             photonView.RPC("PushRPC", photonView.Owner);
             this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
@@ -583,7 +619,7 @@ public class PlayerController : MonoBehaviourPun
     {
         //Si ya tienes un power up no puedes tener otro, pero el que
         //estaba se pone a 0
-        if (Power_Up.NORMAL != this.power) {
+        if (Power_Up.NORMAL != this.Power) {
             SetPowerUpFloor(actualFloor, Floor.Type.Vacio);
             return;
         }
@@ -601,11 +637,11 @@ public class PlayerController : MonoBehaviourPun
         {
             case Floor.Type.RitmoDuplicado:
                 Debug.Log("Poniendo mi power a X2");
-                this.power = Power_Up.RITMODUPLICADO;
+                this.Power = Power_Up.RITMODUPLICADO;
                 break;
             case Floor.Type.Escudo:
                 Debug.Log("Poniendo mi power a ESCUDO");
-                this.power = Power_Up.ESCUDO;
+                this.Power = Power_Up.ESCUDO;
                 photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, true);
                 break;
         }
@@ -639,8 +675,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EndPowerUpRPC()
     {
-        Debug.Log("Quitar escudo");
-        this.power = Power_Up.NORMAL;
+        this.Power = Power_Up.NORMAL;
         photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, false);
     }
 
@@ -752,7 +787,7 @@ public class PlayerController : MonoBehaviourPun
             photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.NORMAL);
             SetRangeColorNormal(GetFloorAreaRange(actualFloor));
             SetAreaColor(actualFloor);
-            HUDManager.instance.AddUltimateCharge(HUDManager.ULTIMATE_MAX_CHARGE);
+            HUDManager.instance.UltimateCharge = HUDManager.ULTIMATE_MAX_CHARGE;
         }
     }
 
@@ -801,7 +836,7 @@ public class PlayerController : MonoBehaviourPun
             if (photonView.IsMine)
             {
                 //Añadir efectos de la boxeadora.
-                HUDManager.instance.DurationUltimate = ULTIMATE_MAX_BEAT_DURATION;
+                HUDManager.instance.durationUltimate = ULTIMATE_MAX_BEAT_DURATION;
             }
         }
         else
@@ -910,7 +945,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     Debug.LogWarning("Esta Ultimate requiere del componente BombaColorManager");
                 }
-                HUDManager.instance.DurationUltimate = ULTIMATE_MAX_BEAT_DURATION;
+                HUDManager.instance.durationUltimate = ULTIMATE_MAX_BEAT_DURATION;
                 SetAreaColor(actualFloor);
             }
             Debug.Log("Bomba Color ejecutado");
@@ -954,7 +989,7 @@ public class PlayerController : MonoBehaviourPun
                 if (photonView.IsMine)
                 {
                     vm.Alpha = 0.5f;
-                    HUDManager.instance.DurationUltimate = ULTIMATE_MAX_BEAT_DURATION;
+                    HUDManager.instance.durationUltimate = ULTIMATE_MAX_BEAT_DURATION;
                 }
                 //Si Frank pertenece a otro jugador.
                 //Deja de verlo.
@@ -976,7 +1011,7 @@ public class PlayerController : MonoBehaviourPun
                 if (photonView.IsMine)
                 {
                     vm.Alpha = 1f;
-                    HUDManager.instance.DurationUltimate = ULTIMATE_MAX_BEAT_DURATION;
+                    HUDManager.instance.durationUltimate = ULTIMATE_MAX_BEAT_DURATION;
                 }
                 else
                 {
@@ -1000,14 +1035,14 @@ public class PlayerController : MonoBehaviourPun
     public void UpdateUltimateTimeRPC()
     {
         //Si está ejecutando una ultimate.
-        if (HUDManager.instance.DurationUltimate >= 0)
+        if (HUDManager.instance.durationUltimate >= 0)
         {
-            if (HUDManager.instance.DurationUltimate > 0)
+            if (HUDManager.instance.durationUltimate > 0)
             {
-                HUDManager.instance.DurationUltimate -= 1;
+                HUDManager.instance.durationUltimate -= 1;
             }
             //Se termina la ejecución de la ultimate.
-            if(HUDManager.instance.DurationUltimate == 0)
+            if(HUDManager.instance.durationUltimate == 0)
             {
                 switch (tipoUltimate)
                 {
@@ -1021,7 +1056,7 @@ public class PlayerController : MonoBehaviourPun
                         PerformInvisibility(false);
                         break;
                 }
-                HUDManager.instance.DurationUltimate = -1;
+                HUDManager.instance.durationUltimate = -1;
             }
         }
     }

@@ -417,8 +417,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5af9335833fb8542946a855f9bd17eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipoUltimate: 0
   ULTIMATE_MAX_BEAT_DURATION: 10
+  tipoUltimate: 0
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
@@ -469,7 +469,7 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: IsFalling
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: Special
   m_SynchronizeLayers:
   - SynchronizeType: 2
