@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviourPun
     public int jumpStats = 0;  //Saltos que ha dado
     public int pushStats = 0;  //Veces que ha sido golpeado
     public int killsStats = 0; //Jugadores que ha sacado del ring
+    public float AnimVelocity = 1;
+    public float AnimVelocityCollision = 0.7f;
     #endregion
 
     // Start is called before the first frame update
@@ -510,7 +512,7 @@ public class PlayerController : MonoBehaviourPun
 
     IEnumerator AnimationsUpdate(int row, int index)
     {
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(AnimVelocityCollision);
         if(actualFloor) SetAreaColor(actualFloor);
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsFalling", true);
@@ -544,7 +546,7 @@ public class PlayerController : MonoBehaviourPun
     }
     IEnumerator AnimationsUpdate(float x, float z)
     {
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(AnimVelocityCollision);
         animator.SetBool("IsFalling", true);
         animator.SetBool("IsJumping", false);
         oldPos = newPos;
@@ -1093,4 +1095,28 @@ public class PlayerController : MonoBehaviourPun
     }
     #endregion
 
+    public void ChangeAnimationSpeed(int bpm)
+    {
+        switch(bpm)
+        {
+            case 1:
+                AnimVelocity = 1.8f;
+                secondsToCount = 0.25f;
+                AnimVelocityCollision = 0.42f;
+                break;
+
+            case 2:
+                AnimVelocity = 1.4f;
+                secondsToCount = 0.3f;
+                AnimVelocityCollision = 0.7f;
+                break;
+
+            case 3:
+                AnimVelocity = 1;
+                secondsToCount = 0.4f;
+                AnimVelocityCollision = 0.98f;
+                break;
+        }
+        animator.SetFloat("AnimMultiplier", AnimVelocity);
+    }
 }

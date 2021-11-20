@@ -14,6 +14,7 @@ public class MusicPlayer : MonoBehaviourPun
     private int numeroCambios = 0;
     private int segundosEspera;
     private int bpm;
+    private GameManager gameManager;
   private int GetRandom()
     {
         return Random.Range(0, canciones.Length);
@@ -24,6 +25,7 @@ public class MusicPlayer : MonoBehaviourPun
         ritmo = GetComponent<Ritmo>();
         cancionActual = GetComponent<AudioSource>();
         if (!PhotonNetwork.IsMasterClient) return;
+        gameManager = FindObjectOfType<GameManager>();
         int numeroCancion = GetRandom();
         StartCoroutine(WaitForSong(numeroCancion));
         StartCoroutine(ChangeBMP(numeroCancion, numeroCambios));
@@ -87,15 +89,15 @@ public class MusicPlayer : MonoBehaviourPun
             switch(numeroCambios)
             {
                 case 0:
-                        segundosEspera = 10;
+                        segundosEspera = 30;
                         bpm = 1;
                     break;
                 case 1:
-                        segundosEspera = 10;
+                        segundosEspera = 20;
                         bpm = 2;
                     break;
                 case 2:
-                        segundosEspera = 10;
+                        segundosEspera = 20;
                         bpm = 3;
                     break;
                 case 3:
@@ -126,6 +128,7 @@ public class MusicPlayer : MonoBehaviourPun
     [PunRPC]
     private void SendChangeBMPRPC(int bpm)
     {
+        gameManager.ChangeAnimationSpeedOnAllPlayers(bpm);
         ritmo.delay = bpm;
     }
 }

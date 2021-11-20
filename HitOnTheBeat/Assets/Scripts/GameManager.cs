@@ -727,4 +727,12 @@ public class GameManager : MonoBehaviourPun
     public void Update()
     {
     }
+
+    public void ChangeAnimationSpeedOnAllPlayers(int bpm)
+    {
+        for (int i = 0; i < jugadores.Count; i++)
+            {
+                jugadores[i].ChangeAnimationSpeed(bpm);
+            }
+    }
 }
