@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviourPun
     public int m_fuerza;
     public GameObject escudo;
     public GameObject hit;
+    //Último personaje que me ha golpeado
+    public int golpeador;
 
     public int Fuerza
     {
@@ -420,7 +422,7 @@ public class PlayerController : MonoBehaviourPun
         rb.useGravity = true;
     }
 
-    public bool EcharOne(FloorDetectorType dir, int max, bool moreThanTwo, bool notCinematic, bool sameFloor)
+    public bool EcharOne(FloorDetectorType dir, int max, bool moreThanTwo, bool notCinematic, bool sameFloor, int golpeador)
     {
         bool echado = false;
         Floor nextFloor = null;
@@ -435,6 +437,7 @@ public class PlayerController : MonoBehaviourPun
             photonView.RPC("PushRPC", photonView.Owner);
             this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
             fuerzaCinetica = 0;
+            this.golpeador = golpeador;
         }
         if (!notCinematic) {
             nextFloor = actualFloor.GetFloor(dir);
