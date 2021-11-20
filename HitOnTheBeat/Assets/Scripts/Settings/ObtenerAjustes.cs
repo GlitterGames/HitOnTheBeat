@@ -15,7 +15,6 @@ public class ObtenerAjustes : MonoBehaviour
     {
         valorBrillo = PlayerPrefs.GetFloat("brillo", 0.5f);
         panelBrillo.color = new Color(panelBrillo.color.r, panelBrillo.color.g, panelBrillo.color.b, valorBrillo);
-
         valorMusica = PlayerPrefs.GetFloat("volumenSonido", -20);
         valorEfectos = PlayerPrefs.GetFloat("volumenEfectos", -20);
         masterMixer.SetFloat("Music", valorMusica);

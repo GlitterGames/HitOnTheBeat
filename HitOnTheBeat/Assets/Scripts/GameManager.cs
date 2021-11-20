@@ -72,10 +72,6 @@ public class GameManager : MonoBehaviourPun
     }
 
     #endregion
-
-    #region Constantes
-    public static int MAX_STRENGHT = 10;
-    #endregion
 	
     #region Variables
     public float TIME;
@@ -340,7 +336,7 @@ public class GameManager : MonoBehaviourPun
             if (jugadores[c.positions[0]].fuerzaCinetica > 0) jugadores[c.positions[0]].Fuerza = jugadores[c.positions[0]].fuerzaCinetica;
             if (jugadores[c.positions[1]].fuerzaCinetica > 0) jugadores[c.positions[1]].Fuerza = jugadores[c.positions[1]].fuerzaCinetica;
 
-            if (jugadores[c.positions[0]].power == PlayerController.Power_Up.ESCUDO && jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
+            if (jugadores[c.positions[0]].Power == PlayerController.Power_Up.ESCUDO && jugadores[c.positions[1]].Power == PlayerController.Power_Up.ESCUDO)
             {
                 StopCoroutine(jugadores[c.positions[0]].powerCoroutine);
                 jugadores[c.positions[0]].EndPowerUp();
@@ -348,7 +344,7 @@ public class GameManager : MonoBehaviourPun
                 jugadores[c.positions[1]].EndPowerUp();
                 powers = true;
             }
-            else if (jugadores[c.positions[1]].power == PlayerController.Power_Up.ESCUDO)
+            else if (jugadores[c.positions[1]].Power == PlayerController.Power_Up.ESCUDO)
             {
                 //Para la corutina para que esta no le quite otro poder en el futuro
                 StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
@@ -358,7 +354,7 @@ public class GameManager : MonoBehaviourPun
                 jugadores[c.positions[0]].Fuerza = 0;
                 powers = true;
             }
-            else if (jugadores[c.positions[0]].power == PlayerController.Power_Up.ESCUDO)
+            else if (jugadores[c.positions[0]].Power == PlayerController.Power_Up.ESCUDO)
             {
                 //Para la corutina para que esta no le quite otro poder en el futuro
                 StopCoroutine(jugadores[c.positions[1]].powerCoroutine);
@@ -385,7 +381,7 @@ public class GameManager : MonoBehaviourPun
             //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
             for (int i = 0; i < c.positions.Count; i++)
             {
-                if (jugadores[c.positions[i]].power == PlayerController.Power_Up.ESCUDO) powers = true;
+                if (jugadores[c.positions[i]].Power == PlayerController.Power_Up.ESCUDO) powers = true;
             }
             if(powers == true)
             {
@@ -421,7 +417,7 @@ public class GameManager : MonoBehaviourPun
                 for (int i = 0; i < c.positions.Count; i++)
                 {
                     //Se realizan las colisiones
-                    if (jugadores[c.positions[i]].power == PlayerController.Power_Up.ESCUDO)
+                    if (jugadores[c.positions[i]].Power == PlayerController.Power_Up.ESCUDO)
                     {
                         StopCoroutine(jugadores[c.positions[i]].powerCoroutine);
                         jugadores[c.positions[i]].EndPowerUp();
@@ -746,8 +742,5 @@ public class GameManager : MonoBehaviourPun
         yield return new WaitForSeconds(time);
         if(f!=null)FindObjectOfType<PhotonInstanciate>().my_player.
             GetComponent<PlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
-    }
-    public void Update()
-    {
     }
 }
