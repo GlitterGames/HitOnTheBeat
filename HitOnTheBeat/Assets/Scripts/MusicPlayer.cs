@@ -15,6 +15,7 @@ public class MusicPlayer : MonoBehaviourPun
     private int segundosEspera;
     private int bpm;
     private GameManager gameManager;
+    public float duracion;
   private int GetRandom()
     {
         return Random.Range(0, canciones.Length);
@@ -27,10 +28,15 @@ public class MusicPlayer : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient) return;
         gameManager = FindObjectOfType<GameManager>();
         int numeroCancion = GetRandom();
+        duracionCancion(numeroCancion);
         StartCoroutine(WaitForSong(numeroCancion));
         StartCoroutine(ChangeBMP(numeroCancion, numeroCambios));
     }
 
+    private void duracionCancion(int numeroCancion)
+    {
+        gameManager.duracion = canciones[numeroCancion].length;
+    }
     IEnumerator WaitForSong(int numeroCancion)
     {
         yield return new WaitForSeconds(3f);

@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviourPun
     public List<PlayerController> jugadores = new List<PlayerController>();
     public Queue<Movement> movimientos = new Queue<Movement>();
     public Queue<Ultimate> ultimates = new Queue<Ultimate>();
+    public float duracion;
     #endregion
 
     void Awake()
