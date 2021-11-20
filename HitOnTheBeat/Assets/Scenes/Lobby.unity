@@ -1133,7 +1133,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 795143576}
         m_TargetAssemblyTypeName: LobbyPrivado, Assembly-CSharp
         m_MethodName: EnviarEmpezarPartida
         m_Mode: 1
