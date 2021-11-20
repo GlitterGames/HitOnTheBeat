@@ -142,6 +142,7 @@ public class PlayerController : MonoBehaviourPun
         Fuerza = 0;
         fuerzaCinetica = 0;
         colision = false;
+        golpeador = -1;
 
         animator = GetComponent<Animator>();
         gameManager = FindObjectOfType<GameManager>();
@@ -935,7 +936,7 @@ public class PlayerController : MonoBehaviourPun
             int fuerzaUsada = GetComponent<BombaColorManager>().fuerzaEmpleada;
             if (pc.actualFloor.Equals(target))
             {
-                pc.EcharOne(pc.actualFloor.GetInverseDireccion(pc.floorDir), fuerzaUsada, true, false, false);
+                pc.EcharOne(pc.actualFloor.GetInverseDireccion(pc.floorDir), fuerzaUsada, true, false, false, -1);
             }
             else if (suelos.Contains(pc.actualFloor))
             {
@@ -965,7 +966,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     fdt = FloorDetectorType.South_east;
                 }
-                pc.EcharOne(fdt, fuerzaUsada, true, false, false);
+                pc.EcharOne(fdt, fuerzaUsada, true, false, false, -1);
             }
         }
     }
