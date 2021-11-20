@@ -18,7 +18,7 @@ public class Floor : MonoBehaviour
         Escudo
     }
     private Type type = Type.Vacio;
-    public Coroutine powertime = null;
+    public Coroutine powertime;
     public Floor GetFloor(FloorDetectorType type) {
         switch (type)
         {
@@ -55,6 +55,25 @@ public class Floor : MonoBehaviour
                 return adyacentes[2];
         }
         return null;
+    }
+    public FloorDetectorType GetInverseDireccion(FloorDetectorType type)
+    {
+        switch (type)
+        {
+            case FloorDetectorType.East:
+                return FloorDetectorType.West;
+            case FloorDetectorType.West:
+                return FloorDetectorType.East;
+            case FloorDetectorType.North_east:
+                return FloorDetectorType.South_west;
+            case FloorDetectorType.North_west:
+                return FloorDetectorType.South_east;
+            case FloorDetectorType.South_east:
+                return FloorDetectorType.North_west;
+            case FloorDetectorType.South_west:
+                return FloorDetectorType.North_east;
+        }
+        return FloorDetectorType.East;
     }
     public Floor GetEast() {
         return adyacentes[0];
@@ -106,17 +125,29 @@ public class Floor : MonoBehaviour
     public Floor[] GetAdyacentes() {
         return adyacentes;
     }
-    public void SetPower(Type t)
+    public void SetPower(Type t, bool cogido, bool soyYo)
     {
+        Material m = FindObjectOfType<GameManager>().materiales.normal;
         this.type = t;
         switch (t)
         {
             case Type.Vacio:
-                SetColor(Color.green);
+                m = FindObjectOfType<GameManager>().materiales.normal;
                 break;
             case Type.RitmoDuplicado:
-                SetColor(Color.red);
+                m = FindObjectOfType<GameManager>().materiales.X2;
                 break;
+            case Type.Escudo:
+                m = FindObjectOfType<GameManager>().materiales.escudo;
+                break;
+        }
+        if (t != Type.Vacio) {
+            this.GetComponent<Renderer>().material = m;
+        } 
+        else if (!(t == Type.Vacio && cogido && soyYo))
+        {
+            this.GetComponent<Renderer>().material = m;
+            SetColor(GetColorN());
         }
     }
     public Type GetPower()
@@ -128,19 +159,15 @@ public class Floor : MonoBehaviour
     void Awake()
     {
         r = this.GetComponentInChildren<Renderer>();
+        powertime = null;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public Vector3 GetFloorPosition()
     {
         return (Vector3.right * transform.position.x + Vector3.forward * transform.position.z);
     }
     public void SetColor(Color c) {
-        r.material.color = c;
+        r.material.SetColor("_BaseColor", c);
     }
     public void SetColorN(Color c)
     {

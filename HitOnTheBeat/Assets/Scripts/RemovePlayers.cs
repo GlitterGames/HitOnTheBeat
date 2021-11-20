@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class RemovePlayers : MonoBehaviourPunCallbacks
 {
     public GameManager gm;
+    public bool endGame = false;
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
@@ -21,25 +22,23 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
 
         if (gm.jugadores.Count == 1)
         {
-            FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoUpdateWinner", RpcTarget.AllViaServer, (int) gm.jugadores[0].tipoPersonaje);
-            FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoExitPlayer", RpcTarget.Others);
+            FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoEndGameRPC", RpcTarget.AllViaServer, (int) gm.jugadores[0].tipoUltimate, FindObjectOfType<Ritmo>().numBeats);
             StartCoroutine(ExitMaster());
         }
     }
-
+    
     public override void OnLeftRoom()
     {
-        SceneManager.LoadScene(4);
-    }
-
-    public void ExitPlayer()
-    {
-        PhotonNetwork.LeaveRoom(true);
+        if(endGame)
+            FindObjectOfType<SceneTransitioner>().GoToVictoryScene(0);
+        else
+            FindObjectOfType<SceneTransitioner>().GoToLobbyScene(0);
     }
 
     IEnumerator ExitMaster()
     {
-        yield return new WaitForSeconds(1);
-        ExitPlayer();
+        yield return new WaitForSeconds(2);
+
+        PhotonNetwork.LeaveRoom(true);
     }
 }

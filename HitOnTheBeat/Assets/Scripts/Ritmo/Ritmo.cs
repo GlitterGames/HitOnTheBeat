@@ -19,9 +19,9 @@ public class Ritmo : MonoBehaviourPun
     public GameObject marcador;
     public GameObject indicador;
     private GameManager gameManager;
-    public float delay;
-    [Range(0,1)]
+    [Range(0, 1)]
     public float successPercentaje;
+    public float delay;
     private float currentTime;
     
     //Variables master
@@ -31,6 +31,9 @@ public class Ritmo : MonoBehaviourPun
     //variables de uso no compartido
     public bool haFallado = false;
     public bool haPulsado = false;
+
+    //stats
+    public int numBeats = 0;
 
     // Start is called before the first frame update
     void Awake()
@@ -52,6 +55,7 @@ public class Ritmo : MonoBehaviourPun
 
         if (!puedeClickear && !beatDone)
         {
+            numBeats++;
             SetColorAllBeatEnd();
             gameManager.DoBeatActions();
             beatDone = true;

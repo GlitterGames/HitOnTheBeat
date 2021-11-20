@@ -41,16 +41,43 @@ public class SceneTransitioner : MonoBehaviour
         this.level = 0;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
+    public void GoToLobbyScene(float delay)
+    {
+        GameObject.Find("Animation").GetComponent<Animator>().SetTrigger("Activate");
+        this.level = 1;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
+
+    public void GoToGameScene(float delay)
+    {
+        anim.SetTrigger("Activate");
+        this.level = 2;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
+
     public void GoToCreditsScene(float delay)
     {
         anim.SetTrigger("Activate");
         this.level = 3;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
-    public void GoToLobbyScene(float delay)
+    
+    public void GoToVictoryScene(float delay)
+    {
+        GameObject.Find("Animation").GetComponent<Animator>().SetTrigger("Activate");
+        this.level = 4;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
+    public void GoToShopScene(float delay)
     {
         anim.SetTrigger("Activate");
-        this.level = 1;
+        this.level = 5;
+        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
+    }
+    public void GoToGemsScene(float delay)
+    {
+        anim.SetTrigger("Activate");
+        this.level = 6;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
     #endregion
