@@ -92,12 +92,15 @@ public class GameManager : MonoBehaviourPun
     public List<PlayerController> jugadores = new List<PlayerController>();
     public Queue<Movement> movimientos = new Queue<Movement>();
     public Queue<Ultimate> ultimates = new Queue<Ultimate>();
+    bool spawn;
+    public Queue<Floor> fallenFloors = new Queue<Floor>();
     #endregion
 
     void Awake()
     {
-        TIME = 30f;
+        TIME = 360f;
         numRows = 5;
+        spawn = false;
         //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
         casillas.Add(new Floor[1]);
         casillas.Add(new Floor[6]);
@@ -124,6 +127,11 @@ public class GameManager : MonoBehaviourPun
         PerformMovements();
         PerformColision();
         ApplyEfectsFromFloor();
+        spawn = true;
+        while (fallenFloors.Count>0)
+        {
+            StartCoroutine(FallFloor(fallenFloors.Dequeue()));
+        }
     }
 
     private void InitColor() {
@@ -639,6 +647,7 @@ public class GameManager : MonoBehaviourPun
     }
     private IEnumerator Blink(Floor f, float seg, int repeticiones) {
         int j;
+        f.SetPower(Floor.Type.Parpadeando, false, false);
         //LAS CASILLAS PARPADEAN
         for (j = 1; j < colorBlink.Count; j++) {
             Color c1 = colorBlink[j-1];
@@ -657,6 +666,10 @@ public class GameManager : MonoBehaviourPun
         }
         yield return new WaitForSeconds(seg);
         yield return new WaitForSeconds(0.02f);
+        fallenFloors.Enqueue(f);
+    }
+    private IEnumerator FallFloor(Floor f)
+    {
         //LAS CASILLAS SE CAEN POR ACCIÓN DE LA GRAVEDAD
         f.GetComponentInChildren<Rigidbody>().isKinematic = false;
         f.GetComponentInChildren<Rigidbody>().useGravity = true;
@@ -665,8 +678,9 @@ public class GameManager : MonoBehaviourPun
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         //LOS JUGADORES QUE SE ENCUENTREN EN ESAS CASILLAS SE CAERAN
-        if (PhotonNetwork.IsMasterClient) {
-            for(int i = 0; i<jugadores.Count; i++)
+        if (PhotonNetwork.IsMasterClient)
+        {
+            for (int i = 0; i < jugadores.Count; i++)
             {
                 if (jugadores[i].actualFloor.Equals(f))
                 {
@@ -676,7 +690,6 @@ public class GameManager : MonoBehaviourPun
                 }
 
             }
-            //casillas[f.row][f.index] = null;
         }
     }
     private IEnumerator BlinkBackground(int row, float seg, int repeticiones)
@@ -708,6 +721,7 @@ public class GameManager : MonoBehaviourPun
         if (!PhotonNetwork.IsMasterClient) yield return new WaitForEndOfFrame();
         for (int i = numRows; i>=0; i--)
         {
+
             yield return new WaitForSeconds(TIME/5);
             DestroyRow(i, 3f, 5);
             numRows = i;
@@ -725,6 +739,9 @@ public class GameManager : MonoBehaviourPun
             for (int i = 0; i < numRep; i++)
             {
                 yield return new WaitForSeconds(espera);
+                spawn = false;
+                yield return new WaitUntil(() => spawn);
+                spawn = false;
                 SpawnPowerUp(15f);
             }
         }
@@ -732,7 +749,7 @@ public class GameManager : MonoBehaviourPun
     //Cuando se cambie el master deberán ejecutarse estos métodos con valores actualizados.
     private void AnimateFloors()
     {
-        //StartCoroutine(DestroyRows());
+        StartCoroutine(DestroyRows());
         StartCoroutine(SpawnPowerUps());
     }
     public void SpawnPowerUp(float time)
