@@ -22,12 +22,9 @@ public class BombaColorManager : MonoBehaviourPun
         bombaNoUsable.SetActive(false);
         bombaUsable.SetActive(true);
         bombaUsable.GetComponent<Animator>().speed = 1f / (Ritmo.instance.delay * GetComponent<PlayerController>().ULTIMATE_MAX_BEAT_DURATION -1f);
-        if (photonView.IsMine)
-        {
-            GetComponent<PlayerController>().SetAreaBombaColor(target);
-            localPos = bombaUsable.transform.localPosition;
-            initialPos = bombaUsable.transform.position;
-        }
+        GetComponent<PlayerController>().SetAreaBombaColor(target);
+        localPos = bombaUsable.transform.localPosition;
+        initialPos = bombaUsable.transform.position;
         PlayerController personaje = GetComponent<PlayerController>();
         fuerzaEmpleada = personaje.Fuerza;
         personaje.Fuerza = 0;
@@ -39,10 +36,7 @@ public class BombaColorManager : MonoBehaviourPun
     {
         while(currentTime < delay)
         {
-            if (photonView.IsMine)
-            {
-                bombaUsable.transform.position = Vector3.Lerp(initialPos, target.transform.position, currentTime / delay);
-            }
+            bombaUsable.transform.position = Vector3.Lerp(initialPos, target.transform.position, currentTime / delay);
             currentTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
 
@@ -50,9 +44,6 @@ public class BombaColorManager : MonoBehaviourPun
         currentTime = 0;
         bombaNoUsable.SetActive(true);
         bombaUsable.SetActive(false);
-        if (photonView.IsMine)
-        {
-            bombaUsable.transform.position = transform.TransformPoint(localPos);
-        }
+        bombaUsable.transform.position = transform.TransformPoint(localPos);
     }
 }

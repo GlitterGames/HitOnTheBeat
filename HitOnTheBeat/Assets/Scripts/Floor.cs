@@ -144,6 +144,9 @@ public class Floor : MonoBehaviour
         if(t == Type.Vacio && !cogido && !soyYo) {
             this.GetComponent<Renderer>().material = m; 
             SetColor(GetColorN());
+        }else if (t != Type.Vacio)
+        {
+            this.GetComponent<Renderer>().material = m;
         }
     }
     public Type GetPower()
