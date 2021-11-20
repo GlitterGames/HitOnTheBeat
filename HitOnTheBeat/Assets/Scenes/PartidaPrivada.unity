@@ -2633,6 +2633,7 @@ MonoBehaviour:
   - {fileID: 1784523173771362489}
   - {fileID: 725704069}
   - {fileID: 355775418104326905}
+  marcador: []
   personajeSeleccionado: 0
 --- !u!4 &1012423050
 Transform:
@@ -3811,7 +3812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5577550071071704162, guid: 817b63e6d7dd90a4fac9408e22888dde, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5577550071071704165, guid: 817b63e6d7dd90a4fac9408e22888dde, type: 3}
       propertyPath: m_SortingOrder

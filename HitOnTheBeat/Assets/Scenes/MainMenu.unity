@@ -1890,7 +1890,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 392215210}
         m_TargetAssemblyTypeName: NetworkController, Assembly-CSharp
-        m_MethodName: Connect2
+        m_MethodName: Connect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

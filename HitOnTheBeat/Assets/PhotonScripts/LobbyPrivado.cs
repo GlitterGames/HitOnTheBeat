@@ -17,8 +17,6 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     private bool IsLoading = false;
     public string roomName;
     public int roomSize;
-    public GameObject roomListingPrefab;
-    public Transform roomsPanel;
     public Button buscarPartida;
     public Button crearSala;
     public Button unirseSala;

@@ -30,7 +30,7 @@ public class LobbyPlayerSelector : MonoBehaviour
         }
         playerDemo[FindObjectOfType<PlayerSelector>().selectedPlayer].SetActive(false);
         playerDemo[type].SetActive(true);
-        marcador[previous].SetActive(false);
+        marcador[FindObjectOfType<PlayerSelector>().selectedPlayer].SetActive(false);
         marcador[type].SetActive(true);
         nombreText.text = nombre[type];
         infoText.text = info[type];
