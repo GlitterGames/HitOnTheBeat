@@ -141,12 +141,13 @@ public class Floor : MonoBehaviour
                 m = FindObjectOfType<GameManager>().materiales.escudo;
                 break;
         }
-        if(t == Type.Vacio && !cogido && !soyYo) {
-            this.GetComponent<Renderer>().material = m; 
-            SetColor(GetColorN());
-        }else if (t != Type.Vacio)
+        if (t != Type.Vacio) {
+            this.GetComponent<Renderer>().material = m;
+        } 
+        else if (!(t == Type.Vacio && cogido && !soyYo))
         {
             this.GetComponent<Renderer>().material = m;
+            SetColor(GetColorN());
         }
     }
     public Type GetPower()
