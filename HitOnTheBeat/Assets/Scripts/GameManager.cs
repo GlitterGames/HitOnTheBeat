@@ -715,6 +715,7 @@ public class GameManager : MonoBehaviourPun
     }
     private IEnumerator SpawnPowerUps()
     {
+        if (!PhotonNetwork.IsMasterClient) yield return new WaitForEndOfFrame();
         //Tiempo de espera entre el spawn de otro power up
         float espera = 5f;
         float numRep = TIME / (int)espera;
