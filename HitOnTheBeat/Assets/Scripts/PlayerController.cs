@@ -745,7 +745,10 @@ public class PlayerController : MonoBehaviourPun
         for (int i = 0; i < casillasAdy.Length; i++)
         {
             Floor floor = casillasAdy[i];
-            if (floor != null) floor.SetColor(gameManager.coloresBombaColor.selectedFloor1);
+            if (floor != null)
+            {
+                if (floor.GetPower() == Floor.Type.Vacio) floor.SetColor(gameManager.coloresBombaColor.selectedFloor1);
+            }
         }
     }
 
@@ -756,7 +759,10 @@ public class PlayerController : MonoBehaviourPun
         for (int i = 0; i < casillasAdy.Length; i++)
         {
             Floor floor = casillasAdy[i];
-            if (floor != null) floor.SetColor(floor.GetColorN());
+            if (floor != null)
+            {
+                if (floor.GetPower() == Floor.Type.Vacio) floor.SetColor(floor.GetColorN());
+            }
         }
     }
     #endregion
@@ -853,7 +859,6 @@ public class PlayerController : MonoBehaviourPun
         if (start)
         {
             animator.SetBool("IsSpecial", true);
-            animator.SetTrigger("Special");
             if (photonView.IsMine)
             {
                 //Añadir efectos de la boxeadora.
@@ -1003,7 +1008,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (start)
         {
-            animator.SetTrigger("Special");
+            animator.SetBool("IsSpecial", true);
             //Si Frank pertecene al que ejecutó la ultimate.
             //Lo ve transparente.
             VisibilityManager vm = GetComponent<VisibilityManager>();
@@ -1027,7 +1032,8 @@ public class PlayerController : MonoBehaviourPun
             }
         }
         else
-        {
+        { 
+            animator.SetBool("IsSpecial", false);
             VisibilityManager vm = GetComponent<VisibilityManager>();
             if (vm)
             {
