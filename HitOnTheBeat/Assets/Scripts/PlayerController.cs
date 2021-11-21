@@ -786,6 +786,79 @@ public class PlayerController : MonoBehaviourPun
     }
     #endregion
 
+    #region DestroyRow
+    public void SetColor(Floor f, Color c)
+    {
+        photonView.RPC("SetColorRPC", RpcTarget.AllViaServer, f.row, f.index, c.b, c.r, c.g);
+    }
+    public void SetColorBackground(int pos, Color c)
+    {
+        photonView.RPC("SetColorBackgroundRPC", RpcTarget.AllViaServer, pos, c.b, c.r, c.g);
+    }
+    public void SetColorN(Floor f, Color c)
+    {
+        photonView.RPC("SetColorNRPC", RpcTarget.AllViaServer, f.row, f.index, c.b, c.r, c.g);
+    }
+    public void SetPower(Floor f, Floor.Type type, bool b1, bool b2)
+    {
+        photonView.RPC("SetPowerRPC", RpcTarget.AllViaServer, f.row, f.index, type, b1, b2);
+    }
+    public void Cinematic(Floor f) {
+        photonView.RPC("CinematicRPC", RpcTarget.AllViaServer, f.row, f.index);
+    }
+    public void CinematicBackground(int pos)
+    {
+        photonView.RPC("CinematicBackgroundRPC", RpcTarget.AllViaServer, pos);
+    }
+    public void Fall(Floor f) {
+        photonView.RPC("FallRPC", RpcTarget.AllViaServer, f.row, f.index);
+    }
+    [PunRPC]
+    public void SetColorRPC(int row, int index, float b, float r, float g)
+    {
+        Floor f = gameManager.casillas[row][index];
+        Color c = new Color(r, g, b);
+        f.SetColor(c);
+    }
+    [PunRPC]
+    public void SetColorBackgroundRPC(int pos, float b, float r, float g)
+    {
+        Color c = new Color(r, g, b);
+        gameManager.background[pos].GetComponent<Renderer>().material.color = c;
+    }
+    [PunRPC]
+    public void SetColorNRPC(int row, int index, float b, float r, float g)
+    {
+        Floor f = gameManager.casillas[row][index];
+        Color c = new Color(r, g, b);
+        f.SetColorN(c);
+    }
+    [PunRPC]
+    public void SetPowerRPC(int row, int index, Floor.Type type, bool b1, bool b2)
+    {
+        Floor f = gameManager.casillas[row][index];
+        f.SetPower(type, b1, b2);
+    }
+    [PunRPC]
+    public void CinematicRPC(int row, int index)
+    {
+        Floor f = gameManager.casillas[row][index];
+        f.GetComponentInChildren<Rigidbody>().isKinematic = false;
+        f.GetComponentInChildren<Rigidbody>().useGravity = true;
+    }
+    [PunRPC]
+    public void CinematicBackgroundRPC(int pos)
+    {
+        gameManager.background[pos].SetActive(false);
+    }
+    [PunRPC]
+    public void FallRPC(int row, int index)
+    {
+        Floor f = gameManager.casillas[row][index];
+        f.gameObject.SetActive(false);
+    }
+    #endregion
+
     #region  Ultimates
     //Se establecen las llamadas al master para registrar las ultimates,
     //cuando el master decida ejecutarlas se ejecutarán a la vez.
