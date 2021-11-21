@@ -74,7 +74,6 @@ public class GameManager : MonoBehaviourPun
     #endregion
 	
     #region Variables
-    public float TIME;
     public int numRows;
     public Materiales materiales;
     public ColoresMovimiento coloresEspeciales;
@@ -99,7 +98,6 @@ public class GameManager : MonoBehaviourPun
 
     void Awake()
     {
-        TIME = duracion;
         numRows = 5;
         spawn = false;
         //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
@@ -275,6 +273,7 @@ public class GameManager : MonoBehaviourPun
                 List<int> positions = PerformColision(false, colisiones[i]);
                 for (int j = 0; j < positions.Count; j++)
                 {
+                    jugadores[j].SetPuesto(jugadores.Count - 1);
                     jugadores.RemoveAt(positions[j]);
                     positions = Reordenar(positions[j], positions);
                     ReordenarGolpeados(positions[j]);
@@ -311,6 +310,7 @@ public class GameManager : MonoBehaviourPun
                 List<int> positions = PerformColision(true, colisiones[i]);
                 for (int j = 0; j < positions.Count; j++)
                 {
+                    jugadores[j].SetPuesto(jugadores.Count - 1);
                     jugadores.RemoveAt(positions[j]);
                     positions = Reordenar(positions[j], positions);
                     ReordenarGolpeados(positions[j]);
@@ -343,6 +343,7 @@ public class GameManager : MonoBehaviourPun
                         {
                             jugadores[jugadores[i].golpeador].killsStats = jugadores[jugadores[i].golpeador].killsStats+1;
                         }
+                        jugadores[i].SetPuesto(jugadores.Count - 1);
                         jugadores.RemoveAt(i);
                         ReordenarGolpeados(i);
                     }
@@ -779,10 +780,11 @@ public class GameManager : MonoBehaviourPun
     }
     private IEnumerator DestroyRows()
     {
+        yield return new WaitForEndOfFrame();
         int numrep = numRows;
         for (int i = numrep; i>=0; i--)
         {
-            yield return new WaitForSeconds(TIME/5);
+            yield return new WaitForSeconds(duracion/5);
             numRows--;
             DestroyRow(i, 1f, 3);
         }
