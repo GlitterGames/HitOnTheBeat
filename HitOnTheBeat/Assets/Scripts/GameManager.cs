@@ -365,8 +365,8 @@ public class GameManager : MonoBehaviourPun
         {
             moreThanTwo = false;
             //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
-            if (jugadores[c.positions[0]].fuerzaCinetica > 0) jugadores[c.positions[0]].Fuerza = jugadores[c.positions[0]].fuerzaCinetica;
-            if (jugadores[c.positions[1]].fuerzaCinetica > 0) jugadores[c.positions[1]].Fuerza = jugadores[c.positions[1]].fuerzaCinetica;
+            if (jugadores[c.positions[0]].fuerzaCinetica > 0) jugadores[c.positions[0]].SetFuerza(jugadores[c.positions[0]].fuerzaCinetica);
+            if (jugadores[c.positions[1]].fuerzaCinetica > 0) jugadores[c.positions[1]].SetFuerza(jugadores[c.positions[1]].fuerzaCinetica);
 
             if (jugadores[c.positions[0]].Power == PlayerController.Power_Up.ESCUDO && jugadores[c.positions[1]].Power == PlayerController.Power_Up.ESCUDO)
             {
@@ -385,7 +385,7 @@ public class GameManager : MonoBehaviourPun
                 //Y llama a la RPC que utiliza su poder
                 jugadores[c.positions[1]].EndPowerUp();
                 //Solo el que pierde acaba con fuerza 0
-                jugadores[c.positions[0]].Fuerza = 0;
+                jugadores[c.positions[0]].SetFuerza(0);
                 powers = true;
             }
             else if (jugadores[c.positions[0]].Power == PlayerController.Power_Up.ESCUDO)
@@ -396,7 +396,7 @@ public class GameManager : MonoBehaviourPun
                 //Y llama a la RPC que utiliza su poder
                 jugadores[c.positions[0]].EndPowerUp();
                 //Solo el que pierde acaba con fuerza 0
-                jugadores[c.positions[1]].Fuerza = 0;
+                jugadores[c.positions[1]].SetFuerza(0);
                 powers = true;
             }
             if (powers)
@@ -437,7 +437,7 @@ public class GameManager : MonoBehaviourPun
                 //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
                 for (int i = 0; i < c.positions.Count; i++)
                 {
-                    if (jugadores[c.positions[i]].fuerzaCinetica > 0) jugadores[c.positions[i]].Fuerza = jugadores[c.positions[i]].fuerzaCinetica;
+                    if (jugadores[c.positions[i]].fuerzaCinetica > 0) jugadores[c.positions[i]].SetFuerza(jugadores[c.positions[i]].fuerzaCinetica);
                 }
                 List<int> fuerzas = new List<int>();
                 bool equal = false;
@@ -518,7 +518,7 @@ public class GameManager : MonoBehaviourPun
                             }
                         }
                         //Todos los participantes reinician su fuerza
-                        jugadores[c.positions[i]].Fuerza = 0;
+                        jugadores[c.positions[i]].SetFuerza(0);
                     }
                 }
             }
@@ -540,8 +540,8 @@ public class GameManager : MonoBehaviourPun
         {
             moreThanTwo = false;
             //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
-            if (jugadores[c.positions[0]].fuerzaCinetica > 0) jugadores[c.positions[0]].Fuerza = jugadores[c.positions[0]].fuerzaCinetica;
-            if (jugadores[c.positions[1]].fuerzaCinetica > 0) jugadores[c.positions[1]].Fuerza = jugadores[c.positions[1]].fuerzaCinetica;
+            if (jugadores[c.positions[0]].fuerzaCinetica > 0) jugadores[c.positions[0]].SetFuerza(jugadores[c.positions[0]].fuerzaCinetica);
+            if (jugadores[c.positions[1]].fuerzaCinetica > 0) jugadores[c.positions[1]].SetFuerza(jugadores[c.positions[1]].fuerzaCinetica);
             //Los dos jugadores se dan la dirección del otro jugador como dirección a la que tienen que ir
             //Si los dos jugadores tienen la misma fuerza se echan uno para atrás
             if (jugadores[c.positions[0]].Fuerza == jugadores[c.positions[1]].Fuerza)
@@ -600,8 +600,8 @@ public class GameManager : MonoBehaviourPun
                 }
             }
             //Todos los participantes reinician su fuerza
-            jugadores[c.positions[0]].Fuerza = 0;
-            jugadores[c.positions[1]].Fuerza = 0;
+            jugadores[c.positions[0]].SetFuerza(0);
+            jugadores[c.positions[1]].SetFuerza(0);
         }
         //Colision entre más de dos jugadores
         else
@@ -609,7 +609,7 @@ public class GameManager : MonoBehaviourPun
             //Por todos los jugadores pone la fuerza cinética como su fuerza para colisionar con los demás jugadores
             for (int i = 0; i < c.positions.Count; i++)
             {
-                if (jugadores[c.positions[i]].fuerzaCinetica > 0) jugadores[c.positions[i]].Fuerza = jugadores[c.positions[i]].fuerzaCinetica;
+                if (jugadores[c.positions[i]].fuerzaCinetica > 0) jugadores[c.positions[i]].SetFuerza(jugadores[c.positions[i]].fuerzaCinetica);
             }
             List<int> fuerzas = new List<int>();
             bool equal = false;
@@ -672,7 +672,7 @@ public class GameManager : MonoBehaviourPun
                     } 
                 }
                 //Todos los participantes reinician su fuerza
-                jugadores[c.positions[i]].Fuerza = 0;
+                jugadores[c.positions[i]].SetFuerza(0);
             }
         }
         return eliminados;
@@ -736,7 +736,6 @@ public class GameManager : MonoBehaviourPun
         //Se actualizan los valores de las Ultimates en todos los jugadores.
         foreach (PlayerController pc in jugadores)
         {
-            pc.CancelUltimate();
             pc.UpdateUltimateTime();
         }
     }
@@ -788,6 +787,7 @@ public class GameManager : MonoBehaviourPun
                 if (jugadores[i].actualFloor.Equals(f))
                 {
                     jugadores[i].Caer();
+                    jugadores[i].SetPuesto(jugadores.Count-1);
                     jugadores.RemoveAt(i);
                     ReordenarGolpeados(i);
                     i--;

@@ -7,6 +7,7 @@ public class Victory : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject[] playerDemo;
+    public GameObject[] puesto;
     private PlayerSelector inGameData;
     public TMP_Text hitsText;
     public TMP_Text jumpText;
@@ -19,6 +20,7 @@ public class Victory : MonoBehaviour
     {
         efectosSonido = GetComponent<EfectosSonido>();
         inGameData = FindObjectOfType<PlayerSelector>();
+        puesto[inGameData.puesto].SetActive(true);
         playerDemo[inGameData.playerWinner].SetActive(true);
         hitsText.SetText("Golpes dados: " + inGameData.hitsStats);
         jumpText.SetText("Saltos: " + inGameData.jumpStats);

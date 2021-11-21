@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviourPun
 
     //Editor
     public Ultimate tipoUltimate = Ultimate.MEGA_PUNCH;
+    public int tipoSkin;
     [HideInInspector]
     public Estado estadoActual = Estado.NORMAL;
     public Floor actualFloor;
@@ -48,6 +49,7 @@ public class PlayerController : MonoBehaviourPun
     //Último personaje que me ha golpeado
     public int golpeador;
     public EfectosSonido efectosSonido;
+    private int puesto = 0;
 
     public int Fuerza
     {
@@ -338,6 +340,17 @@ public class PlayerController : MonoBehaviourPun
         Fuerza--;
     }
 
+    public void SetFuerza(int fuerza)
+    {
+        photonView.RPC("SetFuerzaRPC", RpcTarget.All, fuerza);
+    }
+
+    [PunRPC]
+    public void SetFuerzaRPC(int fuerza)
+    {
+        Fuerza = fuerza;
+    }
+
     [PunRPC]
     public void NoHaPulsadoRPC()
     {
@@ -353,7 +366,18 @@ public class PlayerController : MonoBehaviourPun
         fuerzaCinetica = 0;
     }
 
+    public void SetPuesto(int puesto)
+    {
+        photonView.RPC("SetPuestoRPC", photonView.Owner, puesto);
+    }
+
     [PunRPC]
+    public void SetPuestoRPC(int puesto)
+    {
+        this.puesto = puesto;
+    }
+
+   [PunRPC]
     private void GolpearRPC()
     {
         //Si la boxeadora realiza un golpe, gasta la ultimate.
@@ -439,6 +463,7 @@ public class PlayerController : MonoBehaviourPun
                 HUDManager.instance.durationUltimate = 1;
             }
             photonView.RPC("PushRPC", photonView.Owner);
+            if(estadoActual==Estado.ULTIMATE && tipoUltimate == Ultimate.BOMBA_COLOR) CancelUltimate();
             this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
             fuerzaCinetica = 0;
             this.golpeador = golpeador;
@@ -675,6 +700,7 @@ public class PlayerController : MonoBehaviourPun
     public void SetHit(bool activated)
     {
         photonView.RPC("HitRPC", RpcTarget.AllViaServer, activated);
+        HUDManager.instance.UltimateCharge++;
     }
     [PunRPC]
     public void EscudoRPC(bool activated)
@@ -963,11 +989,13 @@ public class PlayerController : MonoBehaviourPun
                 //Añadir efectos de la boxeadora.
                 HUDManager.instance.durationUltimate = ULTIMATE_MAX_BEAT_DURATION;
             }
+            GetComponent<MegaPunchManager>().SetSmoke(true);
         }
         else
         {
             //Parar efectos de la boxeadora.
             animator.SetBool("IsSpecial", false);
+            GetComponent<MegaPunchManager>().SetSmoke(false);
         }
     }
     #endregion
@@ -1259,6 +1287,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void KillRPC()
     {
+        HUDManager.instance.UltimateCharge = HUDManager.ULTIMATE_MAX_CHARGE;
         killsStats++;
     }
 
@@ -1297,11 +1326,13 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void DoEndGameRPC(int num, int numBeats)
+    private void DoEndGameRPC(int num, int skin, int numBeats)
     {
         PlayerController mpc = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
         PlayerSelector ps = FindObjectOfType<PlayerSelector>();
+        ps.puesto = mpc.puesto;
         ps.playerWinner = num;
+        ps.playerWinnerSkin = skin;
         ps.hitsStats = mpc.hitsStats;
         ps.killsStats = mpc.killsStats;
         ps.pushStats = mpc.pushStats;

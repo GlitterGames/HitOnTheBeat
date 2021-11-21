@@ -14,6 +14,7 @@ public class EfectosSonido : MonoBehaviour
 
     public void PlayEffect(int numeroEfecto)
     {
+        if (!efecto) efecto = FindObjectOfType<AudioSource>();
         efecto.clip = audioClips[numeroEfecto];
         efecto.Play();
     }

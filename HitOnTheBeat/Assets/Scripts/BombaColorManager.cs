@@ -7,11 +7,11 @@ public class BombaColorManager : MonoBehaviourPun
 {
     public GameObject bombaNoUsable;
     public GameObject bombaUsable;
+    public GameObject explosion;
     [HideInInspector]
     public Floor target;
     [HideInInspector]
     public int fuerzaEmpleada;
-    private Vector3 localPos;
     private Vector3 initialPos;
     private float currentTime;
     // Start is called before the first frame update
@@ -19,11 +19,11 @@ public class BombaColorManager : MonoBehaviourPun
     public void StartAnimation(Floor target, float delay)
     {
         this.target = target;
+        explosion.SetActive(false);
         bombaNoUsable.SetActive(false);
         bombaUsable.SetActive(true);
         bombaUsable.GetComponent<Animator>().speed = 1f / (Ritmo.instance.delay * GetComponent<PlayerController>().ULTIMATE_MAX_BEAT_DURATION -1f);
         GetComponent<PlayerController>().SetAreaBombaColor(target);
-        localPos = bombaUsable.transform.localPosition;
         initialPos = bombaUsable.transform.position;
         PlayerController personaje = GetComponent<PlayerController>();
         fuerzaEmpleada = personaje.Fuerza;
@@ -44,6 +44,6 @@ public class BombaColorManager : MonoBehaviourPun
         currentTime = 0;
         bombaNoUsable.SetActive(true);
         bombaUsable.SetActive(false);
-        bombaUsable.transform.position = transform.TransformPoint(localPos);
+        explosion.SetActive(true);
     }
 }
