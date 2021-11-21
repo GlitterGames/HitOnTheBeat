@@ -105,6 +105,12 @@ MonoBehaviour:
   - StartSongRPC
   - EnviarEmpezarPartidaRPC
   - X2RPC
+  - CinematicBackgroundRPC
+  - CinematicRPC
+  - FallRPC
+  - SetColorBackgroundRPC
+  - SetColorNRPC
+  - SetPowerRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
