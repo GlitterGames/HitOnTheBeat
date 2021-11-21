@@ -13,9 +13,10 @@ public class NetworkController : MonoBehaviourPunCallbacks
     //[SerializeField] private UIManager _uiManager;
     public GameObject conectando;
     private SceneTransitioner st;
+    public EfectosSonido efectosSonido;
     void Start()
     {
-        Debug.Log("Start");
+        efectosSonido = GetComponent<EfectosSonido>();
     }
     [SerializeField] private InputField _name;
 
@@ -28,58 +29,34 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.NickName = _name.text;
-        Debug.Log(_name + "estás conectado al servidor de la región: " + PhotonNetwork.CloudRegion);
         PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("Conectado a la lobby general.");
-        //PhotonNetwork.CreateRoom(_name.text);
         SceneManager.LoadScene(1);
         st.EndTransition();
     }
 
-        public void Connect ()
+    public void Connect ()
     {
-        Debug.Log("Botón de connect pulsado");
+        efectosSonido.PlayEffect(0);
         st.StartTransition(1);
         if (!PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.ConnectUsingSettings())
             {
-                Debug.Log("\nEstamos conectados al servidor");
+                //Debug.Log("\nEstamos conectados al servidor");
             }
             else
             {
-                 Debug.Log("\nError al conectar al servidor");
+                //Debug.Log("\nError al conectar al servidor");
                 st.EndTransition();
             }
         }
         else
         {
-            Debug.Log("\nYa conectado");
-        }
-    }
-    public void Connect2()
-    {
-        Debug.Log("Botón de connect pulsado");
-        st.StartTransition(5);
-        if (!PhotonNetwork.IsConnected)
-        {
-            if (PhotonNetwork.ConnectUsingSettings())
-            {
-                Debug.Log("\nEstamos conectados al servidor");
-            }
-            else
-            {
-                Debug.Log("\nError al conectar al servidor");
-                st.EndTransition();
-            }
-        }
-        else
-        {
-            Debug.Log("\nYa conectado");
+            //Debug.Log("\nYa conectado");
         }
     }
 

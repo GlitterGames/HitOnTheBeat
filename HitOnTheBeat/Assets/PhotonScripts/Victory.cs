@@ -13,9 +13,11 @@ public class Victory : MonoBehaviour
     public TMP_Text pushText;
     public TMP_Text killsText;
     public TMP_Text averageRhythmText;
+    public EfectosSonido efectosSonido;
 
     void Start()
     {
+        efectosSonido = GetComponent<EfectosSonido>();
         inGameData = FindObjectOfType<PlayerSelector>();
         playerDemo[inGameData.playerWinner].SetActive(true);
         hitsText.SetText("Golpes dados: " + inGameData.hitsStats);
@@ -23,5 +25,18 @@ public class Victory : MonoBehaviour
         pushText.SetText("Golpes recibidos: " + inGameData.pushStats);
         killsText.SetText("Bajas: " + inGameData.killsStats);
         averageRhythmText.SetText("Ritmo ratio: " + inGameData.averageRhythmStats + "%");
+        switch (inGameData.selectedPlayer)
+        {
+            case 0:
+                efectosSonido.PlayEffect(0);    //Punch
+                break;
+            case 1:
+                efectosSonido.PlayEffect(1);    //XX
+                break;
+            case 2:
+                efectosSonido.PlayEffect(2);    //FANTASMA
+                break;
+        }
+        
     }
 }

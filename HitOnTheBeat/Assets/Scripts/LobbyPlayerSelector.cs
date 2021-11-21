@@ -19,8 +19,15 @@ public class LobbyPlayerSelector : MonoBehaviour
 	public GameObject[] marcador;
     public bool personajeSeleccionado = false;
 
+    public EfectosSonido efectosSonido;
+
+    void Start()
+    {
+        efectosSonido = GetComponent<EfectosSonido>();
+    }
     public void OnChangeCharacter(int type)
     {
+        efectosSonido.PlayEffect(type);
         if (!personajeSeleccionado)
         {
             personajeSeleccionado = true;

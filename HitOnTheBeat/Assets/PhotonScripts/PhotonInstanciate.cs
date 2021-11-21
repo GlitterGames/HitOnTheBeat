@@ -16,6 +16,8 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
 
     private PlayerSelector playerSelector;
 
+    private EfectosSonido efectosSonido;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -40,6 +42,8 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     }
     public void OnGoBack()
     {
+        efectosSonido = GetComponent<EfectosSonido>();
+        efectosSonido.PlayEffect(0);
         FindObjectOfType<SceneTransitioner>().GoToLobbyScene(0);
     }
 }
