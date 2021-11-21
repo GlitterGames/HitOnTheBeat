@@ -2694,8 +2694,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSelector: {fileID: 7322513980058453232, guid: 44eef140b86067448b5dab04696dd702, type: 3}
-  maxPlayersInRoom: 2
-  minPlayersInRoom: 2
+  maxPlayersInRoom: 1
+  minPlayersInRoom: 1
   roomName: 
   roomSize: 0
   buscarPartida: {fileID: 1233901355}

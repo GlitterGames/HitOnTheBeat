@@ -38,6 +38,8 @@ public class SceneTransitioner : MonoBehaviour
     #region Eventos
     public void GoToMainScene(float delay)
     {
+        efectosSonido = GetComponent<EfectosSonido>();
+        efectosSonido.PlayEffect(1);
         anim.SetTrigger("Activate");
         this.level = 0;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
@@ -83,6 +85,8 @@ public class SceneTransitioner : MonoBehaviour
     }
     public void GoToGemsScene(float delay)
     {
+        efectosSonido = GetComponent<EfectosSonido>();
+        efectosSonido.PlayEffect(0);
         anim.SetTrigger("Activate");
         this.level = 6;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
