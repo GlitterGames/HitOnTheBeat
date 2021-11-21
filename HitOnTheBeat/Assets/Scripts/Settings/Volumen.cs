@@ -8,6 +8,7 @@ public class Volumen : MonoBehaviour
 {
     public Slider sliderSonido, sliderEfectos;
     public Image imagenMuteSonido, imagenMuteEfectos;
+    public Sprite []sprites;
     public AudioMixer masterMixer;
 
     void Start()
@@ -37,16 +38,16 @@ public class Volumen : MonoBehaviour
     public void RevisarSiEstoyMuteSonido(float valor)
     {
         if (valor == -80)
-            imagenMuteSonido.enabled = true;
+            imagenMuteSonido.sprite = sprites[0];
         else
-            imagenMuteSonido.enabled = false;
+            imagenMuteSonido.sprite = sprites[1];
     }
 
         public void RevisarSiEstoyMuteEfectos(float valor)
     {
         if (valor == -80)
-            imagenMuteEfectos.enabled = true;
+            imagenMuteEfectos.sprite = sprites[2];
         else
-            imagenMuteEfectos.enabled = false;
+            imagenMuteEfectos.sprite = sprites[3];
     }
 }
