@@ -1676,7 +1676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b18d1b6654fe13346892ac7df5e30971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliderSonido: {fileID: 0}
+  sliderSonido: {fileID: 752701857}
   sliderEfectos: {fileID: 1368857034}
   imagenMuteSonido: {fileID: 1374724056}
   imagenMuteEfectos: {fileID: 1622442813}
@@ -1699,7 +1699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggle: {fileID: 353859081}
-  resolucionesDropDown: {fileID: 0}
+  resolucionesDropDown: {fileID: 736402740}
 --- !u!114 &690427541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1726,7 +1726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eaac5ef4fe7d62439a2dc2a86540e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slider: {fileID: 0}
+  slider: {fileID: 2037780052}
   sliderValue: 0
   panelBrillo: {fileID: 2747659850630348824}
   sprites:

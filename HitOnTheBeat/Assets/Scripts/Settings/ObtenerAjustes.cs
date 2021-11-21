@@ -13,7 +13,7 @@ public class ObtenerAjustes : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        valorBrillo = PlayerPrefs.GetFloat("brillo", 0.5f);
+        valorBrillo = PlayerPrefs.GetFloat("brillo", 0f);
         panelBrillo.color = new Color(panelBrillo.color.r, panelBrillo.color.g, panelBrillo.color.b, valorBrillo);
         valorMusica = PlayerPrefs.GetFloat("volumenSonido", -20);
         valorEfectos = PlayerPrefs.GetFloat("volumenEfectos", -20);
