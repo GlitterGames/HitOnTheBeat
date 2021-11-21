@@ -2692,7 +2692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSelector: {fileID: 7322513980058453232, guid: 44eef140b86067448b5dab04696dd702, type: 3}
-  maxPlayersInRoom: 4
+  maxPlayersInRoom: 2
   minPlayersInRoom: 2
   roomName: 
   roomSize: 0
@@ -4191,8 +4191,8 @@ MonoBehaviour:
   playerSelector: {fileID: 7322513980058453232, guid: 44eef140b86067448b5dab04696dd702, type: 3}
   JoinRandomBtn: {fileID: 1233901355}
   Log: {fileID: 0}
-  maxPlayersInRoom: 1
-  minPlayersInRoom: 1
+  maxPlayersInRoom: 2
+  minPlayersInRoom: 2
   PlayerCounter: {fileID: 0}
 --- !u!4 &1653187504
 Transform:

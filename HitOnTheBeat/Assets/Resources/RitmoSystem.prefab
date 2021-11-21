@@ -310,6 +310,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3cf53f3f1e698034ba58eddb55366f24, type: 3}
   cancionActual: {fileID: 0}
   ritmo: {fileID: 0}
+  duracion: 0
 --- !u!82 &89253438023978382
 AudioSource:
   m_ObjectHideFlags: 0

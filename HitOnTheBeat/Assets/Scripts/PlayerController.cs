@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviourPun
     public GameObject hit;
     //Último personaje que me ha golpeado
     public int golpeador;
+    public EfectosSonido efectosSonido;
 
     public int Fuerza
     {
@@ -127,7 +128,7 @@ public class PlayerController : MonoBehaviourPun
     void Awake()
     {
         powerCoroutine = null;
-    my_input = new InputController();
+        my_input = new InputController();
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
@@ -156,6 +157,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Start()
     {
+        efectosSonido = GetComponent<EfectosSonido>();
         if (photonView.IsMine) StartCoroutine(PrimerPintado());
         StartCoroutine(SetEscudo(false));
     }
@@ -345,6 +347,7 @@ public class PlayerController : MonoBehaviourPun
 
     public void Golpear()
     {
+        efectosSonido.PlayEffect(0);
         photonView.RPC("GolpearRPC", RpcTarget.AllViaServer);
         photonView.RPC("HitRPC", photonView.Owner);
         fuerzaCinetica = 0;
@@ -631,6 +634,7 @@ public class PlayerController : MonoBehaviourPun
     {
         //Si ya tienes un power up no puedes tener otro, pero el que
         //estaba se pone a 0
+        efectosSonido.PlayEffect(1);
         if (Power_Up.NORMAL != this.Power) {
             SetPowerUpFloor(actualFloor, Floor.Type.Vacio);
             return;
@@ -805,6 +809,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void ChangeStateRPC(Estado state)
     {
+        efectosSonido.PlayEffect(0);
         estadoActual = state;
     }
 
