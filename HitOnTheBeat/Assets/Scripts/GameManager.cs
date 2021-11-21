@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviourPun
 
     void Awake()
     {
-        TIME = 200f;
+        TIME = duracion;
         numRows = 5;
         spawn = false;
         //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
@@ -207,6 +207,7 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
+    #region Colisiones
     //Si ya existe esa colision te devuelve la posición en la que te encuentra
     // -1 si no la encuentra
     private int Exists(List<Colisions> colisiones, Floor f) {
@@ -408,19 +409,11 @@ public class GameManager : MonoBehaviourPun
                 bool echado = jugadores[c.positions[0]].EcharOne(dir1, 1, moreThanTwo, notCinematic, sameFloor, c.positions[1]);
                 if (echado) {
                     int i = c.positions[0];
-                    if (jugadores[i].golpeador != -1)
-                    {
-                        jugadores[jugadores[i].golpeador].killsStats = jugadores[jugadores[i].golpeador].killsStats + 1;
-                    }
                     eliminados.Add(i);
                 } 
                 echado = jugadores[c.positions[1]].EcharOne(dir0, 1, moreThanTwo, notCinematic, sameFloor, c.positions[0]);
                 if (echado) {
                     int i = c.positions[0];
-                    if (jugadores[i].golpeador != -1)
-                    {
-                        jugadores[jugadores[i].golpeador].killsStats = jugadores[jugadores[i].golpeador].killsStats + 1;
-                    }
                     eliminados.Add(i);
                 } 
             }
@@ -473,10 +466,6 @@ public class GameManager : MonoBehaviourPun
                         bool echado = jugadores[c.positions[i]].EcharOne(jugadores[i].floorDir, 1, moreThanTwo, notCinematic, sameFloor, -1);
                         if (echado) {
                             int k = c.positions[i];
-                            if (jugadores[k].golpeador != -1)
-                            {
-                                jugadores[jugadores[k].golpeador].killsStats = jugadores[jugadores[k].golpeador].killsStats + 1;
-                            }
                             eliminados.Add(k);
                         }
                     }
@@ -495,10 +484,6 @@ public class GameManager : MonoBehaviourPun
                             if (echado)
                             {
                                 int k = c.positions[i];
-                                if (jugadores[k].golpeador != -1)
-                                {
-                                    jugadores[jugadores[k].golpeador].killsStats = jugadores[jugadores[k].golpeador].killsStats + 1;
-                                }
                                 eliminados.Add(k);
                             }
                         }
@@ -510,10 +495,6 @@ public class GameManager : MonoBehaviourPun
                             if (echado)
                             {
                                 int k = c.positions[i];
-                                if (jugadores[k].golpeador != -1)
-                                {
-                                    jugadores[jugadores[k].golpeador].killsStats = jugadores[jugadores[k].golpeador].killsStats + 1;
-                                }
                                 eliminados.Add(k);
                             }
                         }
@@ -551,19 +532,11 @@ public class GameManager : MonoBehaviourPun
                 bool echado = jugadores[c.positions[0]].EcharOne(dir1, 1, moreThanTwo, notCinematic, sameFloor, c.positions[1]);
                 if (echado) {
                     int i = c.positions[0];
-                    if (jugadores[i].golpeador != -1)
-                    {
-                        jugadores[jugadores[i].golpeador].killsStats = jugadores[jugadores[i].golpeador].killsStats + 1;
-                    }
                     eliminados.Add(i);
                 } 
                 echado = jugadores[c.positions[1]].EcharOne(dir0, 1, moreThanTwo, notCinematic, sameFloor, c.positions[0]);
                 if (echado) {
                     int i = c.positions[1];
-                    if (jugadores[i].golpeador != -1)
-                    {
-                        jugadores[jugadores[i].golpeador].killsStats = jugadores[jugadores[i].golpeador].killsStats + 1;
-                    }
                     eliminados.Add(i);
                 } 
             }
@@ -572,13 +545,9 @@ public class GameManager : MonoBehaviourPun
             {
                 jugadores[c.positions[0]].Golpear();
                 int max = jugadores[c.positions[0]].Fuerza - jugadores[c.positions[1]].Fuerza;
-                bool echado = jugadores[c.positions[1]].EcharOne(jugadores[c.positions[0]].floorDir, max, moreThanTwo, notCinematic, sameFloor, -1);
+                bool echado = jugadores[c.positions[1]].EcharOne(jugadores[c.positions[0]].floorDir, max, moreThanTwo, notCinematic, sameFloor, c.positions[0]);
                 if (echado) {
                     int i = c.positions[1];
-                    if (jugadores[i].golpeador != -1)
-                    {
-                        jugadores[jugadores[i].golpeador].killsStats = jugadores[jugadores[i].golpeador].killsStats + 1;
-                    }
                     eliminados.Add(i);
                 }
                 
@@ -588,14 +557,10 @@ public class GameManager : MonoBehaviourPun
             {
                 jugadores[c.positions[1]].Golpear();
                 int max = jugadores[c.positions[1]].Fuerza - jugadores[c.positions[0]].Fuerza;
-                bool echado = jugadores[c.positions[0]].EcharOne(jugadores[c.positions[1]].floorDir, max, moreThanTwo, notCinematic, sameFloor, -1);
+                bool echado = jugadores[c.positions[0]].EcharOne(jugadores[c.positions[1]].floorDir, max, moreThanTwo, notCinematic, sameFloor, c.positions[1]);
                 if (echado)
                 {
                     int i = c.positions[0];
-                    if (jugadores[i].golpeador != -1)
-                    {
-                        jugadores[jugadores[i].golpeador].killsStats = jugadores[jugadores[i].golpeador].killsStats + 1;
-                    }
                     eliminados.Add(i);
                 }
             }
@@ -650,10 +615,6 @@ public class GameManager : MonoBehaviourPun
                     if (echado)
                     {
                         int k = c.positions[i];
-                        if (jugadores[k].golpeador != -1)
-                        {
-                            jugadores[jugadores[k].golpeador].killsStats = jugadores[jugadores[k].golpeador].killsStats + 1;
-                        }
                         eliminados.Add(k);
                     }
                 }
@@ -664,10 +625,6 @@ public class GameManager : MonoBehaviourPun
                     bool echado = jugadores[c.positions[i]].EcharOne(jugadores[c.positions[i]].floorDir, maxFuerza - fuerzas[i], moreThanTwo, notCinematic, sameFloor, -1);
                     if (echado) {
                         int k = c.positions[i];
-                        if (jugadores[k].golpeador != -1)
-                        {
-                            jugadores[jugadores[k].golpeador].killsStats = jugadores[jugadores[k].golpeador].killsStats + 1;
-                        }
                         eliminados.Add(k);
                     } 
                 }
@@ -678,6 +635,7 @@ public class GameManager : MonoBehaviourPun
         return eliminados;
 
     }
+    #endregion
     //Esta region podría mejorarse mediante la implementación de eventos.
     #region PlayerControllerManagement
     public void RegisterMovement(int id, int row, int index, FloorDetectorType dir)
@@ -742,6 +700,8 @@ public class GameManager : MonoBehaviourPun
     }
 
     #endregion
+
+    #region ROWS and POWER UPS
     public void DestroyRow(int row, float seg, int repeticiones) {
         foreach (Floor f in casillas[row])
         {
@@ -816,35 +776,30 @@ public class GameManager : MonoBehaviourPun
         }
         yield return new WaitForSeconds(seg);
         jugadores[0].CinematicBackground(row);
-        yield return new WaitForEndOfFrame();
     }
-	
     private IEnumerator DestroyRows()
     {
-        for (int i = numRows; i>=0; i--)
+        int numrep = numRows;
+        for (int i = numrep; i>=0; i--)
         {
-
             yield return new WaitForSeconds(TIME/5);
-            DestroyRow(i, 3f, 5);
-            numRows = i;
+            numRows--;
+            DestroyRow(i, 1f, 3);
         }
-        
     }
     private IEnumerator SpawnPowerUps()
     {
         //Tiempo de espera entre el spawn de otro power up
-        float espera = 5f;
-        float numRep = TIME / (int)espera;
-        while (true)
+        float espera = 10f;
+        bool seguir = true;
+        while (seguir)
         {
-            for (int i = 0; i < numRep; i++)
-            {
-                yield return new WaitForSeconds(espera);
-                spawn = false;
-                yield return new WaitUntil(() => spawn);
-                spawn = false;
-                SpawnPowerUp(15f);
-            }
+            if (numRows < 3) { seguir = false; }
+            yield return new WaitForSeconds(espera);
+            spawn = false;
+            yield return new WaitUntil(() => spawn);
+            spawn = false;
+            SpawnPowerUp(15f);
         }
     }
     //Cuando se cambie el master deberán ejecutarse estos métodos con valores actualizados.
@@ -858,6 +813,7 @@ public class GameManager : MonoBehaviourPun
     {
         bool seguir = true;
         Floor f = null;
+        if (numRows < 3) { return; }
         while (seguir) { 
             seguir = false;
             int i = Random.Range(0, numRows);
@@ -867,9 +823,11 @@ public class GameManager : MonoBehaviourPun
             {
                 if (jugadores[a].actualFloor.Equals(f)) seguir = true;
             }
+            if (f.GetPower() != Floor.Type.Vacio) seguir = true;
+            if (numRows < 3) { return; }
         }
         int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;
-        int k = Random.Range(1, num);
+        int k = Random.Range(2, num);
         f.powertime = StartCoroutine(SetType(f, (Floor.Type)k, time));
     }
     private IEnumerator SetType(Floor f, Floor.Type t, float time)
@@ -880,7 +838,7 @@ public class GameManager : MonoBehaviourPun
         if(f!=null)FindObjectOfType<PhotonInstanciate>().my_player.
             GetComponent<PlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
     }
-
+    #endregion 
     public void ChangeAnimationSpeedOnAllPlayers(float bpm)
     {
         for (int i = 0; i < jugadores.Count; i++)
