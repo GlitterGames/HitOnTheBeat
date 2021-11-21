@@ -124,10 +124,10 @@ public class GameManager : MonoBehaviourPun
     //Se ejecuta cada vez que comienza un nuevo Beat.
     public void DoBeatActions()
     {
+        ApplyEfectsFromFloor();
         PerformUltimates();
         PerformMovements();
         PerformColision();
-        ApplyEfectsFromFloor();
         spawn = true;
         while (fallenFloors.Count>0)
         {
