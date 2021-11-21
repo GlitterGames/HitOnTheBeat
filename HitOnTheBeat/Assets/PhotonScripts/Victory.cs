@@ -27,7 +27,13 @@ public class Victory : MonoBehaviour
         pushText.SetText("Golpes recibidos: " + inGameData.pushStats);
         killsText.SetText("Bajas: " + inGameData.killsStats);
         averageRhythmText.SetText("Ritmo ratio: " + inGameData.averageRhythmStats + "%");
-        switch (inGameData.selectedPlayer)
+        SonarEfecto(inGameData.selectedPlayer);
+    }
+
+        public IEnumerator SonarEfecto(int t)
+    {
+        yield return new WaitForSeconds(2);
+        switch (t)
         {
             case 0:
                 efectosSonido.PlayEffect(0);    //Punch
@@ -39,6 +45,5 @@ public class Victory : MonoBehaviour
                 efectosSonido.PlayEffect(2);    //FANTASMA
                 break;
         }
-        
     }
 }

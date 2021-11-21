@@ -306,8 +306,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canciones:
-  - {fileID: 8300000, guid: ec235ccf699a6c243a29a8dcdb5c4dda, type: 3}
-  - {fileID: 8300000, guid: 3cf53f3f1e698034ba58eddb55366f24, type: 3}
+  - {fileID: 8300000, guid: f20bb7e6c627aa44db8d8ebf82b37d07, type: 3}
+  - {fileID: 8300000, guid: c0f8586fda1a2414db594caa919fd66d, type: 3}
   cancionActual: {fileID: 0}
   ritmo: {fileID: 0}
   duracion: 0
