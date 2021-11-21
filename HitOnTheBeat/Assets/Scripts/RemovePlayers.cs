@@ -17,10 +17,10 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("SetPlayerCamera",
+        if(gm.jugadores[0]) FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("SetPlayerCamera",
             collider.GetComponent<PhotonView>().Owner, gm.jugadores[0].photonView.ViewID);
 
-        if (gm.jugadores.Count == 1)
+        if (gm.jugadores.Count <= 1)
         {
             FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoEndGameRPC", RpcTarget.AllViaServer, (int) gm.jugadores[0].tipoUltimate, gm.jugadores[0].tipoSkin, FindObjectOfType<Ritmo>().numBeats);
             StartCoroutine(ExitMaster());
