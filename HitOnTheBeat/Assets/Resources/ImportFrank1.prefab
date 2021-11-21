@@ -259,7 +259,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 52
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -350,9 +350,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioClips:
-  - {fileID: 8300000, guid: a0bd553d47e4f1d4e85ca13598d722d0, type: 3}
   - {fileID: 8300000, guid: e7a38370e5aa6004994d65484c998ec7, type: 3}
   - {fileID: 8300000, guid: 850a83f5415d54248b65be98f866ddb5, type: 3}
+  - {fileID: 8300000, guid: 9a8d908a6df65e44c8283ca2272a4d4f, type: 3}
+  - {fileID: 8300000, guid: 5c76fb8203c5f4d4a985c741f12ef508, type: 3}
+  - {fileID: 8300000, guid: 6906fa54742afca44b3d730d25ba1f99, type: 3}
   efecto: {fileID: 0}
 --- !u!1 &2473856199421206113
 GameObject:
