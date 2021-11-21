@@ -28,19 +28,12 @@ public class Victory : MonoBehaviour
         switch (inGameData.selectedPlayer)
         {
             case 0:
-            case 1:
-            case 2:
-            case 3:
                 efectosSonido.PlayEffect(0);    //Punch
                 break;
-            case 4:
-            case 5:
-            case 6:
-            case 7:
+            case 1:
                 efectosSonido.PlayEffect(1);    //XX
                 break;
-            case 8:
-            case 9:
+            case 2:
                 efectosSonido.PlayEffect(2);    //FANTASMA
                 break;
         }
