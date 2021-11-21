@@ -117,6 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ULTIMATE_MAX_BEAT_DURATION: 7
   tipoUltimate: 2
+  tipoSkin: 0
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
@@ -1152,13 +1153,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
---- !u!1 &856487040640255666 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4728838632997408626, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
-  m_PrefabInstance: {fileID: 5351102925179636160}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &47581092670528520 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5398660376114238920, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
+  m_PrefabInstance: {fileID: 5351102925179636160}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &856487040640255666 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4728838632997408626, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
   m_PrefabInstance: {fileID: 5351102925179636160}
   m_PrefabAsset: {fileID: 0}

@@ -117,6 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ULTIMATE_MAX_BEAT_DURATION: 7
   tipoUltimate: 2
+  tipoSkin: 1
   estadoActual: 0
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
