@@ -22,7 +22,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     public Button unirseSala;
     public Button empezarPartida;
     public Text PlayerCounter;
-    
+    public EfectosSonido efectosSonido;
 
 
 
@@ -32,7 +32,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
         if (!FindObjectOfType<PlayerSelector>()) DontDestroyOnLoad(Instantiate(playerSelector,
              playerSelector.transform.position, playerSelector.transform.rotation));
 
-
+        efectosSonido = GetComponent<EfectosSonido>();
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -41,6 +41,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
+        efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
         unirseSala.interactable = false;
         crearSala.interactable = false;
@@ -70,6 +71,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     }
   public void JoinRandom()
     {
+        efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
         unirseSala.interactable = false;
         crearSala.interactable = false;
@@ -85,7 +87,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
         if (PhotonNetwork.CreateRoom(null, new Photon.Realtime.RoomOptions()
          {MaxPlayers = maxPlayersInRoom}))
          {
-           Debug.Log("Sala creada con éxito");
+           Debug.Log("Sala creada con ï¿½xito");
          }
          else
          {
@@ -106,6 +108,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
 
     public void JoinLobbyOnClick()
     {
+        efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
         unirseSala.interactable = false;
         crearSala.interactable = false;
@@ -133,14 +136,13 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
    
     public void EnviarEmpezarPartida()
     {
-        Debug.Log("Enviando mensaje ");
+        efectosSonido.PlayEffect(2);
         photonView.RPC("EnviarEmpezarPartidaRPC", RpcTarget.AllViaServer);
     }
 
     [PunRPC]
     public void EnviarEmpezarPartidaRPC()
     {
-        Debug.Log("Mensaje RPC");
         LoadMap();
     }
     public void LoadMap()
@@ -151,6 +153,7 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
 
     public void OnGoBack()
     {
+        efectosSonido.PlayEffect(1);
         PhotonNetwork.Disconnect();
     }
 
@@ -158,5 +161,11 @@ public class LobbyPrivado : MonoBehaviourPunCallbacks
     {
         base.OnDisconnected(cause);
         FindObjectOfType<SceneTransitioner>().StartTransition(0, 0);
+    }
+
+    public void GoSettings()
+    {
+         efectosSonido.PlayEffect(0);
+         FindObjectOfType<SceneTransitioner>().StartTransition(7, 0.5f);;
     }
 }
