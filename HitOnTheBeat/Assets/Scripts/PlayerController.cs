@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviourPun
     public int m_fuerza;
     public GameObject escudo;
     public GameObject hit;
+    public GameObject X2;
     //Último personaje que me ha golpeado
     public int golpeador;
 
@@ -157,7 +158,7 @@ public class PlayerController : MonoBehaviourPun
     void Start()
     {
         if (photonView.IsMine) StartCoroutine(PrimerPintado());
-        StartCoroutine(SetEscudo(false));
+        SetEscudo(false);
     }
 
     IEnumerator PrimerPintado()
@@ -650,20 +651,23 @@ public class PlayerController : MonoBehaviourPun
             case Floor.Type.RitmoDuplicado:
                 Debug.Log("Poniendo mi power a X2");
                 this.Power = Power_Up.RITMODUPLICADO;
+                SetX2(true);
                 break;
             case Floor.Type.Escudo:
                 Debug.Log("Poniendo mi power a ESCUDO");
                 this.Power = Power_Up.ESCUDO;
-                photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, true);
+                SetEscudo(true);
                 break;
         }
     }
     //Escudo y Hit
-    public IEnumerator SetEscudo(bool activated)
+    public void SetEscudo(bool activated)
     {
-        Debug.Log("ESCUDO " + activated);
-        yield return new WaitForSeconds(0.5f);
         photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, activated);
+    }
+    public void SetX2(bool activated)
+    {
+        photonView.RPC("X2RPC", RpcTarget.AllViaServer, activated);
     }
     public void SetHit(bool activated)
     {
@@ -679,6 +683,11 @@ public class PlayerController : MonoBehaviourPun
     {
         hit.SetActive(activated);
     }
+    [PunRPC]
+    public void X2RPC(bool activated)
+    {
+        X2.SetActive(activated);
+    }
     //End of the use of the PowerUp
     public void EndPowerUp()
     {
@@ -687,10 +696,10 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EndPowerUpRPC()
     {
+        if (this.Power == Power_Up.RITMODUPLICADO) SetX2(false);
+        if (this.Power == Power_Up.ESCUDO) SetEscudo(false);
         this.Power = Power_Up.NORMAL;
-        photonView.RPC("EscudoRPC", RpcTarget.AllViaServer, false);
     }
-
     public IEnumerator PowerUp()
     {
         yield return new WaitForSeconds(durationPowerUp);
