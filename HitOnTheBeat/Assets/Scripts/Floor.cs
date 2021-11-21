@@ -126,7 +126,7 @@ public class Floor : MonoBehaviour
     public Floor[] GetAdyacentes() {
         return adyacentes;
     }
-    public void SetPower(Type t, bool cogido, bool soyYo)
+    public void SetPower(Floor.Type t, bool cogido, bool soyYo)
     {
         Material m = FindObjectOfType<GameManager>().materiales.normal;
         this.type = t;
