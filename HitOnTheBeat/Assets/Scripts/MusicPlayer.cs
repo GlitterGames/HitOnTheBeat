@@ -108,19 +108,19 @@ public class MusicPlayer : MonoBehaviourPun
             {
                 case 0:
                         segundosEspera = 56.88f;
-                        bpm = 0.88f;
+                        bpm = 1.66f;
                     break;
                 case 1:
                         segundosEspera = 28.45f;
-                        bpm = 0.44f;
+                        bpm = 0.88f;
                     break;
                 case 2:
                         segundosEspera = 14.32f;
-                        bpm = 0.88f;
+                        bpm = 1.66f;
                     break;
                 case 3:
                         segundosEspera = 20.45f;
-                        bpm = 0.44f;
+                        bpm = 0.88f;
                     break;
                 default:
                         segundosEspera = 20;

@@ -264,7 +264,7 @@ MonoBehaviour:
     fallo: {r: 1, g: 0.39999998, b: 0.39999998, a: 1}
   marcador: {fileID: 8925135898577463437}
   indicador: {fileID: 733187108676576993}
-  successPercentaje: 0.3
+  successPercentaje: 0.5
   delay: 2
   puedeClickear: 0
   beatDone: 0

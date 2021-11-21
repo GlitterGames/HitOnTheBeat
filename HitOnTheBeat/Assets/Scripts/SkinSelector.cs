@@ -42,6 +42,27 @@ public class SkinSelector : MonoBehaviour
         skins[selectedSkin].boton.Select();
     }
 
+    private void OnDisable()
+    {
+        int select = 0;
+        switch (player)
+        {
+            case 0:
+                select = PlayerPrefs.GetInt("skinPunchPrincess", 0);
+                break;
+            case 1:
+                select = PlayerPrefs.GetInt("skinXXColor", 0);
+                break;
+            case 2:
+                select = PlayerPrefs.GetInt("skinFrank", 0);
+                break;
+        }
+        if (select != selectedSkin)
+        {
+            skins[selectedSkin].skinDemo.SetActive(false);
+        }
+    }
+
     public void SelectSkin(int index)
     {
         Skin skin = skins[index];
@@ -81,6 +102,7 @@ public class SkinSelector : MonoBehaviour
         if (gemas < skin.precio) return;
         else FindObjectOfType<GemasManager>().AddTickets(-skin.precio);
         skin.purchased = true;
+        skins[selectedSkin] = skin;
         comprar.interactable = false;
         precioText.SetText("");
         switch (player)
