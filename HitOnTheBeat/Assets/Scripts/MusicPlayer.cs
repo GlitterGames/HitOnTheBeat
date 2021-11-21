@@ -147,6 +147,6 @@ public class MusicPlayer : MonoBehaviourPun
     private void SendChangeBMPRPC(float bpm)
     {
         gameManager.ChangeAnimationSpeedOnAllPlayers(bpm);
-        ritmo.delay = bpm;
+        Ritmo.instance.delay = bpm;
     }
 }
