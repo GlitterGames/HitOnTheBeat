@@ -1315,7 +1315,10 @@ public class PlayerController : MonoBehaviourPun
 
     public void ChangeAnimationSpeed(float bpm)
     {
-        switch(bpm)
+        AnimVelocity = 1.8f - (0.4f * (bpm - 1));
+        secondsToCount = (1.4f / (AnimVelocity/1.4f)) * 0.3f / 1.4f;
+        AnimVelocityCollision = (1.4f / (AnimVelocity/1.4f)) * 0.7f / 1.4f;
+        /*switch(bpm)
         {
             case 1:
                 AnimVelocity = 1.8f;
@@ -1334,7 +1337,7 @@ public class PlayerController : MonoBehaviourPun
                 secondsToCount = 0.4f;
                 AnimVelocityCollision = 0.98f;
                 break;
-        }
+        }*/
         animator.SetFloat("AnimMultiplier", AnimVelocity);
     }
 }

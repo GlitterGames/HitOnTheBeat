@@ -12,7 +12,7 @@ public class MusicPlayer : MonoBehaviourPun
     public Ritmo ritmo;
     private int pos;
     private int numeroCambios = 0;
-    private int segundosEspera;
+    private float segundosEspera;
     private float bpm;
     private GameManager gameManager;
     public float duracion;
@@ -65,35 +65,35 @@ public class MusicPlayer : MonoBehaviourPun
             switch(numeroCambios)
             {
                 case 0:
-                        segundosEspera = 10;
+                        segundosEspera = 19.20f;
                         bpm = 1.34f;
                     break;
                 case 1:
-                        segundosEspera = 10;
+                        segundosEspera = 29.14f;
                         bpm = 1.14f;
                     break;
                 case 2:
-                        segundosEspera = 10;
+                        segundosEspera = 8.73f;
                         bpm = 1.09f;
                     break;
                 case 3:
-                        segundosEspera = 20;
+                        segundosEspera = 8.38f;
                         bpm = 1.04f;
                     break;
                 case 4:
-                        segundosEspera = 20;
+                        segundosEspera = 8;
                         bpm = 1;
                     break;
                 case 5:
-                        segundosEspera = 20;
+                        segundosEspera = 7.68f;
                         bpm = 0.96f;
                     break;
                 case 6:
-                        segundosEspera = 20;
+                        segundosEspera = 7.39f;
                         bpm = 0.92f;
                     break;
                 case 7:
-                        segundosEspera = 20;
+                        segundosEspera = 51.52f;
                         bpm = 0.88f;
                     break;
                 default:
@@ -107,24 +107,20 @@ public class MusicPlayer : MonoBehaviourPun
             switch(numeroCambios)
             {
                 case 0:
-                        segundosEspera = 30;
-                        bpm = 1;
+                        segundosEspera = 56.88f;
+                        bpm = 0.88f;
                     break;
                 case 1:
-                        segundosEspera = 20;
-                        bpm = 2;
+                        segundosEspera = 28.45f;
+                        bpm = 0.44f;
                     break;
                 case 2:
-                        segundosEspera = 20;
-                        bpm = 3;
+                        segundosEspera = 14.32f;
+                        bpm = 0.88f;
                     break;
                 case 3:
-                        segundosEspera = 20;
-                        bpm = 2;
-                    break;
-                case 4:
-                        segundosEspera = 20;
-                        bpm = 2;
+                        segundosEspera = 20.45f;
+                        bpm = 0.44f;
                     break;
                 default:
                         segundosEspera = 20;
