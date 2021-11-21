@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19412693, g: 0.042998955, b: 0.17586365, a: 1}
+  m_IndirectSpecularColor: {r: 0.19417849, g: 0.043102093, b: 0.17582595, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -774,11 +774,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.06297418
+      value: 0.06297422
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.021232797
+      value: -0.021232812
       objectReference: {fileID: 0}
     - target: {fileID: 1146539692200160418, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -838,11 +838,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4117320156741995903, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.06297418
+      value: 0.06297422
       objectReference: {fileID: 0}
     - target: {fileID: 4117320156741995903, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.021232797
+      value: -0.021232812
       objectReference: {fileID: 0}
     - target: {fileID: 4117320157406309160, guid: 4085eb79fd06c744d98472d27da13c5a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6693,6 +6693,58 @@ PrefabInstance:
       propertyPath: f.Array.data[3]
       value: 
       objectReference: {fileID: 630375066}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[0].skins.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[1].skins.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[2].skins.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[0].skins.Array.data[0]
+      value: 
+      objectReference: {fileID: 1784523174532803008, guid: d73a9841283c89041833c85ae2d22013, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[0].skins.Array.data[1]
+      value: 
+      objectReference: {fileID: 1784523174532803008, guid: 339d3d0f00124074db2d224d9f3e91b8, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[0].skins.Array.data[2]
+      value: 
+      objectReference: {fileID: 1784523174532803008, guid: 1562693b30c583742b84867d78f08864, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[0].skins.Array.data[3]
+      value: 
+      objectReference: {fileID: 1784523174532803008, guid: 3df1913972c096343996be5d6950aaf8, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[1].skins.Array.data[0]
+      value: 
+      objectReference: {fileID: 1385504132329047271, guid: ed429d607ae00a24f8feb1395c455b41, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[1].skins.Array.data[1]
+      value: 
+      objectReference: {fileID: 1385504132329047271, guid: f010dc86b4c10874c8a2447323b8a68d, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[1].skins.Array.data[2]
+      value: 
+      objectReference: {fileID: 1385504132329047271, guid: 8d5fe93404477ac4dbb7427650217b2a, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[1].skins.Array.data[3]
+      value: 
+      objectReference: {fileID: 1385504132329047271, guid: aba95c7186ec5114092b9e52f140882a, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[2].skins.Array.data[0]
+      value: 
+      objectReference: {fileID: 856494220921389532, guid: ea07a8eed03b68140a3c8331f18b592d, type: 3}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: playerAvatar.Array.data[2].skins.Array.data[1]
+      value: 
+      objectReference: {fileID: 856494220921389532, guid: 654e981a2ad4d094ba9608bcec862914, type: 3}
     - target: {fileID: 7393199628301082237, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
       propertyPath: m_Name
       value: '@PhotonInstanciate'

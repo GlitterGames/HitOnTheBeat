@@ -6,6 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class LobbyPlayerSelector : MonoBehaviour
 {
+    [System.Serializable]
+    public struct Skins
+    {
+        public List<GameObject> skins;
+    }
+    public List<Skins> playerDemo;
     private bool selected = false;
     public Button boton;
     public Button boton2;
@@ -15,7 +21,6 @@ public class LobbyPlayerSelector : MonoBehaviour
     public string[] nombre = new string[3];
     [TextArea(1, 10)]
     public string[] info;
-    public GameObject[] playerDemo;
 	public GameObject[] marcador;
     public bool personajeSeleccionado = false;
 
@@ -35,12 +40,27 @@ public class LobbyPlayerSelector : MonoBehaviour
             if (!selected) boton2.interactable = true;
             if (!selected) boton3.interactable = true;
         }
-        playerDemo[FindObjectOfType<PlayerSelector>().selectedPlayer].SetActive(false);
-        playerDemo[type].SetActive(true);
+        int selectedSkin = 0;
+        switch (type)
+        {
+            case 0:
+                selectedSkin = PlayerPrefs.GetInt("skinPunchPrincess", 0);
+                break;
+            case 1:
+                selectedSkin = PlayerPrefs.GetInt("skinXXColor", 0);
+                break;
+            case 2:
+                selectedSkin = PlayerPrefs.GetInt("skinFrank", 0);
+                break;
+        }
+        playerDemo[FindObjectOfType<PlayerSelector>().selectedPlayer]
+            .skins[FindObjectOfType<PlayerSelector>().selectedSkin].SetActive(false);
+        playerDemo[type].skins[selectedSkin].SetActive(true);
         marcador[FindObjectOfType<PlayerSelector>().selectedPlayer].SetActive(false);
         marcador[type].SetActive(true);
         nombreText.text = nombre[type];
         infoText.text = info[type];
         FindObjectOfType<PlayerSelector>().selectedPlayer = type;
+        FindObjectOfType<PlayerSelector>().selectedSkin = selectedSkin;
     }
 }
