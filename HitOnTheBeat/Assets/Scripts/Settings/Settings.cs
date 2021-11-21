@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class Settings : MonoBehaviour
 {
+    public EfectosSonido efectosSonido;
     /*private void Awake()
     {
         var noDestruir = FindObjectsOfType<Settings>();
@@ -17,8 +18,13 @@ public class Settings : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
     }*/
+    void Start()
+    {
+        efectosSonido = GetComponent<EfectosSonido>();
+    }
     public void goBack()
     {
+        efectosSonido.PlayEffect(1);
         FindObjectOfType<SceneTransitioner>().StartTransition(1, 0.5f);;
     }
 }

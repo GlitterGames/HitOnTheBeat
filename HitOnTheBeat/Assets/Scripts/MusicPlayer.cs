@@ -13,7 +13,7 @@ public class MusicPlayer : MonoBehaviourPun
     private int pos;
     private int numeroCambios = 0;
     private int segundosEspera;
-    private int bpm;
+    private float bpm;
     private GameManager gameManager;
     public float duracion;
   private int GetRandom()
@@ -66,23 +66,35 @@ public class MusicPlayer : MonoBehaviourPun
             {
                 case 0:
                         segundosEspera = 10;
-                        bpm = 1;
+                        bpm = 1.34f;
                     break;
                 case 1:
                         segundosEspera = 10;
-                        bpm = 2;
+                        bpm = 1.14f;
                     break;
                 case 2:
                         segundosEspera = 10;
-                        bpm = 3;
+                        bpm = 1.09f;
                     break;
                 case 3:
                         segundosEspera = 20;
-                        bpm = 2;
+                        bpm = 1.04f;
                     break;
                 case 4:
                         segundosEspera = 20;
-                        bpm = 2;
+                        bpm = 1;
+                    break;
+                case 5:
+                        segundosEspera = 20;
+                        bpm = 0.96f;
+                    break;
+                case 6:
+                        segundosEspera = 20;
+                        bpm = 0.92f;
+                    break;
+                case 7:
+                        segundosEspera = 20;
+                        bpm = 0.88f;
                     break;
                 default:
                         segundosEspera = 20;
@@ -126,13 +138,13 @@ public class MusicPlayer : MonoBehaviourPun
         StartCoroutine(ChangeBMP(numeroCancion, numeroCambios));
     }
 
-    public void SendChangeBMP(int bpm)
+    public void SendChangeBMP(float bpm)
     {
         photonView.RPC("SendChangeBMPRPC", RpcTarget.AllViaServer, bpm);
     }
     
     [PunRPC]
-    private void SendChangeBMPRPC(int bpm)
+    private void SendChangeBMPRPC(float bpm)
     {
         gameManager.ChangeAnimationSpeedOnAllPlayers(bpm);
         ritmo.delay = bpm;

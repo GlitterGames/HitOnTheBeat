@@ -884,7 +884,7 @@ public class GameManager : MonoBehaviourPun
             GetComponent<PlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
     }
 
-    public void ChangeAnimationSpeedOnAllPlayers(int bpm)
+    public void ChangeAnimationSpeedOnAllPlayers(float bpm)
     {
         for (int i = 0; i < jugadores.Count; i++)
             {

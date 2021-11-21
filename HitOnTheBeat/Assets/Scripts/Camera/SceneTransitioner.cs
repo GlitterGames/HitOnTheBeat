@@ -9,6 +9,7 @@ public class SceneTransitioner : MonoBehaviour
 {
     //Prefab del canvas.
     public Animator anim;
+    public EfectosSonido efectosSonido;
     int level = 0;
 
     public void StartTransition(int level, float delay)
@@ -57,6 +58,8 @@ public class SceneTransitioner : MonoBehaviour
 
     public void GoToCreditsScene(float delay)
     {
+        efectosSonido = GetComponent<EfectosSonido>();
+        efectosSonido.PlayEffect(0);
         anim.SetTrigger("Activate");
         this.level = 3;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
@@ -70,6 +73,8 @@ public class SceneTransitioner : MonoBehaviour
     }
     public void GoToShopScene(float delay)
     {
+        efectosSonido = GetComponent<EfectosSonido>();
+        efectosSonido.PlayEffect(0);
         anim.SetTrigger("Activate");
         this.level = 5;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));

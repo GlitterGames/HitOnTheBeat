@@ -1238,7 +1238,7 @@ public class PlayerController : MonoBehaviourPun
     }
     #endregion
 
-    public void ChangeAnimationSpeed(int bpm)
+    public void ChangeAnimationSpeed(float bpm)
     {
         switch(bpm)
         {
