@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviourPun
     public GameObject X2;
     //Último personaje que me ha golpeado
     public int golpeador;
+    public EfectosSonido efectosSonido;
 
     public int Fuerza
     {
@@ -128,7 +129,7 @@ public class PlayerController : MonoBehaviourPun
     void Awake()
     {
         powerCoroutine = null;
-    my_input = new InputController();
+        my_input = new InputController();
 
         //Se definen las callback del Input.
         my_input.Player.Click.performed += ctx => OnClick();
@@ -157,6 +158,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Start()
     {
+        efectosSonido = GetComponent<EfectosSonido>();
         if (photonView.IsMine) StartCoroutine(PrimerPintado());
         SetEscudo(false);
     }
@@ -632,6 +634,7 @@ public class PlayerController : MonoBehaviourPun
     {
         //Si ya tienes un power up no puedes tener otro, pero el que
         //estaba se pone a 0
+        efectosSonido.PlayEffect(0);
         if (Power_Up.NORMAL != this.Power) {
             SetPowerUpFloor(actualFloor, Floor.Type.Vacio);
             return;
@@ -788,9 +791,11 @@ public class PlayerController : MonoBehaviourPun
     //cuando el master decida ejecutarlas se ejecutarán a la vez.
     public void StartUltimate()
     {
+        
         switch (tipoUltimate)
         {
             case Ultimate.MEGA_PUNCH:
+                efectosSonido.PlayEffect(1);
                 photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.ULTIMATE);
                 photonView.RPC("RegisterUltimateRPC", RpcTarget.MasterClient, GetIdPlayer(), tipoUltimate);
                 break;
@@ -799,6 +804,7 @@ public class PlayerController : MonoBehaviourPun
                 SetRangeColor(actualFloor);
                 break;
             case Ultimate.INVISIBILITY:
+                efectosSonido.PlayEffect(1);
                 photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.ULTIMATE);
                 photonView.RPC("RegisterUltimateRPC", RpcTarget.MasterClient, GetIdPlayer(), tipoUltimate);
                 break;
@@ -806,6 +812,7 @@ public class PlayerController : MonoBehaviourPun
     }
     public void SetBombaColorUltimate(Floor f)
     {
+        efectosSonido.PlayEffect(1);
         photonView.RPC("RegisterUltimateRPC", RpcTarget.MasterClient, GetIdPlayer(), tipoUltimate, f.row, f.index);
         SetRangeColorNormal(GetFloorAreaRange(actualFloor));
         SetAreaBombaColor(f);
@@ -814,6 +821,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void ChangeStateRPC(Estado state)
     {
+        if (state == Estado.ULTIMATE) efectosSonido.PlayEffect(4);
         estadoActual = state;
     }
 
@@ -1182,12 +1190,14 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void HitRPC()
     {
+        efectosSonido.PlayEffect(2);
         hitsStats++;
     }
 
     [PunRPC]
     public void PushRPC()
     {
+        efectosSonido.PlayEffect(3);
         pushStats++;
     }
 
