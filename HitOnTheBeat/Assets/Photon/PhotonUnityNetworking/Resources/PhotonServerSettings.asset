@@ -105,15 +105,6 @@ MonoBehaviour:
   - StartSongRPC
   - EnviarEmpezarPartidaRPC
   - X2RPC
-<<<<<<< HEAD
-=======
-  - CinematicRPC
-  - FallRPC
-  - SetColorNRPC
-  - SetPowerRPC
-  - CinematicBackgroundRPC
-  - SetColorBackgroundRPC
->>>>>>> KillStat
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

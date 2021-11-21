@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviourPun
 
     void Awake()
     {
-        TIME = 200f;
+        TIME = 360f;
         numRows = 5;
         spawn = false;
         //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
@@ -743,31 +743,28 @@ public class GameManager : MonoBehaviourPun
 
     #endregion
     public void DestroyRow(int row, float seg, int repeticiones) {
-        foreach(PlayerController j in jugadores)
+        foreach (Floor f in casillas[row])
         {
-            foreach (Floor f in casillas[row])
-            {
-                StartCoroutine(Blink(f, seg, repeticiones));
-            }
-            StartCoroutine(BlinkBackground(row, seg, repeticiones));
+            StartCoroutine(Blink(f, seg, repeticiones));
         }
+        StartCoroutine(BlinkBackground(row, seg, repeticiones));
     }
     private IEnumerator Blink(Floor f, float seg, int repeticiones) {
         int j;
-        jugadores[0].SetPower(f, Floor.Type.Parpadeando, false, false);
+        f.SetPower(Floor.Type.Parpadeando, false, false);
         //LAS CASILLAS PARPADEAN
         for (j = 1; j < colorBlink.Count; j++) {
             Color c1 = colorBlink[j-1];
             Color c2 = colorBlink[j];
-            jugadores[0].SetColor(f,c1);
+            f.SetColor(c1);
             yield return new WaitForSeconds(seg);
             for (int i = 0; i < repeticiones; i++)
             {
-                jugadores[0].SetColor(f, c1);
-                jugadores[0].SetColorN(f, c1);
+                f.SetColor(c1);
+                f.SetColorN(c1);
                 yield return new WaitForSeconds(seg/repeticiones);
-                jugadores[0].SetColor(f, c2);
-                jugadores[0].SetColorN(f, c2);
+                f.SetColor(c2);
+                f.SetColorN(c2);
                 yield return new WaitForSeconds(seg/repeticiones);
             }
         }
@@ -777,10 +774,11 @@ public class GameManager : MonoBehaviourPun
     }
     private IEnumerator FallFloor(Floor f)
     {
-        //LAS CAS LLAS SE CAEN POR ACCIÓN DE LA GRAVEDAD
-        jugadores[0].Cinematic(f);
+        //LAS CASILLAS SE CAEN POR ACCIÓN DE LA GRAVEDAD
+        f.GetComponentInChildren<Rigidbody>().isKinematic = false;
+        f.GetComponentInChildren<Rigidbody>().useGravity = true;
         yield return new WaitForSeconds(0.5f);
-        jugadores[0].Fall(f);
+        f.gameObject.SetActive(false);
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         //LOS JUGADORES QUE SE ENCUENTREN EN ESAS CASILLAS SE CAERAN
@@ -807,25 +805,28 @@ public class GameManager : MonoBehaviourPun
         {
             Color c1 = colorBlink[j - 1];
             Color c2 = colorBlink[j];
-            jugadores[0].SetColorBackground(row, c1);
+            background[row].GetComponent<Renderer>().material.color = c1;
             yield return new WaitForSeconds(seg);
             for (int i = 0; i < repeticiones; i++)
             {
-                jugadores[0].SetColorBackground(row, c1);
+                background[row].GetComponent<Renderer>().material.color = c1;
                 yield return new WaitForSeconds(seg / repeticiones);
-                jugadores[0].SetColorBackground(row, c2);
+                background[row].GetComponent<Renderer>().material.color = c2;
                 yield return new WaitForSeconds(seg / repeticiones);
             }
         }
         yield return new WaitForSeconds(seg);
-        jugadores[0].CinematicBackground(row);
+        
+        background[row].SetActive(false);
         yield return new WaitForEndOfFrame();
     }
 	
     private IEnumerator DestroyRows()
     {
+        if (!PhotonNetwork.IsMasterClient) yield return new WaitForEndOfFrame();
         for (int i = numRows; i>=0; i--)
         {
+
             yield return new WaitForSeconds(TIME/5);
             DestroyRow(i, 3f, 5);
             numRows = i;
@@ -834,6 +835,7 @@ public class GameManager : MonoBehaviourPun
     }
     private IEnumerator SpawnPowerUps()
     {
+        if (!PhotonNetwork.IsMasterClient) yield return new WaitForEndOfFrame();
         //Tiempo de espera entre el spawn de otro power up
         float espera = 5f;
         float numRep = TIME / (int)espera;
@@ -852,7 +854,6 @@ public class GameManager : MonoBehaviourPun
     //Cuando se cambie el master deberán ejecutarse estos métodos con valores actualizados.
     private void AnimateFloors()
     {
-        if (!PhotonNetwork.IsMasterClient) return;
         StartCoroutine(DestroyRows());
         StartCoroutine(SpawnPowerUps());
     }
