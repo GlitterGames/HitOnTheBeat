@@ -33,7 +33,7 @@ Aquí se encuentran todas las herramientas que estamos usando para el desarrollo
 * **Eva Pastor Abánades** - *Game Developer* - [Eva](https://github.com/evitafumar)
 * **Javier Vico Gallego** - *Game Developer* - [Javier](https://github.com/jvicog)
 
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/orgs/GlitterGames/people) quíenes han participado en este proyecto. 
+También puedes mirar la lista de todos los [contribuyentes](https://github.com/orgs/GlitterGames/people) quienes han participado en este proyecto. 
 
 ## Expresiones de Gratitud 🎁
 * A Julio Guillén y Daniel Palacios por impartir la asignatura.
