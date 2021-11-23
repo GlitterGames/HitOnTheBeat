@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: ee26f6ba7ac601748a98b98c9f4d07be, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 69e77624a46d41c45ab5fa2290b393e0, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.96585387, g: 0.9656729, b: 0.9667364, a: 1}
+  m_IndirectSpecularColor: {r: 0.89832157, g: 0.9005052, b: 0.9172306, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -398,12 +398,12 @@ RectTransform:
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 1077343423}
-  m_RootOrder: 10
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -59, y: 487}
-  m_SizeDelta: {x: 464.7917, y: 464.7917}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 39, y: -125}
+  m_SizeDelta: {x: 464.79175, y: 464.7917}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &114479825
 MonoBehaviour:
@@ -473,7 +473,7 @@ RectTransform:
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 1077343423}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -1346,11 +1346,11 @@ RectTransform:
   m_Children:
   - {fileID: 2145966088}
   m_Father: {fileID: 1077343423}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 977, y: -6}
+  m_AnchoredPosition: {x: 1061, y: -74}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &446234541
@@ -1828,7 +1828,7 @@ MonoBehaviour:
   audioClips:
   - {fileID: 8300000, guid: a0bd553d47e4f1d4e85ca13598d722d0, type: 3}
   - {fileID: 8300000, guid: e384caa5debce1542a320c25d52073ff, type: 3}
-  efecto: {fileID: 0}
+  efecto: {fileID: 690427543}
 --- !u!1 &736402738
 GameObject:
   m_ObjectHideFlags: 0
@@ -1863,7 +1863,7 @@ RectTransform:
   - {fileID: 205228031}
   - {fileID: 1144367835}
   m_Father: {fileID: 1077343423}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2271,10 +2271,10 @@ RectTransform:
   - {fileID: 1374724055}
   - {fileID: 1622442815}
   - {fileID: 176339568}
+  - {fileID: 114479824}
   - {fileID: 353859082}
   - {fileID: 115449975}
   - {fileID: 736402739}
-  - {fileID: 114479824}
   - {fileID: 1248054854}
   m_Father: {fileID: 2093332356}
   m_RootOrder: 0
@@ -2569,7 +2569,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 97, y: 142}
+  m_AnchoredPosition: {x: 0, y: 164}
   m_SizeDelta: {x: 464.7917, y: 464.79175}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1248054855
@@ -3767,7 +3767,7 @@ GameObject:
   - component: {fileID: 1884129869}
   - component: {fileID: 1884129868}
   m_Layer: 5
-  m_Name: Button
+  m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3788,11 +3788,11 @@ RectTransform:
   m_Father: {fileID: 1077343423}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -778.0001, y: 932}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: -63, y: 73}
   m_SizeDelta: {x: 160, y: 30}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1884129868
 MonoBehaviour:
   m_ObjectHideFlags: 0

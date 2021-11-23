@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LobbyPlayerSelector : MonoBehaviour
 {
@@ -16,8 +17,8 @@ public class LobbyPlayerSelector : MonoBehaviour
     public Button boton;
     public Button boton2;
     public Button boton3;
-    public Text nombreText;
-    public Text infoText;
+    public TMP_Text nombreText;
+    public TMP_Text infoText;
     public string[] nombre = new string[3];
     [TextArea(1, 10)]
     public string[] info;
@@ -58,8 +59,8 @@ public class LobbyPlayerSelector : MonoBehaviour
         playerDemo[type].skins[selectedSkin].SetActive(true);
         marcador[FindObjectOfType<PlayerSelector>().selectedPlayer].SetActive(false);
         marcador[type].SetActive(true);
-        nombreText.text = nombre[type];
-        infoText.text = info[type];
+        nombreText.SetText(nombre[type]);
+        infoText.SetText(info[type]);
         FindObjectOfType<PlayerSelector>().selectedPlayer = type;
         FindObjectOfType<PlayerSelector>().selectedSkin = selectedSkin;
     }

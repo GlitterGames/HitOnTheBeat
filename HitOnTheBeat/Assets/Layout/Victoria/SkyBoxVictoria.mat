@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SkyBoxLobby
+  m_Name: SkyBoxVictoria
   m_Shader: {fileID: 10700, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _MAPPING_LATITUDE_LONGITUDE_LAYOUT _MIRRORONBACK_ON
   m_LightmapFlags: 4
@@ -48,13 +48,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FrontTex:
-        m_Texture: {fileID: 2800000, guid: 496e3f7c9564a744bb1097a4667b2f39, type: 3}
+        m_Texture: {fileID: 2800000, guid: 565635ec94028994c9b8e82819f25934, type: 3}
         m_Scale: {x: 1.01, y: 1.78}
         m_Offset: {x: -0, y: -0.39}
     - _LeftTex:
-        m_Texture: {fileID: 2800000, guid: 496e3f7c9564a744bb1097a4667b2f39, type: 3}
+        m_Texture: {fileID: 2800000, guid: 565635ec94028994c9b8e82819f25934, type: 3}
         m_Scale: {x: 0, y: 1.59}
-        m_Offset: {x: 0.23, y: -0.27}
+        m_Offset: {x: 0.23, y: 8.8}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 94162de20b405c14a98b0c3189d9d493, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -72,7 +72,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RightTex:
-        m_Texture: {fileID: 2800000, guid: 496e3f7c9564a744bb1097a4667b2f39, type: 3}
+        m_Texture: {fileID: 2800000, guid: 565635ec94028994c9b8e82819f25934, type: 3}
         m_Scale: {x: 1.95, y: 1.17}
         m_Offset: {x: 0.23, y: -0.27}
     - _Tex:

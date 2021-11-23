@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviourPun
     public Floor actualFloor;
     public Floor previousFloor;
     public FloorDetectorType floorDir;
-    public int m_fuerza;
     public GameObject escudo;
     public GameObject hit;
     public GameObject X2;
@@ -51,6 +50,7 @@ public class PlayerController : MonoBehaviourPun
     public EfectosSonido efectosSonido;
     private int puesto = 0;
 
+    private int m_fuerza;
     public int Fuerza
     {
         get
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviourPun
         }
         set
         {
-            if (estadoActual != Estado.EXECUTING || tipoUltimate != Ultimate.MEGA_PUNCH)
+            if (!(estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.MEGA_PUNCH))
             {
                 m_fuerza = value;
                 if (m_fuerza > MAX_STRENGHT) m_fuerza = MAX_STRENGHT;
@@ -79,8 +79,6 @@ public class PlayerController : MonoBehaviourPun
                     HUDManager.instance.SetFuerza(MAX_STRENGHT);
                 }
             }
-
-            
         }
     }
     public int fuerzaCinetica;
