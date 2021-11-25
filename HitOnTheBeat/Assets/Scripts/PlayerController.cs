@@ -447,7 +447,10 @@ public class PlayerController : MonoBehaviourPun
     {
         rb.useGravity = true;
     }
-
+    public void StopCoroutinePowers()
+    {
+        if (powerCoroutine != null) StopCoroutine(powerCoroutine);
+    }
     public bool EcharOne(FloorDetectorType dir, int max, bool moreThanTwo, bool notCinematic, bool sameFloor, int golpeador)
     {
         bool echado = false;
@@ -527,53 +530,6 @@ public class PlayerController : MonoBehaviourPun
             photonView.RPC("EcharMapaRPC", RpcTarget.All);
             photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
         }
-        return echado;
-    }
-    public bool Echar(FloorDetectorType dir, int max)
-    {
-        bool echado = false;
-        Floor nextFloor = null;
-        for (int i = 0; i < max && !echado; i++)
-        {
-            nextFloor = actualFloor.GetFloor(dir);
-            if (nextFloor != null)
-            {
-                //Se actualiza no es la última iteración.
-                //Si es la última iteración se cambiará vía RPC.
-                if (i < max - 1)
-                {
-                    previousFloor = actualFloor;
-                    actualFloor = nextFloor;
-                }
-            }
-            else
-            {
-                //ENVIARLE A LA POSICION DE LA CASILLA "NULL" 
-                Floor inverse = actualFloor.GetInverseFloor(dir);
-                Vector3 diferencia = new Vector3(actualFloor.GetFloorPosition().x - inverse.GetFloorPosition().x, 0f, actualFloor.GetFloorPosition().z - inverse.GetFloorPosition().z);
-                pos = new Vector3(actualFloor.GetFloorPosition().x + diferencia.x, transform.position.y, actualFloor.GetFloorPosition().z + diferencia.z);
-                echado = true;
-            }
-        }
-        if (!echado)
-        {
-            photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
-            photonView.RPC("PushRPC", photonView.Owner);
-            photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir);
-            photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
-        }
-        else
-        {
-            if (this.golpeador != -1) {
-                gameManager.jugadores[this.golpeador].Kill();
-                Debug.LogWarning("Si " + gameManager.jugadores[this.golpeador].killsStats +" Tipo:" +gameManager.jugadores[this.golpeador].tipoUltimate.ToString());
-            } 
-            else { Debug.LogWarning("No se ha podido hacer"); }
-            photonView.RPC("PushRPC", photonView.Owner);
-            photonView.RPC("EcharMapaRPC", RpcTarget.All);
-            photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, pos.x, pos.z);
-        }
-
         return echado;
     }
 
