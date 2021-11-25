@@ -205,6 +205,18 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
+
+    public void RemovePlayer(int index)
+    {
+        jugadores[index].SetPuesto(jugadores.Count - 1);
+        if (jugadores.Count == 1)
+        {
+            RemovePlayers.instance.tipoUltimate = jugadores[0].tipoUltimate;
+            RemovePlayers.instance.tipoSkin = jugadores[0].tipoSkin;
+        }
+        jugadores.RemoveAt(index);
+    }
+
     #region Colisiones
     //Si ya existe esa colision te devuelve la posición en la que te encuentra
     // -1 si no la encuentra
@@ -273,8 +285,7 @@ public class GameManager : MonoBehaviourPun
                 List<int> positions = PerformColision(false, colisiones[i]);
                 for (int j = 0; j < positions.Count; j++)
                 {
-                    jugadores[j].SetPuesto(jugadores.Count - 1);
-                    jugadores.RemoveAt(positions[j]);
+                    RemovePlayer(positions[j]);
                     positions = Reordenar(positions[j], positions);
                     ReordenarGolpeados(positions[j]);
                 }
@@ -310,8 +321,7 @@ public class GameManager : MonoBehaviourPun
                 List<int> positions = PerformColision(true, colisiones[i]);
                 for (int j = 0; j < positions.Count; j++)
                 {
-                    jugadores[j].SetPuesto(jugadores.Count - 1);
-                    jugadores.RemoveAt(positions[j]);
+                    RemovePlayer(positions[j]);
                     positions = Reordenar(positions[j], positions);
                     ReordenarGolpeados(positions[j]);
                 }
@@ -343,8 +353,7 @@ public class GameManager : MonoBehaviourPun
                         {
                             jugadores[jugadores[i].golpeador].killsStats = jugadores[jugadores[i].golpeador].killsStats+1;
                         }
-                        jugadores[i].SetPuesto(jugadores.Count - 1);
-                        jugadores.RemoveAt(i);
+                        RemovePlayer(i);
                         ReordenarGolpeados(i);
                     }
                     bcolision = true;
@@ -748,12 +757,10 @@ public class GameManager : MonoBehaviourPun
                 if (jugadores[i].actualFloor.Equals(f))
                 {
                     jugadores[i].Caer();
-                    jugadores[i].SetPuesto(jugadores.Count-1);
-                    jugadores.RemoveAt(i);
+                    RemovePlayer(i);
                     ReordenarGolpeados(i);
                     i--;
                 }
-
             }
         }
     }

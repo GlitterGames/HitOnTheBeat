@@ -7,8 +7,19 @@ using UnityEngine.SceneManagement;
 
 public class RemovePlayers : MonoBehaviourPunCallbacks
 {
+    //Singletone
+    public static RemovePlayers instance;
+
     public GameManager gm;
     public bool endGame = false;
+    public PlayerController.Ultimate tipoUltimate;
+    public int tipoSkin;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
@@ -17,12 +28,19 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        if(gm.jugadores[0]) FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("SetPlayerCamera",
+        if(gm.jugadores.Count>0) FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("SetPlayerCamera",
             collider.GetComponent<PhotonView>().Owner, gm.jugadores[0].photonView.ViewID);
 
-        if (gm.jugadores.Count <= 1)
+        //Cuando solo queda un único jugador.
+        if (gm.jugadores.Count == 1)
         {
             FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoEndGameRPC", RpcTarget.AllViaServer, (int) gm.jugadores[0].tipoUltimate, gm.jugadores[0].tipoSkin, FindObjectOfType<Ritmo>().numBeats);
+            StartCoroutine(ExitMaster());
+        }
+        //Cuando dos jugadores son eliminados a la vez.
+        else if(gm.jugadores.Count < 1)
+        {
+            FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("DoEndGameRPC", RpcTarget.AllViaServer, (int)tipoUltimate, tipoSkin, FindObjectOfType<Ritmo>().numBeats);
             StartCoroutine(ExitMaster());
         }
     }

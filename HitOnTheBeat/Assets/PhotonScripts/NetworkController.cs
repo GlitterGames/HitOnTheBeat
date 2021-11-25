@@ -17,6 +17,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     void Start()
     {
         efectosSonido = GetComponent<EfectosSonido>();
+        _name.text = PlayerPrefs.GetString("name", "");
     }
     [SerializeField] private InputField _name;
 
@@ -29,6 +30,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.NickName = _name.text;
+        PlayerPrefs.SetString("name", _name.text);
         PhotonNetwork.JoinLobby();
     }
 
