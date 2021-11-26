@@ -1291,20 +1291,23 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void DoEndGameRPC(int num, int skin, int numBeats)
+    public void DoEndGameRPC(string name, int num, int skin, int numBeats)
     {
         PlayerController mpc = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
         PlayerSelector ps = FindObjectOfType<PlayerSelector>();
         ps.puesto = mpc.puesto;
+        ps.playerWinnerName = name;
         ps.playerWinner = num;
         ps.playerWinnerSkin = skin;
         ps.hitsStats = mpc.hitsStats;
         ps.killsStats = mpc.killsStats;
         ps.pushStats = mpc.pushStats;
         ps.jumpStats = mpc.jumpStats;
-        ps.averageRhythmStats = mpc.jumpStats * 100 / numBeats;
+        if(numBeats<=0) ps.averageRhythmStats = 0;
+        else ps.averageRhythmStats = mpc.jumpStats * 100 / numBeats;
 
         FindObjectOfType<RemovePlayers>().endGame = true;
+        if (PhotonNetwork.IsMasterClient) gameManager.StopAllCoroutines();
         PhotonNetwork.LeaveRoom(true);
     }
     #endregion

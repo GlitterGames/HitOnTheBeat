@@ -57,11 +57,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: Orbitron Black SDF
+  m_Name: Orbitron Black SDF Normal
   m_EditorClassIdentifier: 
-  hashCode: -1872603321
+  hashCode: 844447958
   material: {fileID: 4083486251781654666}
-  materialHashCode: 1101845767
+  materialHashCode: 589223222
   m_Version: 1.1.0
   m_SourceFontFileGUID: 495c9e2a934bcc640a8d7427b13cb680
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 495c9e2a934bcc640a8d7427b13cb680, type: 3}

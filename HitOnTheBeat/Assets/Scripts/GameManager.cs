@@ -549,7 +549,7 @@ public class GameManager : MonoBehaviourPun
         FindObjectOfType<PhotonInstanciate>().my_player.
             GetComponent<PlayerController>().SetPowerUpFloor(f, t);
         yield return new WaitForSeconds(time);
-        if(f!=null)FindObjectOfType<PhotonInstanciate>().my_player.
+        if(f!=null) FindObjectOfType<PhotonInstanciate>().my_player.
             GetComponent<PlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
     }
     #endregion 
@@ -565,8 +565,9 @@ public class GameManager : MonoBehaviourPun
         jugadores[index].SetPuesto(jugadores.Count - 1);
         if (jugadores.Count == 1)
         {
-            RemovePlayers.instance.tipoUltimate = jugadores[0].tipoUltimate;
-            RemovePlayers.instance.tipoSkin = jugadores[0].tipoSkin;
+            RemovePlayers.instance.winnerName = jugadores[0].photonView.Owner.NickName;
+            RemovePlayers.instance.winnerUltimate = jugadores[0].tipoUltimate;
+            RemovePlayers.instance.winnerSkin = jugadores[0].tipoSkin;
         }
         jugadores.RemoveAt(index);
     }

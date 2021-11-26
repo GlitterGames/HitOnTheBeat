@@ -138,12 +138,14 @@ public class Ritmo : MonoBehaviourPun
     public void SetColorBeatEndRPC()
     {
         if (!haFallado) {
-            marcador.GetComponent<Image>().color = colores.noClickeable;
         }
         if (!haPulsado)
         {
             marcador.GetComponent<Image>().color = colores.fallo;
             FindObjectOfType<PhotonInstanciate>().my_player.GetPhotonView().RPC("NoHaPulsadoRPC", RpcTarget.All);
+        }else
+        {
+            marcador.GetComponent<Image>().color = colores.noClickeable;
         }
         haFallado = false;
         haPulsado = false;

@@ -28,7 +28,7 @@ public class Colisions
             if (g.jugadores[positions[i]].fuerzaCinetica > 0) g.jugadores[positions[i]].SetFuerza(g.jugadores[positions[i]].fuerzaCinetica);
         }
         if (Powers()) return;
-        if (positions.Count > 2)
+        if (positions.Count <= 2)
         {
             this.moreThanTwo = false;
             PerformTwoColision();

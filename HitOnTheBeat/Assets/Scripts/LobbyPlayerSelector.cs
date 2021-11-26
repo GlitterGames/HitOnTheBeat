@@ -13,7 +13,6 @@ public class LobbyPlayerSelector : MonoBehaviour
         public List<GameObject> skins;
     }
     public List<Skins> playerDemo;
-    private bool selected = false;
     public Button boton;
     public Button boton2;
     public Button boton3;
@@ -37,9 +36,9 @@ public class LobbyPlayerSelector : MonoBehaviour
         if (!personajeSeleccionado)
         {
             personajeSeleccionado = true;
-            if (!selected) boton.interactable = true;
-            if (!selected) boton2.interactable = true;
-            if (!selected) boton3.interactable = true;
+            boton.interactable = true;
+            boton2.interactable = true;
+            boton3.interactable = true;
         }
         int selectedSkin = 0;
         switch (type)

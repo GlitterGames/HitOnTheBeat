@@ -122,7 +122,6 @@ MonoBehaviour:
   actualFloor: {fileID: 0}
   previousFloor: {fileID: 0}
   floorDir: 0
-  m_fuerza: 0
   escudo: {fileID: 856487040640255666}
   hit: {fileID: 376510130986539126}
   X2: {fileID: 4543299334178959048}

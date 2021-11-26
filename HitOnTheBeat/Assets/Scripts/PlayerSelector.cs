@@ -9,6 +9,7 @@ public class PlayerSelector : MonoBehaviour
     public int selectedSkin;
     public int playerWinner;
     public int playerWinnerSkin;
+    public string playerWinnerName;
     public int hitsStats;
     public int jumpStats;
     public int pushStats;
