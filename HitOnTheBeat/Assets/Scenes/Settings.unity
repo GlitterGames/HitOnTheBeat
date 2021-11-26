@@ -385,7 +385,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &114479824
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1272,7 +1272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &353859081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1320,7 +1320,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 690427540}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PantallaCompleta, Assembly-CSharp
         m_MethodName: ActivarPantallaCompleta
         m_Mode: 0
@@ -1624,7 +1624,6 @@ GameObject:
   m_Component:
   - component: {fileID: 690427538}
   - component: {fileID: 690427542}
-  - component: {fileID: 690427540}
   - component: {fileID: 690427539}
   - component: {fileID: 690427537}
   - component: {fileID: 690427544}
@@ -1685,19 +1684,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1e0af2bb9e5b27e4fa1ae41930cced15, type: 3}
   - {fileID: 21300000, guid: 25d41f13ea1f5ff4abb8dfa26fe22804, type: 3}
   masterMixer: {fileID: 24100000, guid: 3d9207f4f7e0903469cc5ed6f025b21a, type: 2}
---- !u!114 &690427540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 690427536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02764504027ec2b4fad8e84cffb48e79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggle: {fileID: 353859081}
 --- !u!114 &690427542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3840,7 +3826,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 690427537}
         m_TargetAssemblyTypeName: Settings, Assembly-CSharp
-        m_MethodName: goBack
+        m_MethodName: GoBack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4459,7 +4445,7 @@ GameObject:
   - component: {fileID: 2747659850919233868}
   - component: {fileID: 2747659850919233871}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Brillo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

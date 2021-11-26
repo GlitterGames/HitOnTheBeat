@@ -466,7 +466,6 @@ public class GameManager : MonoBehaviourPun
                     ReordenarGolpeados(i);
                     i--;
                 }
-
             }
         }
     }

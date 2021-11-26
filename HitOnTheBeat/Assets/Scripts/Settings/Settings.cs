@@ -22,9 +22,9 @@ public class Settings : MonoBehaviour
     {
         efectosSonido = GetComponent<EfectosSonido>();
     }
-    public void goBack()
+    public void GoBack()
     {
         efectosSonido.PlayEffect(1);
-        FindObjectOfType<SceneTransitioner>().StartTransition(1, 0.5f);;
+        FindObjectOfType<SceneTransitioner>().StartTransition(0, 0.5f);;
     }
 }

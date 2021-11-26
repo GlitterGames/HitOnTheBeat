@@ -11,7 +11,6 @@ using UnityEngine.SceneManagement;
 public class NetworkController : MonoBehaviourPunCallbacks
 {
     //[SerializeField] private UIManager _uiManager;
-    public GameObject conectando;
     private SceneTransitioner st;
     public EfectosSonido efectosSonido;
     void Start()
@@ -65,5 +64,10 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public void OnExit()
     {
         Application.Quit();
+    }
+    public void GoSettings()
+    {
+        efectosSonido.PlayEffect(0);
+        FindObjectOfType<SceneTransitioner>().StartTransition(7, 0.5f); ;
     }
 }

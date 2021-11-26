@@ -8,66 +8,144 @@ using Photon;
 using UnityEngine.UI;
 using UnityEngine.TextCore;
 using UnityEngine.SceneManagement;
+using TMPro;
 public class Lobby : MonoBehaviourPunCallbacks
 {
     public GameObject playerSelector;
-    public Button JoinRandomBtn;
-    public Text Log;
-    public byte maxPlayersInRoom = 2;
+    public byte maxPlayersInRoom ;
     public byte minPlayersInRoom = 2;
     private int playerCount = 0;
-    public Text PlayerCounter;
     private bool IsLoading = false;
+    public string roomName;
+    public int roomSize;
+    public Button buscarPartida;
+    public Button crearSala;
+    public Button unirseSala;
+    public Button empezarPartida;
+    public TMP_Text PlayerCounter;
+    public EfectosSonido efectosSonido;
+
+
 
     public void Start()
     {
+
         if (!FindObjectOfType<PlayerSelector>()) DontDestroyOnLoad(Instantiate(playerSelector,
              playerSelector.transform.position, playerSelector.transform.rotation));
+
+        efectosSonido = GetComponent<EfectosSonido>();
     }
 
     #region Photon Callbakcs
-    public void JoinRandom()
+   
+
+    public void CreateRoom()
     {
-        if(!PhotonNetwork.JoinRandomRoom())
+        efectosSonido.PlayEffect(0);
+        buscarPartida.interactable = false;
+        unirseSala.interactable = false;
+        crearSala.interactable = false;
+
+        RoomOptions roomOps = new RoomOptions()
         {
-            Log.text = "Fallo al unirse a la sala";
+            IsVisible = true,
+            IsOpen = true,
+            MaxPlayers = (byte)roomSize
+        };
+            PhotonNetwork.CreateRoom(roomName, roomOps);
+
+        Debug.Log("Sala creada");
+
+    }
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        Debug.Log("Ya existe una sala con ese nombre");
+    }
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("unido a sala"); 
+         
+
+
+
+    }
+  public void JoinRandom()
+    {
+        efectosSonido.PlayEffect(0);
+        buscarPartida.interactable = false;
+        unirseSala.interactable = false;
+        crearSala.interactable = false;
+        if (!PhotonNetwork.JoinRandomRoom())
+        {
+            Debug.Log("Fallo al unirse a la sala");
         }
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Log.text = "No existen salas a las que unirse, creando una nueva...";
+        Debug.Log( "No existen salas a las que unirse, creando una nueva...");
         if (PhotonNetwork.CreateRoom(null, new Photon.Realtime.RoomOptions()
          {MaxPlayers = maxPlayersInRoom}))
          {
-            Log.text = "Sala creada con éxito";
+           Debug.Log("Sala creada con �xito");
          }
          else
          {
-            Log.text = "Fallo al crear la sala";
+            Debug.Log( "Fallo al crear la sala");
          }
     }
+    public void OnRoomNameChanged(string nameIn)
+    {
+        roomName = nameIn;
 
-    public override void OnJoinedRoom()
+    }
+    public void OnRoomSizeChanged(string sizeIn)
     {
-        Log.text = "Unido a la sala";
-		JoinRandomBtn.interactable = false;
-	}
-	#endregion
-    public void FixedUpdate()
-    {
-        if(PhotonNetwork.CurrentRoom != null)
-        {
-            playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-            PlayerCounter.text = playerCount + "/" + maxPlayersInRoom;
-            if (!IsLoading && playerCount >= minPlayersInRoom)
-            {
-                LoadMap();
-            }
-        }
+        roomSize = int.Parse(sizeIn);
+        maxPlayersInRoom = (byte)roomSize;
+
     }
 
-    private void LoadMap()
+    public void JoinLobbyOnClick()
+    {
+        efectosSonido.PlayEffect(0);
+        buscarPartida.interactable = false;
+        unirseSala.interactable = false;
+        crearSala.interactable = false;
+        PhotonNetwork.JoinRoom(roomName);
+    }
+    #endregion
+    public void FixedUpdate()
+    {
+        if (PhotonNetwork.CurrentRoom != null)
+        {
+            playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+            PlayerCounter.text = playerCount.ToString();
+
+
+            if (!IsLoading && playerCount >= minPlayersInRoom)
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    empezarPartida.interactable = true;
+                }
+            }
+        }
+        
+    }
+   
+    public void EnviarEmpezarPartida()
+    {
+        efectosSonido.PlayEffect(2);
+        photonView.RPC("EnviarEmpezarPartidaRPC", RpcTarget.AllViaServer);
+    }
+
+    [PunRPC]
+    public void EnviarEmpezarPartidaRPC()
+    {
+        LoadMap();
+    }
+    public void LoadMap()
     {
         IsLoading = true;
         FindObjectOfType<SceneTransitioner>().StartTransition(2, 0.5f);
@@ -75,6 +153,7 @@ public class Lobby : MonoBehaviourPunCallbacks
 
     public void OnGoBack()
     {
+        efectosSonido.PlayEffect(1);
         PhotonNetwork.Disconnect();
     }
 
@@ -82,10 +161,5 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         base.OnDisconnected(cause);
         FindObjectOfType<SceneTransitioner>().StartTransition(0, 0);
-    }
-
-        public void GoSettings()
-    {
-         FindObjectOfType<SceneTransitioner>().StartTransition(7, 0.5f);;
     }
 }

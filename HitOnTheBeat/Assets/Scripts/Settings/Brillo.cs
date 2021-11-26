@@ -14,14 +14,12 @@ public class Brillo : MonoBehaviour
     void Start()
     {
         slider.value = 0.5f - PlayerPrefs.GetFloat("brillo", 0f);
-        Debug.Log(slider.value);
         panelBrillo.color = new Color(panelBrillo.color.r, panelBrillo.color.g, panelBrillo.color.b, sliderValue);
         RevisarBrillo(0.5f - slider.value);
     }
 
     public void ChangeSlider (float valor)
     {
-        Debug.Log(valor);
         sliderValue = 0.5f - valor;
         RevisarBrillo(sliderValue);
         PlayerPrefs.SetFloat("brillo", sliderValue);
