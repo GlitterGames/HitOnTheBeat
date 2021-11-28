@@ -381,12 +381,7 @@ public class PlayerController : MonoBehaviourPun
         //Si la boxeadora realiza un golpe, gasta la ultimate.
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsAttacking", true);
-        if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.MEGA_PUNCH)
-        {
-            ChangeStateRPC(Estado.NORMAL);
-            HUDManager.instance.durationUltimate = 1;
-        }
-        if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.INVISIBILITY)
+        if (estadoActual == Estado.EXECUTING && (tipoUltimate == Ultimate.MEGA_PUNCH || tipoUltimate == Ultimate.INVISIBILITY))
         {
             ChangeStateRPC(Estado.NORMAL);
             HUDManager.instance.durationUltimate = 1;
@@ -570,7 +565,6 @@ public class PlayerController : MonoBehaviourPun
     IEnumerator AnimationsUpdate(int row, int index)
     {
         yield return new WaitForSeconds(AnimVelocityCollision);
-        if(actualFloor) SetAreaColor(actualFloor);
         animator.SetBool("IsJumping", false);
         animator.SetBool("IsFalling", true);
         Floor nextFloor = gameManager.casillas[row][index];
@@ -581,7 +575,6 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void EcharMapaRPC()
     {
-        SetNormalColor(actualFloor);
         previousFloor = actualFloor;
         actualFloor = null;
     }
@@ -664,8 +657,7 @@ public class PlayerController : MonoBehaviourPun
     }
     public void SetHit(bool activated)
     {
-        photonView.RPC("HitRPC", RpcTarget.AllViaServer, activated);
-        HUDManager.instance.UltimateCharge++;
+        photonView.RPC("DoHitRPC", RpcTarget.AllViaServer, activated);
     }
     [PunRPC]
     public void EscudoRPC(bool activated)
@@ -673,7 +665,7 @@ public class PlayerController : MonoBehaviourPun
         escudo.SetActive(activated);
     }
     [PunRPC]
-    public void HitRPC(bool activated)
+    public void DoHitRPC(bool activated)
     {
         hit.SetActive(activated);
     }
@@ -1261,6 +1253,7 @@ public class PlayerController : MonoBehaviourPun
     {
         efectosSonido.PlayEffect(2);
         hitsStats++;
+        HUDManager.instance.UltimateCharge++;
     }
 
     [PunRPC]
