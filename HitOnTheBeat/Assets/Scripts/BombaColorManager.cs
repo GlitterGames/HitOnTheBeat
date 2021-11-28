@@ -26,7 +26,7 @@ public class BombaColorManager : MonoBehaviourPun
         bombaNoUsable.SetActive(false);
         bombaVisibleUsable.SetActive(true);
         bombaMoverUsable.GetComponent<Animator>().enabled = true;
-        bombaMoverUsable.GetComponent<Animator>().speed = 1f / (Ritmo.instance.delay * GetComponent<PlayerController>().ULTIMATE_MAX_BEAT_DURATION -1f);
+        bombaMoverUsable.GetComponent<Animator>().speed = 1f / (delay-1f);
         GetComponent<PlayerController>().SetAreaBombaColor(target);
         initialPos = bombaMoverUsable.transform.position;
         PlayerController personaje = GetComponent<PlayerController>();

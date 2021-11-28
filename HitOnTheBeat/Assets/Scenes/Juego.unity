@@ -5981,6 +5981,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1943168027754241743, guid: 817b63e6d7dd90a4fac9408e22888dde, type: 3}
+      propertyPath: efectosSonido
+      value: 
+      objectReference: {fileID: 1293503302586188431}
     - target: {fileID: 5577550071071704162, guid: 817b63e6d7dd90a4fac9408e22888dde, type: 3}
       propertyPath: m_Name
       value: SceneTransitioner
@@ -6853,6 +6857,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gm: {fileID: 0}
   endGame: 0
+  winnerName: 
+  winnerUltimate: 0
+  winnerSkin: 0
 --- !u!1001 &4008159358209957481
 PrefabInstance:
   m_ObjectHideFlags: 0
