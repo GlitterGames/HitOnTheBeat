@@ -53,6 +53,7 @@ public class HUDManager : MonoBehaviour
     {
         //Obtener referencias
         myPC = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
+        UltimateCharge = ULTIMATE_MAX_CHARGE;
 
         //Inicializamos la interfaz a valores por defecto u obtenidos de Lobby.
         int ps = FindObjectOfType<PlayerSelector>().selectedPlayer;

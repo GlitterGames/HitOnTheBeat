@@ -6,8 +6,11 @@ using Photon.Pun;
 public class BombaColorManager : MonoBehaviourPun
 {
     public GameObject bombaNoUsable;
-    public GameObject bombaUsable;
+    public GameObject bombaMoverUsable;
+    public GameObject bombaVisibleUsable;
     public GameObject explosion;
+    [Range(0,5)]
+    public float durationEffect = 1f;
     [HideInInspector]
     public Floor target;
     [HideInInspector]
@@ -21,10 +24,11 @@ public class BombaColorManager : MonoBehaviourPun
         this.target = target;
         explosion.SetActive(false);
         bombaNoUsable.SetActive(false);
-        bombaUsable.SetActive(true);
-        bombaUsable.GetComponent<Animator>().speed = 1f / (Ritmo.instance.delay * GetComponent<PlayerController>().ULTIMATE_MAX_BEAT_DURATION -1f);
+        bombaVisibleUsable.SetActive(true);
+        bombaMoverUsable.GetComponent<Animator>().enabled = true;
+        bombaMoverUsable.GetComponent<Animator>().speed = 1f / (Ritmo.instance.delay * GetComponent<PlayerController>().ULTIMATE_MAX_BEAT_DURATION -1f);
         GetComponent<PlayerController>().SetAreaBombaColor(target);
-        initialPos = bombaUsable.transform.position;
+        initialPos = bombaMoverUsable.transform.position;
         PlayerController personaje = GetComponent<PlayerController>();
         fuerzaEmpleada = personaje.Fuerza;
         personaje.Fuerza = 0;
@@ -36,14 +40,16 @@ public class BombaColorManager : MonoBehaviourPun
     {
         while(currentTime < delay)
         {
-            bombaUsable.transform.position = Vector3.Lerp(initialPos, target.transform.position, currentTime / delay);
+            bombaMoverUsable.transform.position = Vector3.Lerp(initialPos, target.transform.position, currentTime / delay);
             currentTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
-
         }
+        bombaMoverUsable.GetComponent<Animator>().enabled = false;
         currentTime = 0;
         bombaNoUsable.SetActive(true);
-        bombaUsable.SetActive(false);
+        bombaVisibleUsable.SetActive(false);
         explosion.SetActive(true);
+        yield return new WaitForSeconds(durationEffect);
+        explosion.SetActive(false);
     }
 }
