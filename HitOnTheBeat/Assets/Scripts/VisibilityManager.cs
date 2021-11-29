@@ -72,19 +72,19 @@ public class VisibilityManager : MonoBehaviour
             colorBody.a = valor;
             alphaSkin.color = colorBody;
             body.material = alphaSkin;
-            foreach (Renderer r in objects)
-            {
-                if (valor >= 1)
-                {
-                    r.enabled = true;
-                }
-                else
-                {
-                    r.enabled = false;
-                }
-            }
-            foreach (CanvasRenderer r in uiObjects) r.GetComponent<CanvasRenderer>().SetAlpha(valor);
         }
+        foreach (Renderer r in objects)
+        {
+            if (valor >= 1)
+            {
+                r.enabled = true;
+            }
+            else
+            {
+                r.enabled = false;
+            }
+        }
+        foreach (CanvasRenderer r in uiObjects) r.GetComponent<CanvasRenderer>().SetAlpha(valor);
     }
 
     private IEnumerator VisibilityVFX(bool activate)

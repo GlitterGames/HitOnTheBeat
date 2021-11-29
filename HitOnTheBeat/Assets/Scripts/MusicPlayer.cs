@@ -136,16 +136,13 @@ public class MusicPlayer : MonoBehaviourPun
 
     public void SendChangeBMP(float bpm)
     {
+        gameManager.ChangeAnimationSpeedOnAllPlayers(bpm);
         photonView.RPC("SendChangeBMPRPC", RpcTarget.AllViaServer, bpm);
     }
     
     [PunRPC]
     private void SendChangeBMPRPC(float bpm)
     {
-        if (gameManager)
-        {
-            gameManager.ChangeAnimationSpeedOnAllPlayers(bpm);
-            if(Ritmo.instance) Ritmo.instance.delay = bpm;
-        }
+        if(Ritmo.instance) Ritmo.instance.delay = bpm;
     }
 }

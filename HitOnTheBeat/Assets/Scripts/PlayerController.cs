@@ -1307,29 +1307,15 @@ public class PlayerController : MonoBehaviourPun
 
     public void ChangeAnimationSpeed(float bpm)
     {
+        photonView.RPC("ChangeAnimationSpeedRPC", RpcTarget.AllViaServer, bpm);
+    }
+
+    [PunRPC]
+    public void ChangeAnimationSpeedRPC(float bpm)
+    {
         AnimVelocity = 1.8f - (0.4f * (bpm - 1));
         secondsToCount = (1.4f / (AnimVelocity/1.4f)) * 0.3f / 1.4f;
         AnimVelocityCollision = (1.4f / (AnimVelocity/1.4f)) * 0.7f / 1.4f;
-        /*switch(bpm)
-        {
-            case 1:
-                AnimVelocity = 1.8f;
-                secondsToCount = 0.25f;
-                AnimVelocityCollision = 0.42f;
-                break;
-
-            case 2:
-                AnimVelocity = 1.4f;
-                secondsToCount = 0.3f;
-                AnimVelocityCollision = 0.7f;
-                break;
-
-            case 3:
-                AnimVelocity = 1;
-                secondsToCount = 0.4f;
-                AnimVelocityCollision = 0.98f;
-                break;
-        }*/
         animator.SetFloat("AnimMultiplier", AnimVelocity);
     }
 }
