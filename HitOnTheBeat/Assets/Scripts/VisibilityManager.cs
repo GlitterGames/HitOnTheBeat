@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class VisibilityManager : MonoBehaviour
 {
+    public Renderer body;
+    public Material skin;
+    public Material alphaSkin;
     [SerializeField]
     private bool m_visible = true;
     [SerializeField]
@@ -56,15 +59,58 @@ public class VisibilityManager : MonoBehaviour
     {
         foreach(Renderer r in objects) r.enabled = valor;
         foreach(CanvasRenderer r in uiObjects) r.GetComponent<CanvasRenderer>().SetAlpha(Convert.ToSingle(valor));
+        //Manejo de VFX.
+        StopAllCoroutines();
+        StartCoroutine(VisibilityVFX(valor));
     }
     private void OnSetAlpha(float valor)
     {
-        foreach (Renderer r in objects) 
+        if (valor >= 1) body.material = skin;
+        else
         {
-            Color color = r.material.color;
-            color.a = valor;
-            r.material.color = color;
+            Color colorBody = alphaSkin.color;
+            colorBody.a = valor;
+            alphaSkin.color = colorBody;
+            body.material = alphaSkin;
+            foreach (Renderer r in objects)
+            {
+                if (valor >= 1)
+                {
+                    r.enabled = true;
+                }
+                else
+                {
+                    r.enabled = false;
+                }
+            }
+            foreach (CanvasRenderer r in uiObjects) r.GetComponent<CanvasRenderer>().SetAlpha(valor);
         }
-        foreach (CanvasRenderer r in uiObjects) r.GetComponent<CanvasRenderer>().SetAlpha(valor);
+    }
+
+    private IEnumerator VisibilityVFX(bool activate)
+    {
+        float currentValue;
+        if (activate)
+        {
+            currentValue = -1;
+            while (currentValue<=1)
+            {
+                currentValue += Time.deltaTime;
+                if (currentValue > 1) currentValue = 1;
+                skin.SetFloat("DisolveValue", currentValue);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        else
+        {
+            currentValue = 1; 
+            while (currentValue >= -1)
+            {
+                currentValue -= Time.deltaTime;
+                if (currentValue < -1) currentValue = -1;
+                skin.SetFloat("DisolveValue", currentValue);
+                yield return new WaitForEndOfFrame();
+            }
+        }
     }
 }

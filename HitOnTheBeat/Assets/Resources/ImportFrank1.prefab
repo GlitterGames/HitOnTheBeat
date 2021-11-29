@@ -237,10 +237,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a777440ec02394f929f3b6a3441f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 1966251007139365814}
+  skin: {fileID: 2100000, guid: acbd380bb5cd4824981584fbaab7f058, type: 2}
+  alphaSkin: {fileID: 2100000, guid: 7983d60bef98d9644a3106eb3b85682b, type: 2}
   m_visible: 1
   m_alpha: 1
   objects:
-  - {fileID: 1966251007139365814}
+  - {fileID: 1216576754311309159}
+  - {fileID: 3864852085868239567}
   uiObjects:
   - {fileID: 2972092278407755902}
 --- !u!82 &-5320793420261067885
@@ -715,7 +719,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: aa607cdb6f385a341bd509c48d82ac5f, type: 2}
+  - {fileID: 2100000, guid: acbd380bb5cd4824981584fbaab7f058, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1155,6 +1159,11 @@ PrefabInstance:
 --- !u!4 &47581092670528520 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5398660376114238920, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
+  m_PrefabInstance: {fileID: 5351102925179636160}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1216576754311309159 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6530441417445863079, guid: f2e7cc7376467a847b61d63be7bc6664, type: 3}
   m_PrefabInstance: {fileID: 5351102925179636160}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &856487040640255666 stripped
