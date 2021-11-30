@@ -24,6 +24,12 @@ public class Lobby : MonoBehaviourPunCallbacks
     public Button empezarPartida;
     public TMP_Text PlayerCounter;
     public EfectosSonido efectosSonido;
+    public GameObject CanvasLobby;
+    public GameObject CanvasRoom;
+    public Text Jugador1;
+    public Text Jugador2;
+    public Text Jugador3;
+    public Text Jugador4;
 
 
 
@@ -63,13 +69,64 @@ public class Lobby : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        Debug.Log("unido a sala"); 
-         
+        Debug.Log("unido a sala");
+        CanvasLobby.SetActive(false);
+        CanvasRoom.SetActive(true);
+        
+
 
 
 
     }
-  public void JoinRandom()
+    void OnPhotonPlayerConnected()
+    {
+        UpdatePlayerList();
+    }
+    public void UpdatePlayerList()
+    {
+         Player[] jugadores= PhotonNetwork.PlayerList;
+       /* foreach(Player player in PhotonNetwork.playerList)
+        { 
+            jugadores.Add(player);
+        }*/
+
+
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            {
+                Jugador1.text = PhotonNetwork.PlayerList[0].NickName;
+                Jugador2.text = null;
+                Jugador3.text = null;
+                Jugador4.text = null;
+            }
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
+            {
+                Jugador1.text = PhotonNetwork.PlayerList[0].NickName;
+                Jugador2.text = PhotonNetwork.PlayerList[1].NickName;
+                Jugador3.text = null;
+                Jugador4.text = null;
+
+        }
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 3)
+            {
+                Jugador1.text = PhotonNetwork.PlayerList[0].NickName;
+                Jugador2.text = PhotonNetwork.PlayerList[1].NickName;
+                Jugador3.text = PhotonNetwork.PlayerList[2].NickName;
+                Jugador4.text = null;
+
+        }
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 4)
+            {
+                Jugador1.text = PhotonNetwork.PlayerList[0].NickName;
+                Jugador2.text = PhotonNetwork.PlayerList[1].NickName;
+                Jugador3.text = PhotonNetwork.PlayerList[2].NickName;
+                Jugador4.text = PhotonNetwork.PlayerList[3].NickName;
+
+            }
+        
+       
+       
+    }
+    public void JoinRandom()
     {
         efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
@@ -117,11 +174,12 @@ public class Lobby : MonoBehaviourPunCallbacks
     #endregion
     public void FixedUpdate()
     {
+       
         if (PhotonNetwork.CurrentRoom != null)
         {
             playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
             PlayerCounter.text = playerCount.ToString();
-
+            UpdatePlayerList();
 
             if (!IsLoading && playerCount >= minPlayersInRoom)
             {
