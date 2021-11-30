@@ -294,6 +294,7 @@ public class GameManager : MonoBehaviourPun
                 {
                     RemovePlayer(i);
                     ReordenarGolpeados(i);
+                    i--;
                 }
                 bcolision = true;
             }
