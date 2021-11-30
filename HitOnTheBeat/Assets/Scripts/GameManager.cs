@@ -248,7 +248,7 @@ public class GameManager : MonoBehaviourPun
             //eliminar jugadores que se hayan caido
             DeletePlayersColision(colisiones, true);
             //Colisiones cinemáticas
-            bcolision = CinematicColisions();
+            CinematicColisions(ref bcolision);
         }
     }
     private void DeletePlayersColision(List<Colisions> colisiones, bool sameFloor)
@@ -266,9 +266,8 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
-    private bool CinematicColisions()
+    private void CinematicColisions(ref bool bcolision)
     {
-        bool bcolision = false;
         for (int i = 0; i < jugadores.Count; i++)
         {
             //En caso de que se acabe de dar una colision no se realizará una cinemática
@@ -299,7 +298,6 @@ public class GameManager : MonoBehaviourPun
                 bcolision = true;
             }
         }
-        return bcolision;
     }
     private List<Colisions> PerformSameFloorColisions(ref bool bcolision)
     {

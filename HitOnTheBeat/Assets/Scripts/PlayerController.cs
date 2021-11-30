@@ -507,6 +507,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if (nextFloor.hasColision == true) {
                 fuerzaCinetica = 0;
+                dir = actualFloor.GetInverseDireccion(dir);
                 nextFloor = actualFloor;
             }
             photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
