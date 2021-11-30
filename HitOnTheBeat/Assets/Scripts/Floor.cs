@@ -6,9 +6,9 @@ using Photon.Pun;
 
 public class Floor : MonoBehaviour
 {
+    #region Atributes
     private Renderer r;
     private Color normal;
-    #region Atributes 
     public int index;
     public int row;
     public Floor[] adyacentes = new Floor[6];
@@ -20,6 +20,9 @@ public class Floor : MonoBehaviour
     }
     private Type type = Type.Vacio;
     public Coroutine powertime;
+    public bool hasColision;
+    #endregion
+    #region GetFloor from direction
     public Floor GetFloor(FloorDetectorType type) {
         switch (type)
         {
@@ -76,6 +79,12 @@ public class Floor : MonoBehaviour
         }
         return FloorDetectorType.East;
     }
+    #endregion
+    #region Adyacents set/get
+    public Floor[] GetAdyacentes()
+    {
+        return adyacentes;
+    }
     public Floor GetEast() {
         return adyacentes[0];
     }
@@ -123,9 +132,9 @@ public class Floor : MonoBehaviour
     {
         adyacentes[5] = _south_west;
     }
-    public Floor[] GetAdyacentes() {
-        return adyacentes;
-    }
+    
+    #endregion
+    #region power
     public void SetPower(Type t, bool cogido, bool soyYo)
     {
         Material m = FindObjectOfType<GameManager>().materiales.normal;
@@ -167,11 +176,14 @@ public class Floor : MonoBehaviour
     {
         return (Vector3.right * transform.position.x + Vector3.forward * transform.position.z);
     }
+    #region Colors
     public void SetColor(Color c) {
+        if (hasColision) return;
         r.material.SetColor("_BaseColor", c);
     }
     public void SetColorN(Color c)
     {
+        if (hasColision) return;
         normal = c;
     }
     public Color GetColor() {
@@ -181,7 +193,7 @@ public class Floor : MonoBehaviour
     {
         return normal;
     }
-
+    #endregion
     public override bool Equals(object other)
     {
         if (other == null) return false;

@@ -240,11 +240,11 @@ public class GameManager : MonoBehaviourPun
         while (bcolision)
         {
             //Colision en caso de dos jugadores se intercambien casillas
-            colisiones = PerformNotSameFloorColisions();
+            colisiones = PerformNotSameFloorColisions(ref bcolision);
             //eliminar jugadores que se hayan caido
             DeletePlayersColision(colisiones, false);
             //Colision normal entre jugadores
-            colisiones = PerformSameFloorColisions();
+            colisiones = PerformSameFloorColisions(ref bcolision);
             //eliminar jugadores que se hayan caido
             DeletePlayersColision(colisiones, true);
             //Colisiones cinemáticas
@@ -301,7 +301,7 @@ public class GameManager : MonoBehaviourPun
         }
         return bcolision;
     }
-    private List<Colisions> PerformSameFloorColisions()
+    private List<Colisions> PerformSameFloorColisions(ref bool bcolision)
     {
         List<Colisions> colisiones = new List<Colisions>();
         for (int k = 0; k < jugadores.Count; k++)
@@ -324,12 +324,13 @@ public class GameManager : MonoBehaviourPun
                         if (!colisiones[pos].positions.Contains(i)) colisiones[pos].positions.Add(i);
                         if (!colisiones[pos].positions.Contains(k)) colisiones[pos].positions.Add(k);
                     }
+                    bcolision = true;
                 }
             }
         }
         return colisiones;
     }
-    private List<Colisions> PerformNotSameFloorColisions()
+    private List<Colisions> PerformNotSameFloorColisions(ref bool bcolision)
     {
         List<Colisions> colisiones = new List<Colisions>();
         for (int k = 0; k < jugadores.Count; k++)
@@ -342,6 +343,7 @@ public class GameManager : MonoBehaviourPun
                     colision.positions.Add(k);
                     colision.positions.Add(i);
                     colisiones.Add(colision);
+                    bcolision = true;
                 }
             }
         }
@@ -521,7 +523,7 @@ public class GameManager : MonoBehaviourPun
     private void AnimateFloors()
     {
         if (!PhotonNetwork.IsMasterClient) return;
-        StartCoroutine(DestroyRows());
+        //StartCoroutine(DestroyRows());
         StartCoroutine(SpawnPowerUps());
     }
     public void SpawnPowerUp(float time)

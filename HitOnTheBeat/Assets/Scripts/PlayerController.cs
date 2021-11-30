@@ -266,7 +266,7 @@ public class PlayerController : MonoBehaviourPun
 
                     //PERFORM MOVEMENT
                     //Si ha sido encontrado un suelo valido o 
-                    if (nextFloor != null)
+                    if (nextFloor != null && !nextFloor.hasColision)
                     {
                         movimientoMarcado = true;
                         photonView.RPC("RegisterClickRPC", RpcTarget.MasterClient, GetIdPlayer(),
@@ -505,12 +505,12 @@ public class PlayerController : MonoBehaviourPun
         }
         if (!echado)
         {
+            if (nextFloor.hasColision == true) {
+                fuerzaCinetica = 0;
+                nextFloor = actualFloor;
+            }
             photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
-            //if (sameFloor) {photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); }
-            //En el caso en el que la colision no fuera en la misma casilla la anterior y la posterior casillas serán la misma
-            //else {
             photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); 
-            //}
             photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
         else
