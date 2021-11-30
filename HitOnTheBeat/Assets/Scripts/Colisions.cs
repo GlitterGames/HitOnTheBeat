@@ -123,11 +123,11 @@ public class Colisions
     {
         if (positions.Count > 2)
         {
-            this.moreThanTwo = false;
+            this.moreThanTwo = true;
         }
         else
         {
-            this.moreThanTwo = true;
+            this.moreThanTwo = false;
         }
         return PerformPowersColision();
     }
