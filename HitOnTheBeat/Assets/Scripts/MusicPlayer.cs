@@ -30,7 +30,6 @@ public class MusicPlayer : MonoBehaviourPun
         int numeroCancion = GetRandom();
         duracionCancion(numeroCancion);
         StartCoroutine(WaitForSong(numeroCancion));
-        StartCoroutine(ChangeBMP(numeroCancion, numeroCambios));
     }
 
     private void duracionCancion(int numeroCancion)
@@ -41,6 +40,7 @@ public class MusicPlayer : MonoBehaviourPun
     {
         yield return new WaitForSeconds(3f);
         StartSong(numeroCancion);
+        StartCoroutine(ChangeBMP(numeroCancion, numeroCambios));
     }
 
     public void StartSong(int numeroCancion)
