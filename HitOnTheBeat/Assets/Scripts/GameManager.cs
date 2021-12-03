@@ -239,6 +239,7 @@ public class GameManager : MonoBehaviourPun
         List<Colisions> colisiones = new List<Colisions>();
         while (bcolision)
         {
+            bcolision = false;
             //Colision en caso de dos jugadores se intercambien casillas
             colisiones = PerformNotSameFloorColisions(ref bcolision);
             //eliminar jugadores que se hayan caido
