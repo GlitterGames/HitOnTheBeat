@@ -366,10 +366,12 @@ public class GameManager : MonoBehaviourPun
 
     private void PerformMovements()
     {
+        foreach (var player in jugadores) player.seHaMovido = false;
         while (movimientos.Count > 0)
         {
             Movement m = movimientos.Dequeue();
             m.player.Mover(m.nextFloor, m.dir);
+            m.player.seHaMovido = true;
         }
     }
 

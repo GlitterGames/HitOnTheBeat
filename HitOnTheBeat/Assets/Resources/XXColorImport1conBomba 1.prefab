@@ -220,6 +220,7 @@ MonoBehaviour:
   secondsCounter: 0
   secondsToCount: 0.4
   movimientoMarcado: 0
+  seHaMovido: 0
   durationPowerUp: 5
   hitsStats: 0
   jumpStats: 0

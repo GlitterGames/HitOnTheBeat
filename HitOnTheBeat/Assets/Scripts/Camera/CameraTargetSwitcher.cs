@@ -32,10 +32,6 @@ public class CameraTargetSwitcher : MonoBehaviour
     {
         cc = GetComponent<CameraController>();
     }
-    private void Start()
-    {
-        SwitchToFreeCamera();
-    }
 
     public void SwitchToFreeCamera()
     {

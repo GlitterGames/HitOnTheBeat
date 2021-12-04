@@ -94,6 +94,7 @@ public class PlayerController : MonoBehaviourPun
     public float secondsCounter = 0f;
     public float secondsToCount = 0.4f;
     public bool movimientoMarcado = false;
+    public bool seHaMovido = false;
     private Vector3 pos = Vector3.zero;
     private Power_Up m_power = Power_Up.NORMAL;
     public Power_Up Power
@@ -353,7 +354,6 @@ public class PlayerController : MonoBehaviourPun
     public void NoHaPulsadoRPC()
     {
         this.Fuerza -= fuerzaSinPulsar;
-        if (Fuerza < 0) Fuerza = 0;
         fuerzaSinPulsar++;
     }
 
@@ -432,8 +432,17 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
+    private void ColorearEcharRPC(int row, int index)
+    {
+        FindObjectOfType<CamShake>().Shake(0.33f);
+        SetNormalColor(actualFloor);
+        SetAreaColor(gameManager.casillas[row][index]);
+    }
+
+    [PunRPC]
     private void NoColorearRPC()
     {
+        FindObjectOfType<CamShake>().Shake(2f);
         SetNormalColor(actualFloor);
     }
 
@@ -510,7 +519,7 @@ public class PlayerController : MonoBehaviourPun
                 dir = actualFloor.GetInverseDireccion(dir);
                 nextFloor = actualFloor;
             }
-            photonView.RPC("ColorearRPC", photonView.Owner, nextFloor.row, nextFloor.index);
+            photonView.RPC("ColorearEcharRPC", photonView.Owner, nextFloor.row, nextFloor.index);
             photonView.RPC("EcharRPC", RpcTarget.All, nextFloor.row, nextFloor.index, dir); 
             photonView.RPC("EcharServerRPC", RpcTarget.AllViaServer, nextFloor.row, nextFloor.index);
         }
@@ -605,9 +614,7 @@ public class PlayerController : MonoBehaviourPun
     }
 
     public void Caer() {
-        pos.x = transform.position.x;
-        pos.y = transform.position.y;
-        pos.z = transform.position.z;
+        pos = transform.position;
         photonView.RPC("EcharMapaRPC", RpcTarget.All);
         photonView.RPC("EcharMapaServerRPC", RpcTarget.AllViaServer, transform.position.x, transform.position.z);
     }
@@ -1061,7 +1068,10 @@ public class PlayerController : MonoBehaviourPun
                 HUDManager.instance.durationUltimate = ULTIMATE_MAX_BEAT_DURATION;
                 SetAreaColor(actualFloor);
             }
-            Debug.Log("Bomba Color ejecutado");
+        }
+        else
+        {
+            FindObjectOfType<CamShake>().Shake(2);
         }
     }
     #endregion
@@ -1275,7 +1285,8 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     private void SetPlayerCamera(int id)
     {
-        FindObjectOfType<VirtualCameraController>().SetTarget(PhotonView.Find(id).transform);
+        FindObjectOfType<CameraTargetSwitcher>().target = PhotonView.Find(id).transform;
+        FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
     }
 
     [PunRPC]
