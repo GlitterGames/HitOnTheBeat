@@ -47,7 +47,11 @@ public class SceneTransitioner : MonoBehaviour
     public void GoToLobbyScene(float delay)
     {
         efectosSonido = GetComponent<EfectosSonido>();
-        efectosSonido.PlayEffect(0);
+        if(efectosSonido) efectosSonido.PlayEffect(0);
+        else
+        {
+            FindObjectOfType<EfectosSonido>().PlayEffect(0);
+        }
         GameObject.Find("Animation").GetComponent<Animator>().SetTrigger("Activate");
         this.level = 1;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));

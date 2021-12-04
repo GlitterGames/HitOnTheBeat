@@ -42,7 +42,8 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     private void Start()
     {
         //Asignamos la cámara al jugador.
-        FindObjectOfType<VirtualCameraController>().SetTarget(my_player.transform);
+        FindObjectOfType<CameraTargetSwitcher>().target = my_player.transform;
+        FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
 
         //Actualizamos la lista de jugadores del master.
         if (PhotonNetwork.IsMasterClient) FindObjectOfType<GameManager>().UpdatePlayers();
@@ -50,8 +51,6 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     }
     public void OnGoBack()
     {
-        efectosSonido = GetComponent<EfectosSonido>();
-        efectosSonido.PlayEffect(0);
-        FindObjectOfType<SceneTransitioner>().GoToLobbyScene(0);
+        PhotonNetwork.LeaveRoom(true);
     }
 }

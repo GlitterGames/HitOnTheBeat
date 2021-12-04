@@ -37,6 +37,7 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
     
     public override void OnLeftRoom()
     {
+        FindObjectOfType<CameraTargetSwitcher>().SwitchToFreeCamera();
         if(endGame)
             FindObjectOfType<SceneTransitioner>().GoToVictoryScene(0);
         else
