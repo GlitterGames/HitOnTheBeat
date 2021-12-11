@@ -625,7 +625,7 @@ public class PlayerController : MonoBehaviourPun
         }
         Floor.Type t = actualFloor.GetPower();
         SetPowerUpFloor(actualFloor, Floor.Type.Vacio);
-        powerCoroutine = gameManager.StartCoroutine(this);
+        powerCoroutine = StartCoroutine(PowerUp());
         photonView.RPC("GetPowerUpRPC", RpcTarget.All, t);
     }
     

@@ -176,11 +176,7 @@ public class Floor : MonoBehaviour
     {
         return (Vector3.right * transform.position.x + Vector3.forward * transform.position.z);
     }
-    public void StopCoroutinePowertime()
-    {
-        if(powertime!=null) StopCoroutine(powertime);
-        else Debug.Log("No tiene corutina de power up");
-    }
+
     #region Colors
     public void SetColor(Color c) {
         if (hasColision) return;

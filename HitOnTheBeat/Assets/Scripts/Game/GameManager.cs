@@ -187,7 +187,8 @@ public class GameManager : MonoBehaviourPun
                 {
                     Debug.Log("HE PILLADO UN POWE UP");
                     jugador.GetPowerUp();
-                    jugador.actualFloor.StopCoroutinePowertime();
+                    if(jugador.actualFloor.powertime!=null) StopCoroutine(jugador.actualFloor.powertime);
+                    else Debug.Log("No tiene corutina de power up");
                 }
             }
         }
@@ -351,10 +352,6 @@ public class GameManager : MonoBehaviourPun
             }
         }
         return colisiones;
-    }
-    public Coroutine StartCoroutine(PlayerController p)
-    {
-        return StartCoroutine(p.PowerUp());
     }
     #endregion
     //Esta region podría mejorarse mediante la implementación de eventos.
