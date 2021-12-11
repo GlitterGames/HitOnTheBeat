@@ -64,7 +64,7 @@ public class MusicPlayer : MonoBehaviourPun
             switch(numeroCambios)
             {
                 case 0:
-                        segundosEspera = 19.20f;
+                        segundosEspera = 19.80f;
                         bpm = 1.34f;
                     break;
                 case 1:
@@ -106,7 +106,7 @@ public class MusicPlayer : MonoBehaviourPun
             switch(numeroCambios)
             {
                 case 0:
-                        segundosEspera = 56.88f;
+                        segundosEspera = 57.76875f;
                         bpm = 1.66f;
                     break;
                 case 1:
