@@ -61,6 +61,6 @@ public class Victory : MonoBehaviour
 
     public void OnContinue()
     {
-        FindObjectOfType<SceneTransitioner>().StartTransition(1, 1f, "Regresando a Lobby");
+        FindObjectOfType<SceneTransitioner>().StartTransition(1, 1f, "Regresando al Lobby");
     }
 }
