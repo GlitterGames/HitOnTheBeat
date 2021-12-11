@@ -78,6 +78,13 @@ public class Lobby : MonoBehaviourPunCallbacks
 
 
     }
+    void OnPlayerLeftRoom(Player player)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.SetMasterClient(PhotonNetwork.PlayerList[0]);
+        }
+    }
     void OnPhotonPlayerConnected()
     {
         UpdatePlayerList();
@@ -154,6 +161,16 @@ public class Lobby : MonoBehaviourPunCallbacks
     public void OnRoomNameChanged(string nameIn)
     {
         roomName = nameIn;
+
+    }
+    public void AbandonarSala()
+    {
+        PhotonNetwork.LeaveRoom();
+        CanvasLobby.SetActive(true);
+        CanvasRoom.SetActive(false);
+        buscarPartida.interactable = true;
+        unirseSala.interactable = true;
+        crearSala.interactable = true;
 
     }
     public void OnRoomSizeChanged(string sizeIn)
