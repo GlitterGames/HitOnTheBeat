@@ -17,11 +17,11 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public void Awake()
     {
         st = FindObjectOfType<SceneTransitioner>();
-        MenuMusicPlayer.Instance.PlayMusic(0);
     }
 
     void Start()
     {
+        MenuMusicPlayer.Instance.PlayMusic(0);
         efectosSonido = GetComponent<EfectosSonido>();
         _name.text = PlayerPrefs.GetString("name", "");
     }

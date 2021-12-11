@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Update()
     {
-        if (transform.position != newPos)
+        if (!transform.position.Equals(newPos))
         {
             secondsCounter += Time.deltaTime;
             float step = speed * Time.deltaTime;
@@ -193,11 +193,13 @@ public class PlayerController : MonoBehaviourPun
                 transform.position = Vector3.MoveTowards(transform.position, newPos, step);
             if ((animator.GetBool("IsJumping") || (animator.GetBool("IsAttacking"))) && !animator.GetBool("IsFalling"))
             {
+                if(transform.position.Equals(newPos)) return;
                 Quaternion rotTarget = Quaternion.LookRotation(newPos - this.transform.position);
                 this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, rotTarget, 250f * Time.deltaTime);
             }
             else if (animator.GetBool("IsFalling"))
             {
+                if (transform.position.Equals(oldPos)) return;
                 Quaternion rotTarget = Quaternion.LookRotation(oldPos - this.transform.position);
                 this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, rotTarget, 50f * Time.deltaTime);
             }
