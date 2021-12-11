@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviourPun
                     HUDManager.instance.SetFuerza(MAX_STRENGHT);
                 }
             }
+            playersForce.changePlayerForce(m_fuerza);
         }
     }
     public int fuerzaCinetica;
@@ -144,7 +145,6 @@ public class PlayerController : MonoBehaviourPun
         previousFloor = actualFloor;
         newPos = transform.position;
         oldPos = transform.position;
-        Fuerza = 0;
         fuerzaCinetica = 0;
         colision = false;
         golpeador = -1;
@@ -161,6 +161,7 @@ public class PlayerController : MonoBehaviourPun
 
     void Start()
     {
+        Fuerza = 0;
         efectosSonido = GetComponent<EfectosSonido>();
         if (photonView.IsMine) StartCoroutine(PrimerPintado());
         SetEscudo(false);
@@ -350,7 +351,6 @@ public class PlayerController : MonoBehaviourPun
     public void SetFuerzaRPC(int fuerza)
     {
         Fuerza = fuerza;
-        playersForce.changePlayerForce(fuerza);
     }
 
     [PunRPC]
