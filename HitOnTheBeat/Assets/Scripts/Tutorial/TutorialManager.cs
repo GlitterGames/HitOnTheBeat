@@ -6,7 +6,7 @@ using Photon.Pun;
 
 public class TutorialManager : MonoBehaviourPun
 {
-
+    /*
 
     #region Estructuras
     [System.Serializable]
@@ -574,5 +574,5 @@ public class TutorialManager : MonoBehaviourPun
             RemovePlayers.instance.winnerSkin = jugadores[0].tipoSkin;
         }
         jugadores.RemoveAt(index);
-    }
+    }*/
 }
