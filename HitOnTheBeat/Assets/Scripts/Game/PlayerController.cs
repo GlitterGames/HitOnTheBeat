@@ -1355,7 +1355,7 @@ public class PlayerController : MonoBehaviourPun
     public void DoEndGameRPC(string name, int num, int skin, int numBeats)
     {
         PlayerController mpc = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
-        PlayerSelector ps = FindObjectOfType<PlayerSelector>();
+        PersistenceData ps = FindObjectOfType<PersistenceData>();
         ps.puesto = mpc.puesto;
         ps.playerWinnerName = name;
         ps.playerWinner = num;

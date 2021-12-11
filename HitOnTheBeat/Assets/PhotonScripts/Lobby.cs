@@ -30,7 +30,7 @@ public class Lobby : MonoBehaviourPunCallbacks
     public void Start()
     {
 
-        if (!FindObjectOfType<PlayerSelector>()) DontDestroyOnLoad(Instantiate(playerSelector,
+        if (!FindObjectOfType<PersistenceData>()) DontDestroyOnLoad(Instantiate(playerSelector,
              playerSelector.transform.position, playerSelector.transform.rotation));
 
         efectosSonido = GetComponent<EfectosSonido>();
@@ -161,5 +161,11 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         base.OnDisconnected(cause);
         FindObjectOfType<SceneTransitioner>().StartTransition(0, 0f);
+    }
+
+    public override void OnLeftLobby()
+    {
+        base.OnLeftLobby();
+        PhotonNetwork.Disconnect();
     }
 }

@@ -58,14 +58,14 @@ public class LobbyPlayerSelector : MonoBehaviour
                 selectedSkin = PlayerPrefs.GetInt("skinFrank", 0);
                 break;
         }
-        playerDemo[FindObjectOfType<PlayerSelector>().selectedPlayer]
-            .skins[FindObjectOfType<PlayerSelector>().selectedSkin].SetActive(false);
+        playerDemo[FindObjectOfType<PersistenceData>().selectedPlayer]
+            .skins[FindObjectOfType<PersistenceData>().selectedSkin].SetActive(false);
         playerDemo[type].skins[selectedSkin].SetActive(true);
-        marcador[FindObjectOfType<PlayerSelector>().selectedPlayer].SetActive(false);
+        marcador[FindObjectOfType<PersistenceData>().selectedPlayer].SetActive(false);
         marcador[type].SetActive(true);
         nombreText.SetText(nombre[type]);
         infoText.SetText(info[type]);
-        FindObjectOfType<PlayerSelector>().selectedPlayer = type;
-        FindObjectOfType<PlayerSelector>().selectedSkin = selectedSkin;
+        FindObjectOfType<PersistenceData>().selectedPlayer = type;
+        FindObjectOfType<PersistenceData>().selectedSkin = selectedSkin;
     }
 }
