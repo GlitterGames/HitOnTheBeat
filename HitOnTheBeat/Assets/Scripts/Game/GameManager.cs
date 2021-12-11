@@ -111,10 +111,10 @@ public class GameManager : MonoBehaviourPun
     //Se ejecuta cada vez que comienza un nuevo Beat.
     public void DoBeatActions()
     {
-        ApplyEfectsFromFloor();
         PerformUltimates();
         PerformMovements();
         PerformColision();
+        ApplyEfectsFromFloor();
         spawn = true;
         while (fallenFloors.Count>0)
         {
@@ -529,7 +529,7 @@ public class GameManager : MonoBehaviourPun
     private void AnimateFloors()
     {
         if (!PhotonNetwork.IsMasterClient) return;
-        //StartCoroutine(DestroyRows());
+        StartCoroutine(DestroyRows());
         StartCoroutine(SpawnPowerUps());
     }
     public void SpawnPowerUp(float time)
@@ -548,6 +548,7 @@ public class GameManager : MonoBehaviourPun
                 if (jugadores[a].actualFloor.Equals(f)) seguir = true;
             }
             if (f.GetPower() != Floor.Type.Vacio) seguir = true;
+            if(f.hasColision == true) seguir = true;
             if (numRows < 3) { return; }
             iteraciones++;
         }

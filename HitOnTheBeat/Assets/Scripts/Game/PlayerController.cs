@@ -812,7 +812,7 @@ public class PlayerController : MonoBehaviourPun
         f.GetComponentInChildren<Rigidbody>().useGravity = true;
     }
     [PunRPC]
-    public void CinematicRowRPC(int row, int index)
+    public void CinematicRowRPC(int row)
     {
         foreach(Floor f in gameManager.casillas[row])
         {
@@ -832,7 +832,7 @@ public class PlayerController : MonoBehaviourPun
         f.gameObject.SetActive(false);
     }
     [PunRPC]
-    public void FallRowRPC(int row, int index)
+    public void FallRowRPC(int row)
     {
         foreach (Floor f in gameManager.casillas[row])
         {
