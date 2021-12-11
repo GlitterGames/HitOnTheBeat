@@ -461,14 +461,7 @@ public class PlayerController : MonoBehaviourPun
         Floor nextFloor = null;
         if(notCinematic == true)
         {
-            //Se vuelve a ver al fantasma cuando recibe un golpe.
-            if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.INVISIBILITY)
-            {
-                ChangeStateRPC(Estado.NORMAL);
-                HUDManager.instance.durationUltimate = 1;
-            }
             photonView.RPC("PushRPC", photonView.Owner);
-            if(estadoActual==Estado.ULTIMATE && tipoUltimate == Ultimate.BOMBA_COLOR) CancelUltimate();
             this.colision = true; //Se acaba de realizar colision por lo que no realiza la cinematica hasta la siguiente ejecucion
             fuerzaCinetica = 0;
             this.golpeador = golpeador;
@@ -1270,6 +1263,13 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void PushRPC()
     {
+        //Se vuelve a ver al fantasma cuando recibe un golpe.
+        if (estadoActual == Estado.EXECUTING && tipoUltimate == Ultimate.INVISIBILITY)
+        {
+            photonView.RPC("ChangeStateRPC", RpcTarget.All, Estado.NORMAL);
+            HUDManager.instance.durationUltimate = 1;
+        }
+        if (estadoActual == Estado.ULTIMATE && tipoUltimate == Ultimate.BOMBA_COLOR) CancelUltimate();
         efectosSonido.PlayEffect(3);
         pushStats++;
     }
