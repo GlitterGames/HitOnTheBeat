@@ -26,6 +26,11 @@ public class LobbyPlayerSelector : MonoBehaviour
 
     public EfectosSonido efectosSonido;
 
+    private void Awake()
+    { 
+        MenuMusicPlayer.Instance.PlayMusic(0);
+    }
+
     void Start()
     {
         efectosSonido = GetComponent<EfectosSonido>();

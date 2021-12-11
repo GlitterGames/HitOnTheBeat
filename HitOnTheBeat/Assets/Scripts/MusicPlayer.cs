@@ -10,7 +10,6 @@ public class MusicPlayer : MonoBehaviourPun
     public AudioSource cancionActual;
 
     public Ritmo ritmo;
-    private int pos;
     private int numeroCambios = 0;
     private float segundosEspera;
     private float bpm;

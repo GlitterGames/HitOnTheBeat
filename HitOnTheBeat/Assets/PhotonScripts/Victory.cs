@@ -22,6 +22,11 @@ public class Victory : MonoBehaviour
     public TMP_Text averageRhythmText;
     public EfectosSonido efectosSonido;
 
+    private void Awake()
+    {
+        MenuMusicPlayer.Instance.PlayMusic(1);
+    }
+
     void Start()
     {
         efectosSonido = GetComponent<EfectosSonido>();
