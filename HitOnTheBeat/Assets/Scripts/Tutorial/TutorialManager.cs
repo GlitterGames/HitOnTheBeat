@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 
-public class GameManager : MonoBehaviourPun
+public class TutorialManager : MonoBehaviourPun
 {
 
 
@@ -178,6 +178,7 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
+
     public void ApplyEfectsFromFloor() {
         if (PhotonNetwork.IsMasterClient)
         {
@@ -187,7 +188,8 @@ public class GameManager : MonoBehaviourPun
                 {
                     Debug.Log("HE PILLADO UN POWE UP");
                     jugador.GetPowerUp();
-                    jugador.actualFloor.StopCoroutinePowertime();
+                    if(jugador.actualFloor.powertime!=null) StopCoroutine(jugador.actualFloor.powertime);
+                    else Debug.Log("No tiene corutina de power up");
                 }
             }
         }
@@ -235,8 +237,7 @@ public class GameManager : MonoBehaviourPun
     {
         bool bcolision = true; //En caso de que no se tengan que comprobar colisiones
         List<Colisions> colisiones = new List<Colisions>();
-        int iteraciones = 0;
-        while (bcolision && iteraciones < 200)
+        while (bcolision)
         {
             bcolision = false;
             //Colision en caso de dos jugadores se intercambien casillas
@@ -249,11 +250,6 @@ public class GameManager : MonoBehaviourPun
             DeletePlayersColision(colisiones, true);
             //Colisiones cinemáticas
             CinematicColisions(ref bcolision);
-            iteraciones++;
-        }
-        if (bcolision)
-        {
-            Debug.LogWarning("Se ha sobrepasado el máximo número de colisiones por beat");
         }
     }
     private void DeletePlayersColision(List<Colisions> colisiones, bool sameFloor)
@@ -536,8 +532,7 @@ public class GameManager : MonoBehaviourPun
         bool seguir = true;
         Floor f = null;
         if (numRows < 3) { return; }
-        int iteraciones = 0;
-        while (seguir && iteraciones < 100) { 
+        while (seguir) { 
             seguir = false;
             int i = Random.Range(0, numRows);
             int j = Random.Range(0, casillas[i].Length);
@@ -548,12 +543,6 @@ public class GameManager : MonoBehaviourPun
             }
             if (f.GetPower() != Floor.Type.Vacio) seguir = true;
             if (numRows < 3) { return; }
-            iteraciones++;
-        }
-        if (seguir)
-        {
-            Debug.Log("No ha sido posible hacer aparecer el power up");
-            return;
         }
         int num = Floor.Type.GetNames(typeof(Floor.Type)).Length;
         int k = Random.Range(2, num);

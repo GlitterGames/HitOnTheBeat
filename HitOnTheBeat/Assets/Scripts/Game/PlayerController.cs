@@ -728,6 +728,14 @@ public class PlayerController : MonoBehaviourPun
     {
         photonView.RPC("SetColorNRPC", RpcTarget.AllViaServer, f.row, f.index, c.b, c.r, c.g);
     }
+    public void SetColorRow(int row, Color c)
+    {
+        photonView.RPC("SetColorRowRPC", RpcTarget.AllViaServer, row, c.b, c.r, c.g);
+    }
+    public void SetColorRowN(int row, Color c)
+    {
+        photonView.RPC("SetColorRowNRPC", RpcTarget.AllViaServer, row, c.b, c.r, c.g);
+    }
     public void SetPower(Floor f, Floor.Type type, bool b1, bool b2)
     {
         photonView.RPC("SetPowerRPC", RpcTarget.AllViaServer, f.row, f.index, type, b1, b2);
@@ -736,6 +744,10 @@ public class PlayerController : MonoBehaviourPun
     {
         photonView.RPC("CinematicRPC", RpcTarget.AllViaServer, f.row, f.index);
     }
+    public void Cinematic(int row)
+    {
+        photonView.RPC("CinematicRowRPC", RpcTarget.AllViaServer, row);
+    }
     public void CinematicBackground(int pos)
     {
         photonView.RPC("CinematicBackgroundRPC", RpcTarget.AllViaServer, pos);
@@ -743,6 +755,28 @@ public class PlayerController : MonoBehaviourPun
     public void Fall(Floor f)
     {
         photonView.RPC("FallRPC", RpcTarget.AllViaServer, f.row, f.index);
+    }
+    public void Fall(int row)
+    {
+        photonView.RPC("FallRowRPC", RpcTarget.AllViaServer, row);
+    }
+    [PunRPC]
+    public void SetColorRowRPC(int row, float b, float r, float g)
+    {
+        foreach (Floor f in gameManager.casillas[row])
+        {
+            Color c = new Color(r, g, b);
+            f.SetColor(c);
+        }
+    }
+    [PunRPC]
+    public void SetColorRowNRPC(int row, float b, float r, float g)
+    {
+        foreach(Floor f in gameManager.casillas[row])
+        {
+            Color c = new Color(r, g, b);
+            f.SetColorN(c);
+        }        
     }
     [PunRPC]
     public void SetColorRPC(int row, int index, float b, float r, float g)
@@ -778,6 +812,15 @@ public class PlayerController : MonoBehaviourPun
         f.GetComponentInChildren<Rigidbody>().useGravity = true;
     }
     [PunRPC]
+    public void CinematicRowRPC(int row, int index)
+    {
+        foreach(Floor f in gameManager.casillas[row])
+        {
+            f.GetComponentInChildren<Rigidbody>().isKinematic = false;
+            f.GetComponentInChildren<Rigidbody>().useGravity = true;
+        }        
+    }
+    [PunRPC]
     public void CinematicBackgroundRPC(int pos)
     {
         gameManager.background[pos].SetActive(false);
@@ -787,6 +830,14 @@ public class PlayerController : MonoBehaviourPun
     {
         Floor f = gameManager.casillas[row][index];
         f.gameObject.SetActive(false);
+    }
+    [PunRPC]
+    public void FallRowRPC(int row, int index)
+    {
+        foreach (Floor f in gameManager.casillas[row])
+        {
+            f.gameObject.SetActive(false);
+        }
     }
     #endregion
 
