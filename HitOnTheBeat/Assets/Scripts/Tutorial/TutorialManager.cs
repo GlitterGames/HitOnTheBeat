@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 
-public class GameManager : MonoBehaviourPun
+public class TutorialManager : MonoBehaviourPun
 {
 
 
