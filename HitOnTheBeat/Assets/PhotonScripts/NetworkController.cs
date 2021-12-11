@@ -44,7 +44,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public void Connect ()
     {
         efectosSonido.PlayEffect(0);
-        st.StartTransition(1);
+        st.StartTransition(1, "Conectando con el Servidor...");
         if (!PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.ConnectUsingSettings())
@@ -70,6 +70,6 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public void GoSettings()
     {
         efectosSonido.PlayEffect(0);
-        FindObjectOfType<SceneTransitioner>().StartTransition(7, 0.5f); ;
+        st.StartTransition(7, 0);
     }
 }

@@ -58,4 +58,9 @@ public class Victory : MonoBehaviour
                 break;
         }
     }
+
+    public void OnContinue()
+    {
+        FindObjectOfType<SceneTransitioner>().StartTransition(1, 1f, "Regresando a Lobby");
+    }
 }

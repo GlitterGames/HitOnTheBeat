@@ -4,13 +4,21 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class SceneTransitioner : MonoBehaviour
 {
     //Prefab del canvas.
     public Animator anim;
+    public TMP_Text info;
     public EfectosSonido efectosSonido;
     int level = 0;
+
+    public void StartTransition(int level, float delay, string texto)
+    {
+        StartTransition(level, delay);
+        info.SetText(texto);
+    }
 
     public void StartTransition(int level, float delay)
     {
@@ -18,6 +26,12 @@ public class SceneTransitioner : MonoBehaviour
         this.level = level;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
+    public void StartTransition(int level, string texto)
+    {
+        StartTransition(level);
+        info.SetText(texto);
+    }
+
     public void StartTransition(int level)
     {
         anim.SetTrigger("Activate");

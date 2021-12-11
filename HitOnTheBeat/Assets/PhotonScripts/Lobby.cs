@@ -148,7 +148,7 @@ public class Lobby : MonoBehaviourPunCallbacks
     public void LoadMap()
     {
         IsLoading = true;
-        FindObjectOfType<SceneTransitioner>().StartTransition(2, 0.5f);
+        FindObjectOfType<SceneTransitioner>().StartTransition(2, 0.5f, "Cargando partida...");
     }
 
     public void OnGoBack()
@@ -160,6 +160,6 @@ public class Lobby : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-        FindObjectOfType<SceneTransitioner>().StartTransition(0, 0);
+        FindObjectOfType<SceneTransitioner>().StartTransition(0, 0f);
     }
 }

@@ -1407,6 +1407,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4519352760965735798, guid: 6ff686066a30f2b4297ef530574d5188, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ff686066a30f2b4297ef530574d5188, type: 3}
 --- !u!1 &1476316388
@@ -1966,17 +1970,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 817b63e6d7dd90a4fac9408e22888dde, type: 3}
---- !u!114 &1804912981 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -1943168027754241743, guid: 817b63e6d7dd90a4fac9408e22888dde, type: 3}
-  m_PrefabInstance: {fileID: 1804912980}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1804912982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d7ec8e00312638478578a72a3194bb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1804912982 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5577550071071704162, guid: 817b63e6d7dd90a4fac9408e22888dde, type: 3}
@@ -4865,10 +4858,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1804912981}
-        m_TargetAssemblyTypeName: SceneTransitioner, Assembly-CSharp
-        m_MethodName: GoToLobbyScene
-        m_Mode: 4
+      - m_Target: {fileID: 1719898107}
+        m_TargetAssemblyTypeName: Victory, Assembly-CSharp
+        m_MethodName: OnContinue
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
