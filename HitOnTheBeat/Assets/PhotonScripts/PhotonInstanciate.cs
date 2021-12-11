@@ -37,6 +37,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
         string namePrefab = playerAvatar[typePlayer].skins[skinPlayer].name;
         my_player = PhotonNetwork.Instantiate(namePrefab, pos, Quaternion.Euler(0,180,0));
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.Instantiate(ritmo.name, pos, Quaternion.identity);
+        MenuMusicPlayer.Instance.StopMusic();
     }
 
     private void Start()
