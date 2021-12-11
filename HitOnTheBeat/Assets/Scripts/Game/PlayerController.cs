@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviourPun
     public int golpeador;
     public EfectosSonido efectosSonido;
     private int puesto = 0;
+    private PlayersForce playersForce;
 
     private int m_fuerza;
     public int Fuerza
@@ -136,6 +137,7 @@ public class PlayerController : MonoBehaviourPun
         my_input.Player.Click.performed += ctx => OnClick();
 
         floorDir = FloorDetectorType.West;
+        playersForce = GetComponent<PlayersForce>();
 
         //Los viewId de Cada jugador se caracterizan por el número 1000 así sabemos de quien es este objeto.
         actualFloor = FindObjectOfType<PhotonInstanciate>().f[GetIdPlayer()];
@@ -348,6 +350,7 @@ public class PlayerController : MonoBehaviourPun
     public void SetFuerzaRPC(int fuerza)
     {
         Fuerza = fuerza;
+        playersForce.changePlayerForce(fuerza);
     }
 
     [PunRPC]

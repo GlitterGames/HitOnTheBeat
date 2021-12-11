@@ -80,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - DisolveValue: 1
+    - DisolveValue: -0.33333328
     - Vector1_2e9c6e83bbcc41dd97a2c3d33bbe2297: 8.3
     - Vector1_6af622c85a5d4499b2984fbfa8f7cf6a: 1
     - Vector1_78669f918dbd473dae575d9ef2e00174: 25
