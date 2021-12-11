@@ -178,7 +178,6 @@ public class GameManager : MonoBehaviourPun
             }
         }
     }
-
     public void ApplyEfectsFromFloor() {
         if (PhotonNetwork.IsMasterClient)
         {
