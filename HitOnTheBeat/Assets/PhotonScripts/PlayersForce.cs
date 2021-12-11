@@ -5,7 +5,7 @@ using Photon.Pun;
 public class PlayersForce : MonoBehaviourPun
 {
     [SerializeField]
-    private Sprite[] imageList = new Sprite[11];
+    private Sprite[] imageList = new Sprite[12];
     [SerializeField]
     public SpriteRenderer spriteRenderer;
     // Start is called before the first frame update
@@ -15,6 +15,10 @@ public class PlayersForce : MonoBehaviourPun
         if (!photonView.IsMine)
         {
             spriteRenderer.sprite = imageList[0];
+        }
+        else
+        {
+            spriteRenderer.sprite = imageList[11];
         }
     }
 
