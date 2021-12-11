@@ -6,8 +6,7 @@ using Photon.Pun;
 
 public class TutorialManager : MonoBehaviourPun
 {
-    /*
-
+    
     #region Estructuras
     [System.Serializable]
     public struct Materiales
@@ -50,18 +49,17 @@ public class TutorialManager : MonoBehaviourPun
     }
     public struct Movement
     {
-        public PlayerController player;
+        public TutorialPlayerController player;
         public Floor nextFloor;
         public FloorDetectorType dir;
     }
     public struct Ultimate
     {
-        public PlayerController player;
-        public PlayerController.Ultimate type;
+        public TutorialPlayerController player;
+        public TutorialPlayerController.Ultimate type;
         public Floor targetFloor;
     }
     #endregion
-	
     #region Variables
     public int numRows;
     public Materiales materiales;
@@ -77,14 +75,13 @@ public class TutorialManager : MonoBehaviourPun
     public GameObject[] background = new GameObject[6];
     public List<Floor[]> casillas = new List<Floor[]>();
     [HideInInspector]
-    public List<PlayerController> jugadores = new List<PlayerController>();
+    public List<TutorialPlayerController> jugadores = new List<TutorialPlayerController>();
     public Queue<Movement> movimientos = new Queue<Movement>();
     public Queue<Ultimate> ultimates = new Queue<Ultimate>();
     public float duracion;
     bool spawn;
-    public Queue<Floor> fallenFloors = new Queue<Floor>();
+    public Queue<int> fallenFloors = new Queue<int>();
     #endregion
-
     void Awake()
     {
         numRows = 5;
@@ -97,7 +94,6 @@ public class TutorialManager : MonoBehaviourPun
         casillas.Add(new Floor[24]);
         casillas.Add(new Floor[30]);
     }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -107,7 +103,6 @@ public class TutorialManager : MonoBehaviourPun
         InitBackground();
         AnimateFloors();
     }
-
     //Se ejecuta cada vez que comienza un nuevo Beat.
     public void DoBeatActions()
     {
@@ -121,7 +116,6 @@ public class TutorialManager : MonoBehaviourPun
             StartCoroutine(FallFloor(fallenFloors.Dequeue()));
         }
     }
-
     private void InitColor() {
         color.Add(coloresAnillos.anillo0);
         color.Add(coloresAnillos.anillo1);
@@ -146,13 +140,12 @@ public class TutorialManager : MonoBehaviourPun
     public void UpdatePlayers()
     {
         jugadores.Clear();
-        HashSet<GameObject> players = PhotonNetwork.FindGameObjectsWithComponent(typeof(PlayerController));
+        HashSet<GameObject> players = PhotonNetwork.FindGameObjectsWithComponent(typeof(TutorialPlayerController));
         foreach (GameObject go in players)
         {
-            jugadores.Add(go.GetComponent<PlayerController>());
+            jugadores.Add(go.GetComponent<TutorialPlayerController>());
         }
     }
-
     private void InitCasillas()
     {
         //Adquiero todas las casillas de las escena
@@ -166,7 +159,6 @@ public class TutorialManager : MonoBehaviourPun
 
         CasillasSetColor();
     }
-
     private void CasillasSetColor()
     {
         for (int i = 0; i < casillas.Count; i++)
@@ -178,11 +170,10 @@ public class TutorialManager : MonoBehaviourPun
             }
         }
     }
-
     public void ApplyEfectsFromFloor() {
         if (PhotonNetwork.IsMasterClient)
         {
-            foreach (PlayerController jugador in jugadores)
+            foreach (TutorialPlayerController jugador in jugadores)
             {
                 if (jugador.actualFloor.GetPower() != Floor.Type.Vacio)
                 {
@@ -348,17 +339,17 @@ public class TutorialManager : MonoBehaviourPun
         }
         return colisiones;
     }
-    public Coroutine StartCoroutine(PlayerController p)
+    public Coroutine StartCoroutine(TutorialPlayerController p)
     {
         return StartCoroutine(p.PowerUp());
     }
     #endregion
     //Esta region podría mejorarse mediante la implementación de eventos.
-    #region PlayerControllerManagement
+    #region TutorialPlayerControllerManagement
     public void RegisterMovement(int id, int row, int index, FloorDetectorType dir)
     {
         Movement move = new Movement();
-        move.player = jugadores.Find((player) => player.GetIdPlayer() == id);
+        move.player = jugadores.Find((player) => player.id == id);
         move.nextFloor = casillas[row][index];
         move.dir = dir;
         movimientos.Enqueue(move);
@@ -375,18 +366,18 @@ public class TutorialManager : MonoBehaviourPun
         }
     }
 
-    public void RegisterUltimate(int id, PlayerController.Ultimate type)
+    public void RegisterUltimate(int id, TutorialPlayerController.Ultimate type)
     {
         Ultimate ultimate = new Ultimate();
-        ultimate.player = jugadores.Find((player) => player.GetIdPlayer() == id);
+        ultimate.player = jugadores.Find((player) => player.id == id);
         ultimate.type = type;
         ultimates.Enqueue(ultimate);
     }
 
-    public void RegisterUltimate(int id, PlayerController.Ultimate type, int row, int index)
+    public void RegisterUltimate(int id, TutorialPlayerController.Ultimate type, int row, int index)
     {
         Ultimate ultimate = new Ultimate();
-        ultimate.player = jugadores.Find((player) => player.GetIdPlayer() == id);
+        ultimate.player = jugadores.Find((player) => player.id == id);
         ultimate.type = type;
         ultimate.targetFloor = casillas[row][index];
         ultimates.Enqueue(ultimate);
@@ -399,19 +390,19 @@ public class TutorialManager : MonoBehaviourPun
             Ultimate ul = ultimates.Dequeue();
             switch (ul.type)
             {
-                case PlayerController.Ultimate.MEGA_PUNCH:
+                case TutorialPlayerController.Ultimate.MEGA_PUNCH:
                     ul.player.PerformMegaPunch(true);
                     break;
-                case PlayerController.Ultimate.BOMBA_COLOR:
+                case TutorialPlayerController.Ultimate.BOMBA_COLOR:
                     ul.player.PerformBombaColor(true, ul.targetFloor);
                     break;
-                case PlayerController.Ultimate.INVISIBILITY:
+                case TutorialPlayerController.Ultimate.INVISIBILITY:
                     ul.player.PerformInvisibility(true);
                     break;
             }
         }
         //Se actualizan los valores de las Ultimates en todos los jugadores.
-        foreach (PlayerController pc in jugadores)
+        foreach (TutorialPlayerController pc in jugadores)
         {
             pc.UpdateUltimateTime();
         }
@@ -420,55 +411,121 @@ public class TutorialManager : MonoBehaviourPun
     #endregion
 
     #region ROWS and POWER UPS
-    public void DestroyRow(int row, float seg, int repeticiones) {
-        foreach (Floor f in casillas[row])
-        {
-            StartCoroutine(Blink(f, seg, repeticiones));
-        }
+    public void DestroyRow(int row, float seg, int repeticiones)
+    {
+
+        StartCoroutine(Blink(row, seg, repeticiones));
         StartCoroutine(BlinkBackground(row, seg, repeticiones));
     }
-    private IEnumerator Blink(Floor f, float seg, int repeticiones) {
+    private IEnumerator Blink(int row, float seg, int repeticiones)
+    {
         int j;
-        jugadores[0].SetPower(f, Floor.Type.Parpadeando, false, false);
+        foreach (Floor f in casillas[row])
+        {
+            SetPower(f, Floor.Type.Parpadeando, false, false);
+        }
         //LAS CASILLAS PARPADEAN
-        for (j = 1; j < colorBlink.Count; j++) {
-            Color c1 = colorBlink[j-1];
+        for (j = 1; j < colorBlink.Count; j++)
+        {
+            Color c1 = colorBlink[j - 1];
             Color c2 = colorBlink[j];
-            jugadores[0].SetColor(f, c1);
+            SetColorRow(row, c1);
             yield return new WaitForSeconds(seg);
             for (int i = 0; i < repeticiones; i++)
             {
-                jugadores[0].SetColor(f, c1);
-                jugadores[0].SetColorN(f, c1);
-                yield return new WaitForSeconds(seg/repeticiones);
-                jugadores[0].SetColor(f, c2);
-                jugadores[0].SetColorN(f, c2);
-                yield return new WaitForSeconds(seg/repeticiones);
+                SetColorRow(row, c1);
+                SetColorRowN(row, c1);
+                yield return new WaitForSeconds(seg / repeticiones);
+                SetColorRow(row, c2);
+                SetColorRowN(row, c2);
+                yield return new WaitForSeconds(seg / repeticiones);
             }
         }
         yield return new WaitForSeconds(seg);
         yield return new WaitForSeconds(0.02f);
-        fallenFloors.Enqueue(f);
+        fallenFloors.Enqueue(row);
     }
-    private IEnumerator FallFloor(Floor f)
+    #region RPC
+    public void SetColorRowRPC(int row, Color c)
+    {
+        foreach (Floor f in casillas[row])
+        {
+            f.SetColor(c);
+        }
+    }
+    public void SetColorBackgroundRPC(int pos, Color c)
+    {
+        background[pos].GetComponent<Renderer>().material.color = c;
+    }
+    public void SetColorRowN(int row, Color c)
+    {
+        foreach (Floor f in casillas[row])
+        {
+            f.SetColorN(c);
+        }
+    }
+    public void SetColorRow(int row, Color c)
+    {
+        foreach (Floor f in casillas[row])
+        {
+            f.SetColor(c);
+        }
+    }
+    public void SetColor(Floor f, Color c)
+    {
+        f.SetColor(c);
+    }
+    public void SetColorN(Floor f, Color c)
+    {
+        f.SetColorN(c);
+    }
+    public void SetPower(Floor f, Floor.Type type, bool b1, bool b2)
+    {
+        f.SetPower(type, b1, b2);
+    }
+    public void CinematicRowRPC(int row)
+    {
+        foreach (Floor f in casillas[row])
+        {
+            f.GetComponentInChildren<Rigidbody>().isKinematic = false;
+            f.GetComponentInChildren<Rigidbody>().useGravity = true;
+        }
+    }
+    public void CinematicBackgroundRPC(int pos)
+    {
+        background[pos].SetActive(false);
+    }
+    public void FallRowRPC(int row)
+    {
+        foreach (Floor f in casillas[row])
+        {
+            f.gameObject.SetActive(false);
+        }
+    }
+    #endregion
+    private IEnumerator FallFloor(int row)
     {
         //LAS CASILLAS SE CAEN POR ACCIÓN DE LA GRAVEDAD
-        jugadores[0].Cinematic(f);
+        CinematicRowRPC(row);
         yield return new WaitForSeconds(0.5f);
-        jugadores[0].Fall(f);
+        FallRowRPC(row);
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         //LOS JUGADORES QUE SE ENCUENTREN EN ESAS CASILLAS SE CAERAN
+
         if (PhotonNetwork.IsMasterClient)
         {
             for (int i = 0; i < jugadores.Count; i++)
             {
-                if (jugadores[i].actualFloor.Equals(f))
+                foreach (Floor f in casillas[row])
                 {
-                    jugadores[i].Caer();
-                    RemovePlayer(i);
-                    ReordenarGolpeados(i);
-                    i--;
+                    if (jugadores[i].actualFloor.Equals(f))
+                    {
+                        jugadores[i].Caer();
+                        RemovePlayer(i);
+                        ReordenarGolpeados(i);
+                        i--;
+                    }
                 }
             }
         }
@@ -481,18 +538,18 @@ public class TutorialManager : MonoBehaviourPun
         {
             Color c1 = colorBlink[j - 1];
             Color c2 = colorBlink[j];
-            jugadores[0].SetColorBackground(row, c1);
+            SetColorBackgroundRPC(row, c1);
             yield return new WaitForSeconds(seg);
             for (int i = 0; i < repeticiones; i++)
             {
-                jugadores[0].SetColorBackground(row, c1);
+                SetColorBackgroundRPC(row, c1);
                 yield return new WaitForSeconds(seg / repeticiones);
-                jugadores[0].SetColorBackground(row, c2);
+                SetColorBackgroundRPC(row, c2);
                 yield return new WaitForSeconds(seg / repeticiones);
             }
         }
         yield return new WaitForSeconds(seg);
-        jugadores[0].CinematicBackground(row);
+        CinematicBackgroundRPC(row);
     }
     private IEnumerator DestroyRows()
     {
@@ -524,7 +581,7 @@ public class TutorialManager : MonoBehaviourPun
     private void AnimateFloors()
     {
         if (!PhotonNetwork.IsMasterClient) return;
-        //StartCoroutine(DestroyRows());
+        StartCoroutine(DestroyRows());
         StartCoroutine(SpawnPowerUps());
     }
     public void SpawnPowerUp(float time)
@@ -551,10 +608,10 @@ public class TutorialManager : MonoBehaviourPun
     private IEnumerator SetType(Floor f, Floor.Type t, float time)
     {
         FindObjectOfType<PhotonInstanciate>().my_player.
-            GetComponent<PlayerController>().SetPowerUpFloor(f, t);
+            GetComponent<TutorialPlayerController>().SetPowerUpFloor(f, t);
         yield return new WaitForSeconds(time);
         if(f!=null) FindObjectOfType<PhotonInstanciate>().my_player.
-            GetComponent<PlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
+            GetComponent<TutorialPlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
     }
     #endregion 
     public void ChangeAnimationSpeedOnAllPlayers(float bpm)
@@ -574,5 +631,5 @@ public class TutorialManager : MonoBehaviourPun
             RemovePlayers.instance.winnerSkin = jugadores[0].tipoSkin;
         }
         jugadores.RemoveAt(index);
-    }*/
+    }
 }
