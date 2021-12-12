@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using Photon.Pun.UtilityScripts;
 
 public class PhotonInstanciate : MonoBehaviourPunCallbacks
 {

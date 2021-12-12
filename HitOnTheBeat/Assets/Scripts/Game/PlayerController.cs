@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 using UnityEngine.UI;
+using Photon.Realtime;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -141,7 +142,13 @@ public class PlayerController : MonoBehaviourPun
         playersForce = GetComponentInChildren<PlayersForce>();
 
         //Los viewId de Cada jugador se caracterizan por el número 1000 así sabemos de quien es este objeto.
-        actualFloor = FindObjectOfType<PhotonInstanciate>().f[GetIdPlayer()];
+        int id = -1;
+        Player[] players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (players[i].ActorNumber == photonView.Owner.ActorNumber) id = i;
+        }
+        actualFloor = FindObjectOfType<PhotonInstanciate>().f[id];
         previousFloor = actualFloor;
         newPos = transform.position;
         oldPos = transform.position;
