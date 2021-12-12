@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:HitOnTheBeat/Assets/Layout/TIenda/new.png.meta
-guid: 11907314cf76fe3498abf97d1021bbc4
-=======
-guid: 97b483dd19a0c964c8e1b576ac6da73e
->>>>>>> main:HitOnTheBeat/Assets/Layout/TIenda/barra_tienda.png.meta
+guid: 0d36a1f28e5bfe240851a814f9c86603
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,7 +43,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -93,18 +89,6 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Windows Store Apps
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
