@@ -76,8 +76,6 @@ public class Lobby : MonoBehaviourPunCallbacks
         CanvasLobby.SetActive(false);
         CanvasRoom.SetActive(true);
         CanvasRoomPrivada.SetActive(false);
-        
-
 }
    
     void OnPlayerLeftRoom(Player player)
@@ -129,11 +127,7 @@ public class Lobby : MonoBehaviourPunCallbacks
                 Jugador2.text = PhotonNetwork.PlayerList[1].NickName;
                 Jugador3.text = PhotonNetwork.PlayerList[2].NickName;
                 Jugador4.text = PhotonNetwork.PlayerList[3].NickName;
-
             }
-        
-       
-       
     }
     public void JoinRandom()
     {
@@ -177,6 +171,7 @@ public class Lobby : MonoBehaviourPunCallbacks
     }
     public void IrASalaPrivada()
     {
+        efectosSonido.PlayEffect(0);
         CanvasLobby.SetActive(false);
         CanvasRoomPrivada.SetActive(true);
     }

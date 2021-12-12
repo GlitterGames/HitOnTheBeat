@@ -36,13 +36,6 @@ public class SceneTutorialPhoto : MonoBehaviour
         SetPosition();
         
     }
-    public void GoBack() {
-        canvas.SetActive(false);
-    }
-    public void GoTutorial()
-    {
-        canvas.SetActive(true);
-    }
     public void AbleBackButton() {
         back.interactable = true;
     }

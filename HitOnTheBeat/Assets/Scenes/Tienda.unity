@@ -623,7 +623,7 @@ MonoBehaviour:
   - skinDemo: {fileID: 69655513}
     boton: {fileID: 1623560984}
     nombre: Punch Pirate Celestial
-    descripcion: "Cuenta la leyenda que una vez Punch Princess lanz\xF3 su ganch\xF3
+    descripcion: "Cuenta la leyenda que una vez Punch Princess lanz\xF3 su gancho
       tan alto que decidi\xF3 quedarse a vivir por los cielos. \n\nHoy en d\xEDa
       se la conoce como la pirata celestial."
     purchased: 0
@@ -8814,7 +8814,7 @@ MonoBehaviour:
   - skinDemo: {fileID: 3241529834554261064}
     boton: {fileID: 1405879624}
     nombre: Frank Currante
-    descripcion: "Un fantasma trajeado es un fantasma bien dotado. Lament\xE1blemente
+    descripcion: "Un fantasma trajeado es un fantasma bien dotado. Lamentablemente
       para Frank, se acabaron las vacaciones. \n\nEn este mundo ni los fantasmas
       pueden escapar de las crueles garras del capitalismo."
     purchased: 0
@@ -10692,7 +10692,7 @@ MonoBehaviour:
   - skinDemo: {fileID: 1295598206}
     boton: {fileID: 714777395}
     nombre: XXToxic
-    descripcion: "Si alguien es fan de las raves, ese es \nXXToxic, quien no dud\xF3
+    descripcion: "Si alguien es fan de las fiestas, ese es \nXXToxic, quien no dud\xF3
       en bailar aunque la pista de baile fuera una central nuclear. Desde entonces
       irradia un curioso verde incandescente.\n\n\"Don't you know that you're toxic?\"."
     purchased: 0
