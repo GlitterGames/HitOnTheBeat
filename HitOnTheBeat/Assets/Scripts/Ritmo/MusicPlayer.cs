@@ -9,7 +9,7 @@ public class MusicPlayer : MonoBehaviourPun
     public AudioClip[] canciones;
     public AudioSource cancionActual;
 
-    [HideInInspector] public Ritmo ritmo;
+    public Ritmo ritmo;
     private int numeroCambios = 0;
     private float segundosEspera;
     private float bpm;
@@ -64,15 +64,15 @@ public class MusicPlayer : MonoBehaviourPun
             switch(numeroCambios)
             {
                 case 0:
-                        segundosEspera = 19.83f;
-                        bpm = 1.20f;
+                        segundosEspera = 19.80f;
+                        bpm = 1.34f;
                     break;
                 case 1:
-                        segundosEspera = 9.14f;
+                        segundosEspera = 29.14f;
                         bpm = 1.14f;
                     break;
                 case 2:
-                        segundosEspera = 8.72f;
+                        segundosEspera = 8.73f;
                         bpm = 1.09f;
                     break;
                 case 3:
@@ -106,25 +106,21 @@ public class MusicPlayer : MonoBehaviourPun
             switch(numeroCambios)
             {
                 case 0:
-                        segundosEspera = 57.8f;
-                        bpm = 1.775f;
+                        segundosEspera = 57.76875f;
+                        bpm = 1.66f;
                     break;
                 case 1:
-                        segundosEspera = 28.44f;
-                        bpm = 0.885f;
+                        segundosEspera = 28.45f;
+                        bpm = 0.88f;
                     break;
                 case 2:
-                        segundosEspera = 14.22f;
-                        bpm = 1.775f;
+                        segundosEspera = 14.32f;
+                        bpm = 1.66f;
                     break;
                 case 3:
-                        segundosEspera = 56.88f;
-                        bpm = 0.885f;
+                        segundosEspera = 20.45f;
+                        bpm = 0.88f;
                     break;
-                case 4:
-                        segundosEspera = 24.94f;
-                        bpm = 1.775f;
-                        break;
                 default:
                         segundosEspera = 20;
                         bpm = 2;
@@ -146,6 +142,6 @@ public class MusicPlayer : MonoBehaviourPun
     [PunRPC]
     private void SendChangeBMPRPC(float bpm)
     {
-        if(Ritmo.instance) Ritmo.instance.Delay = bpm;
+        if(Ritmo.instance) Ritmo.instance.delay = bpm;
     }
 }
