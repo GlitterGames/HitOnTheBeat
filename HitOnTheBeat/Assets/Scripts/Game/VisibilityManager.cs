@@ -93,7 +93,7 @@ public class VisibilityManager : MonoBehaviour
         if (activate)
         {
             currentValue = -1;
-            while (currentValue<=1)
+            while (currentValue < 1)
             {
                 currentValue += Time.deltaTime;
                 if (currentValue > 1) currentValue = 1;
@@ -104,7 +104,7 @@ public class VisibilityManager : MonoBehaviour
         else
         {
             currentValue = 1; 
-            while (currentValue >= -1)
+            while (currentValue > -1)
             {
                 currentValue -= Time.deltaTime;
                 if (currentValue < -1) currentValue = -1;

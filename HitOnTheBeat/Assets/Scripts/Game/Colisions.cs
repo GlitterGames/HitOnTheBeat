@@ -160,12 +160,12 @@ public class Colisions
         g.jugadores[pos0].Golpear();
         int max = g.jugadores[pos0].Fuerza - g.jugadores[pos1].Fuerza;
         FloorDetectorType dir = g.jugadores[pos0].floorDir;
-        //if (g.jugadores[pos0].seHaMovido == false)
-        //{
-        //    Floor f = g.jugadores[pos1].actualFloor;
-        //    dir = g.jugadores[pos1].floorDir;
-        //    dir = f.GetInverseDireccion(dir);
-        //}
+        if (g.jugadores[pos0].seHaMovido == false)
+        {
+            Floor f = g.jugadores[pos1].actualFloor;
+            dir = g.jugadores[pos1].floorDir;
+            dir = f.GetInverseDireccion(dir);
+        }
         bool echado = g.jugadores[pos1].EcharOne(dir, max, moreThanTwo, notCinematic, sameFloor, pos0); ;
         if (echado) eliminados.Add(pos1);
     }

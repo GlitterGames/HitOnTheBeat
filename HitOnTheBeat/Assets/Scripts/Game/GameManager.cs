@@ -183,7 +183,7 @@ public class GameManager : MonoBehaviourPun
         {
             foreach (PlayerController jugador in jugadores)
             {
-                if (jugador.actualFloor.GetPower() != Floor.Type.Vacio)
+                if (jugador.actualFloor.GetPower() != Floor.Type.Vacio && jugador.actualFloor.GetPower() != Floor.Type.Parpadeando)
                 {
                     Debug.Log("HE PILLADO UN POWE UP");
                     jugador.GetPowerUp();
@@ -473,6 +473,7 @@ public class GameManager : MonoBehaviourPun
                         RemovePlayer(i);
                         ReordenarGolpeados(i);
                         i--;
+                        break;
                     }
                 }
             }

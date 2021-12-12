@@ -56,7 +56,7 @@ public class HUDManager : MonoBehaviour
         UltimateCharge = ULTIMATE_MAX_CHARGE;
 
         //Inicializamos la interfaz a valores por defecto u obtenidos de Lobby.
-        int ps = FindObjectOfType<PlayerSelector>().selectedPlayer;
+        int ps = FindObjectOfType<PersistenceData>().selectedPlayer;
         icono.sprite = personajesIcono[ps];
         ultimate.GetComponent<Image>().sprite = tiposUltimate[ps];
         SetFuerza(myPC.Fuerza);

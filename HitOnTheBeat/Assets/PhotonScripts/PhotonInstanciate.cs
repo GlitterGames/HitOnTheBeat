@@ -20,7 +20,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     public GameObject my_player;
     public GameObject ritmo;
 
-    private PlayerSelector playerSelector;
+    private PersistenceData playerSelector;
 
     private EfectosSonido efectosSonido;
 
@@ -29,7 +29,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     {
         instance = this;
         //instanciamos el main character.
-        playerSelector = FindObjectOfType<PlayerSelector>();
+        playerSelector = FindObjectOfType<PersistenceData>();
         int typePlayer = playerSelector.selectedPlayer;
         int skinPlayer = playerSelector.selectedSkin;
         int id = PhotonNetwork.LocalPlayer.ActorNumber - 1;
