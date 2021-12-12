@@ -1257,6 +1257,7 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
         }
+        casillas.Remove(target);
         return casillas;
     }
 
