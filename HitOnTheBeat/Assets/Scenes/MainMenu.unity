@@ -744,7 +744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   efectosSonido: {fileID: 0}
-  _name: {fileID: 6288390}
+  _name: {fileID: 0}
 --- !u!4 &392215211
 Transform:
   m_ObjectHideFlags: 0
@@ -1047,8 +1047,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -203, y: -225.05954}
-  m_SizeDelta: {x: 500, y: 500}
+  m_AnchoredPosition: {x: -227.92139, y: -276.6576}
+  m_SizeDelta: {x: 621.9259, y: 621.9259}
   m_Pivot: {x: -0.05312258, y: -0.05955577}
 --- !u!114 &466029021
 MonoBehaviour:
@@ -1093,9 +1093,9 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 21300000, guid: bfaa3127c1990f44f9c454f69e096687, type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: 8b8eb4c985ffedb45a5a1b94ebe0d21b, type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 88987c1e2b606df43bee8769445c8afc, type: 3}
+    m_DisabledSprite: {fileID: 21300000, guid: 9ea6111ae3ee0f44180bb815519a3598, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -1139,7 +1139,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 35a76c221c421d845b562b8f604f2c0c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 34de19d78ab4adf4aa3cd1f0a483813a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1286,8 +1286,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -63, y: -182}
-  m_SizeDelta: {x: 709, y: 443}
+  m_AnchoredPosition: {x: -76.54285, y: -304}
+  m_SizeDelta: {x: 963.936, y: 725.6465}
   m_Pivot: {x: -0.05312258, y: -0.05955577}
 --- !u!114 &603268079
 MonoBehaviour:
@@ -1515,7 +1515,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: a4a4c0b775ca5654580330b2a0c3425a, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1960,8 +1960,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -329, y: -226}
-  m_SizeDelta: {x: 500, y: 500}
+  m_AnchoredPosition: {x: -440.5, y: -276.66}
+  m_SizeDelta: {x: 621.9259, y: 621.9259}
   m_Pivot: {x: -0.05312258, y: -0.05955577}
 --- !u!114 &1101201423
 MonoBehaviour:
@@ -2006,9 +2006,9 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 21300000, guid: a199ca3942978ae4f992a630e8c2d721, type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: ee1101ef7a62e2e42b27d3fb87381493, type: 3}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 4ea606167454fd345bfd7eb0cb62cf21, type: 3}
+    m_DisabledSprite: {fileID: 21300000, guid: ee1101ef7a62e2e42b27d3fb87381493, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -2052,7 +2052,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6fad8b7b7ed93c14384091e1fcf0e0f8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f1f99b41f67c7fa4eb199565c54eb084, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2312,8 +2312,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -96.5, y: -28}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -156.88611, y: -64.597595}
+  m_SizeDelta: {x: 280.7722, y: 103.1952}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1354945462
 MonoBehaviour:
@@ -2339,7 +2339,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: d7e90131b589a7644a25b11dc3b599c1, type: 3}
     m_FontSize: 20
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 2
@@ -3130,7 +3130,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 349, y: -402}
+  m_AnchoredPosition: {x: 349, y: -399}
   m_SizeDelta: {x: 670, y: 670}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2031560480
