@@ -329,6 +329,7 @@ public class PlayerController : MonoBehaviourPun
         {
             ritmo.SetColor(ritmo.colores.fallo);
             ritmo.haFallado = true;
+            GameObject.Find("SceneTransitioner").GetComponent<EfectosSonido>().PlayEffect(1);
         }
     }
 
