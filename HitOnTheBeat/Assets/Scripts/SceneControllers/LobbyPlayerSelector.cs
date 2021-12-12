@@ -13,7 +13,7 @@ public class LobbyPlayerSelector : MonoBehaviour
         public List<GameObject> skins;
     }
     public List<Skins> playerDemo;
-    public Button boton;
+   
     public Button boton2;
     public Button boton3;
     public TMP_Text nombreText;
@@ -41,7 +41,7 @@ public class LobbyPlayerSelector : MonoBehaviour
         if (!personajeSeleccionado)
         {
             personajeSeleccionado = true;
-            boton.interactable = true;
+           
             boton2.interactable = true;
             boton3.interactable = true;
         }

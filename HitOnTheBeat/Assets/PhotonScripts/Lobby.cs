@@ -20,7 +20,6 @@ public class Lobby : MonoBehaviourPunCallbacks
     public int roomSize;
     public Button buscarPartida;
     public Button crearSala;
-    public Button unirseSala;
     public Button empezarPartida;
     public TMP_Text PlayerCounter;
     public EfectosSonido efectosSonido;
@@ -55,7 +54,6 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
-        unirseSala.interactable = false;
         crearSala.interactable = false;
 
         RoomOptions roomOps = new RoomOptions()
@@ -81,10 +79,8 @@ public class Lobby : MonoBehaviourPunCallbacks
         CanvasRoomPrivada.SetActive(false);
         
 
-
-
-
-    }
+}
+   
     void OnPlayerLeftRoom(Player player)
     {
         if (PhotonNetwork.IsMasterClient)
@@ -144,7 +140,6 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
-        unirseSala.interactable = false;
         crearSala.interactable = false;
         if (!PhotonNetwork.JoinRandomRoom())
         {
@@ -176,28 +171,21 @@ public class Lobby : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
         CanvasLobby.SetActive(true);
         CanvasRoom.SetActive(false);
+        CanvasRoomPrivada.SetActive(false);
         buscarPartida.interactable = true;
-        unirseSala.interactable = true;
         crearSala.interactable = true;
 
     }
-    public void IrCrearSala()
+    public void IrASalaPrivada()
     {
         CanvasLobby.SetActive(false);
         CanvasRoomPrivada.SetActive(true);
-        gameObjectUnirseSalaPrivada.SetActive(false);
+       
         
 
 
     }
-    public void IrUnirseSala()
-    {
-        CanvasLobby.SetActive(false);
-        CanvasRoomPrivada.SetActive(true);
-        gameObjectCrearSalaPrivada.SetActive(false);
-        botonUnirseSalaPrivada.interactable = true;
-
-    }
+    
 
     public void OnRoomSizeChanged(string sizeIn)
     {
@@ -210,7 +198,6 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
-        unirseSala.interactable = false;
         crearSala.interactable = false;
         PhotonNetwork.JoinRoom(roomName);
     }
@@ -249,7 +236,7 @@ public class Lobby : MonoBehaviourPunCallbacks
         efectosSonido.PlayEffect(2);
         photonView.RPC("EnviarEmpezarPartidaRPC", RpcTarget.AllViaServer);
     }
-
+    
     [PunRPC]
     public void EnviarEmpezarPartidaRPC()
     {
