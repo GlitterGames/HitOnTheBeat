@@ -12,12 +12,11 @@ using TMPro;
 public class Lobby : MonoBehaviourPunCallbacks
 {
     public GameObject playerSelector;
-    public byte maxPlayersInRoom ;
+    public byte maxPlayersInRoom = 4;
     public byte minPlayersInRoom = 2;
     private int playerCount = 0;
     private bool IsLoading = false;
     public string roomName;
-    public int roomSize;
     public Button buscarPartida;
     public Button crearSala;
     public Button empezarPartida;
@@ -60,7 +59,7 @@ public class Lobby : MonoBehaviourPunCallbacks
         {
             IsVisible = true,
             IsOpen = true,
-            MaxPlayers = (byte)roomSize
+            MaxPlayers = (byte)maxPlayersInRoom
         };
             PhotonNetwork.CreateRoom(roomName, roomOps);
 
@@ -168,7 +167,7 @@ public class Lobby : MonoBehaviourPunCallbacks
     }
     public void AbandonarSala()
     {
-        PhotonNetwork.LeaveRoom();
+        if(PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
         CanvasLobby.SetActive(true);
         CanvasRoom.SetActive(false);
         CanvasRoomPrivada.SetActive(false);
@@ -180,18 +179,6 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         CanvasLobby.SetActive(false);
         CanvasRoomPrivada.SetActive(true);
-       
-        
-
-
-    }
-    
-
-    public void OnRoomSizeChanged(string sizeIn)
-    {
-        roomSize = int.Parse(sizeIn);
-        maxPlayersInRoom = (byte)roomSize;
-
     }
 
     public void JoinLobbyOnClick()
@@ -235,6 +222,7 @@ public class Lobby : MonoBehaviourPunCallbacks
     public void EnviarEmpezarPartida()
     {
         efectosSonido.PlayEffect(2);
+        PhotonNetwork.CurrentRoom.IsOpen = false;
         photonView.RPC("EnviarEmpezarPartidaRPC", RpcTarget.AllViaServer);
     }
     
