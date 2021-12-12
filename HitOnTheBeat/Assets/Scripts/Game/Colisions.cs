@@ -158,8 +158,10 @@ public class Colisions
             pos0 = positions[1];
             pos1 = positions[0];
         }
-        
-        g.jugadores[pos0].Golpear();
+        if (g.jugadores[pos0].seHaMovido == true)
+        {
+            g.jugadores[pos0].Golpear();
+        }
         int max = g.jugadores[pos0].Fuerza - g.jugadores[pos1].Fuerza;
         FloorDetectorType dir = g.jugadores[pos0].floorDir;
         if (g.jugadores[pos0].seHaMovido == false)
@@ -221,5 +223,4 @@ public class Colisions
             }
         }
     }
-
 }
