@@ -37,12 +37,14 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
         string namePrefab = playerAvatar[typePlayer].skins[skinPlayer].name;
         my_player = PhotonNetwork.Instantiate(namePrefab, pos, Quaternion.Euler(0,180,0));
         if(PhotonNetwork.IsMasterClient) PhotonNetwork.Instantiate(ritmo.name, pos, Quaternion.identity);
+        MenuMusicPlayer.Instance.StopMusic();
     }
 
     private void Start()
     {
         //Asignamos la cámara al jugador.
-        FindObjectOfType<VirtualCameraController>().SetTarget(my_player.transform);
+        FindObjectOfType<CameraTargetSwitcher>().target = my_player.transform;
+        FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
 
         //Actualizamos la lista de jugadores del master.
         if (PhotonNetwork.IsMasterClient) FindObjectOfType<GameManager>().UpdatePlayers();
@@ -50,8 +52,6 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     }
     public void OnGoBack()
     {
-        efectosSonido = GetComponent<EfectosSonido>();
-        efectosSonido.PlayEffect(0);
-        FindObjectOfType<SceneTransitioner>().GoToLobbyScene(0);
+        PhotonNetwork.LeaveRoom(true);
     }
 }

@@ -11,7 +11,6 @@ public class SceneTransitioner : MonoBehaviour
     public Animator anim;
     public EfectosSonido efectosSonido;
     int level = 0;
-
     public void StartTransition(int level, float delay)
     {
         anim.SetTrigger("Activate");
@@ -23,12 +22,10 @@ public class SceneTransitioner : MonoBehaviour
         anim.SetTrigger("Activate");
         this.level = level;
     }
-
     public void EndTransition()
     {
         SceneManager.LoadScene(level);
     }
-
     IEnumerator InstantEndTransition(float delay)
     {
         yield return new WaitForSeconds(0.55f + delay);
@@ -47,19 +44,21 @@ public class SceneTransitioner : MonoBehaviour
     public void GoToLobbyScene(float delay)
     {
         efectosSonido = GetComponent<EfectosSonido>();
-        efectosSonido.PlayEffect(0);
+        if(efectosSonido) efectosSonido.PlayEffect(0);
+        else
+        {
+            FindObjectOfType<EfectosSonido>().PlayEffect(0);
+        }
         GameObject.Find("Animation").GetComponent<Animator>().SetTrigger("Activate");
         this.level = 1;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
-
     public void GoToGameScene(float delay)
     {
         anim.SetTrigger("Activate");
         this.level = 2;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
-
     public void GoToCreditsScene(float delay)
     {
         efectosSonido = GetComponent<EfectosSonido>();
@@ -68,7 +67,6 @@ public class SceneTransitioner : MonoBehaviour
         this.level = 3;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
-    
     public void GoToVictoryScene(float delay)
     {
         GameObject.Find("Animation").GetComponent<Animator>().SetTrigger("Activate");
@@ -77,7 +75,7 @@ public class SceneTransitioner : MonoBehaviour
     }
     public void GoToShopScene(float delay)
     {
-        efectosSonido = GetComponent<EfectosSonido>();
+        efectosSonido = GetComponent<EfectosSonido>(); 
         efectosSonido.PlayEffect(0);
         anim.SetTrigger("Activate");
         this.level = 5;

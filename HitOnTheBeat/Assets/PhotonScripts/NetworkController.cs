@@ -13,17 +13,19 @@ public class NetworkController : MonoBehaviourPunCallbacks
     //[SerializeField] private UIManager _uiManager;
     private SceneTransitioner st;
     public EfectosSonido efectosSonido;
-    void Start()
-    {
-        efectosSonido = GetComponent<EfectosSonido>();
-        _name.text = PlayerPrefs.GetString("name", "");
-    }
-    [SerializeField] private InputField _name;
 
     public void Awake()
     {
         st = FindObjectOfType<SceneTransitioner>();
     }
+
+    void Start()
+    {
+        MenuMusicPlayer.Instance.PlayMusic(0);
+        efectosSonido = GetComponent<EfectosSonido>();
+        _name.text = PlayerPrefs.GetString("name", "");
+    }
+    [SerializeField] private InputField _name;
 
     // Update is called once per frame
     public override void OnConnectedToMaster()

@@ -186,6 +186,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  hasColision: 0
 --- !u!64 &-7278428099947206385
 MeshCollider:
   m_ObjectHideFlags: 0
