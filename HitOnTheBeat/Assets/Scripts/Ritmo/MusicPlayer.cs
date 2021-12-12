@@ -37,7 +37,7 @@ public class MusicPlayer : MonoBehaviourPun
     }
     IEnumerator WaitForSong(int numeroCancion)
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(6f);
         StartSong(numeroCancion);
         StartCoroutine(ChangeBMP(numeroCancion, numeroCambios));
     }

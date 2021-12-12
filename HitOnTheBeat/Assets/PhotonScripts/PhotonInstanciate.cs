@@ -21,9 +21,12 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     public GameObject ritmo;
 
     private PersistenceData playerSelector;
+    private CameraController cameraController;
 
     private EfectosSonido efectosSonido;
 
+    public Transform [] transforms;
+ 
     // Start is called before the first frame update
     void Awake()
     {
@@ -42,9 +45,10 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        cameraController = FindObjectOfType<CameraController>();
         //Asignamos la cámara al jugador.
         FindObjectOfType<CameraTargetSwitcher>().target = my_player.transform;
-        FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
+        StartCoroutine(AnimationsOnStart());
 
         //Actualizamos la lista de jugadores del master.
         if (PhotonNetwork.IsMasterClient) FindObjectOfType<GameManager>().UpdatePlayers();
@@ -53,5 +57,26 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     public void OnGoBack()
     {
         PhotonNetwork.LeaveRoom(true);
+    }
+
+    [PunRPC]
+    public void CamLookPlayerRPC()
+    {
+        StopAllCoroutines();
+        FindObjectOfType<CameraTargetSwitcher>().target = my_player.transform;
+        FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
+    }
+
+    IEnumerator AnimationsOnStart()
+    {
+        FindObjectOfType<CameraTargetSwitcher>().target = transforms[0];
+        FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
+        cameraController.MainAngle = 0;
+        yield return new WaitForSeconds(2);
+        FindObjectOfType<CameraTargetSwitcher>().target = transforms[1];
+        cameraController.MainAngle = 45;
+        FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
+        yield return new WaitForSeconds(2);
+        if (PhotonNetwork.IsMasterClient) photonView.RPC("CamLookPlayerRPC", RpcTarget.AllViaServer);
     }
 }

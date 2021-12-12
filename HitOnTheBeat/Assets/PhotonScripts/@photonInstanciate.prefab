@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 207516311041541468}
   - component: {fileID: 876326638838762888}
+  - component: {fileID: 9004030442015959000}
   m_Layer: 0
-  m_Name: '@PhotonInstanciate'
+  m_Name: '@photonInstanciate'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,9 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAvatar:
-  - {fileID: 1784523174532803008, guid: d73a9841283c89041833c85ae2d22013, type: 3}
-  - {fileID: 1385504132329047271, guid: ed429d607ae00a24f8feb1395c455b41, type: 3}
-  - {fileID: 856494220921389532, guid: ea07a8eed03b68140a3c8331f18b592d, type: 3}
+  - skins: []
+  - skins: []
+  - skins: []
   f:
   - {fileID: 0}
   - {fileID: 0}
@@ -54,3 +55,26 @@ MonoBehaviour:
   - {fileID: 0}
   my_player: {fileID: 0}
   ritmo: {fileID: 3601274991278263997, guid: 7b26bab3c407e92449c63dc964099486, type: 3}
+  transforms: []
+--- !u!114 &9004030442015959000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7393199628301082237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

@@ -3368,6 +3368,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4407859680185277287, guid: 2d7037c99b675fa4b9adcde924d63862, type: 3}
   m_PrefabInstance: {fileID: 892046589}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1041583618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1041583619}
+  m_Layer: 0
+  m_Name: CamAnim2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1041583619
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041583618}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -7.69, y: -3.67, z: -3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1053711411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4605,6 +4635,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5872082923393549408, guid: 95f8b4ce1c03e2a43a4554f6c85d7b63, type: 3}
   m_PrefabInstance: {fileID: 1347710830}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1431042328
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1431042329}
+  m_Layer: 0
+  m_Name: CamAnim1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1431042329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431042328}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 7.81, y: -3.48, z: -2.77}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1451103646
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6986,6 +7046,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 630375066}
     - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: transforms.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: transforms.Array.data[0]
+      value: 
+      objectReference: {fileID: 1431042329}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: transforms.Array.data[1]
+      value: 
+      objectReference: {fileID: 1041583619}
+    - target: {fileID: 876326638838762888, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
       propertyPath: playerAvatar.Array.data[0].skins.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -7040,6 +7112,10 @@ PrefabInstance:
     - target: {fileID: 7393199628301082237, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
       propertyPath: m_Name
       value: '@PhotonInstanciate'
+      objectReference: {fileID: 0}
+    - target: {fileID: 9004030442015959000, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
+      propertyPath: sceneViewId
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25742036e40bf694b991f19c72590dbc, type: 3}
