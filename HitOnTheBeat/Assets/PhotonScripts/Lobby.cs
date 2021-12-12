@@ -12,18 +12,28 @@ using TMPro;
 public class Lobby : MonoBehaviourPunCallbacks
 {
     public GameObject playerSelector;
-    public byte maxPlayersInRoom ;
+    public byte maxPlayersInRoom = 4;
     public byte minPlayersInRoom = 2;
     private int playerCount = 0;
     private bool IsLoading = false;
     public string roomName;
-    public int roomSize;
     public Button buscarPartida;
     public Button crearSala;
-    public Button unirseSala;
     public Button empezarPartida;
     public TMP_Text PlayerCounter;
     public EfectosSonido efectosSonido;
+    public GameObject CanvasLobby;
+    public GameObject CanvasRoom;
+    public GameObject CanvasRoomPrivada;
+    public GameObject gameObjectCrearSalaPrivada;
+    public GameObject gameObjectUnirseSalaPrivada;
+    public Button botonCrearSalaPrivada;
+    public Button botonUnirseSalaPrivada;
+
+    public Text Jugador1;
+    public Text Jugador2;
+    public Text Jugador3;
+    public Text Jugador4;
 
 
 
@@ -43,14 +53,13 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
-        unirseSala.interactable = false;
         crearSala.interactable = false;
 
         RoomOptions roomOps = new RoomOptions()
         {
             IsVisible = true,
             IsOpen = true,
-            MaxPlayers = (byte)roomSize
+            MaxPlayers = (byte)maxPlayersInRoom
         };
             PhotonNetwork.CreateRoom(roomName, roomOps);
 
@@ -63,17 +72,73 @@ public class Lobby : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        Debug.Log("unido a sala"); 
-         
+        Debug.Log("unido a sala");
+        CanvasLobby.SetActive(false);
+        CanvasRoom.SetActive(true);
+        CanvasRoomPrivada.SetActive(false);
+        
 
-
-
+}
+   
+    void OnPlayerLeftRoom(Player player)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.SetMasterClient(PhotonNetwork.PlayerList[0]);
+        }
     }
-  public void JoinRandom()
+    void OnPhotonPlayerConnected()
+    {
+        UpdatePlayerList();
+    }
+    public void UpdatePlayerList()
+    {
+         Player[] jugadores= PhotonNetwork.PlayerList;
+       /* foreach(Player player in PhotonNetwork.playerList)
+        { 
+            jugadores.Add(player);
+        }*/
+
+
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            {
+                Jugador1.text = PhotonNetwork.PlayerList[0].NickName;
+                Jugador2.text = null;
+                Jugador3.text = null;
+                Jugador4.text = null;
+            }
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
+            {
+                Jugador1.text = PhotonNetwork.PlayerList[0].NickName;
+                Jugador2.text = PhotonNetwork.PlayerList[1].NickName;
+                Jugador3.text = null;
+                Jugador4.text = null;
+
+        }
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 3)
+            {
+                Jugador1.text = PhotonNetwork.PlayerList[0].NickName;
+                Jugador2.text = PhotonNetwork.PlayerList[1].NickName;
+                Jugador3.text = PhotonNetwork.PlayerList[2].NickName;
+                Jugador4.text = null;
+
+        }
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 4)
+            {
+                Jugador1.text = PhotonNetwork.PlayerList[0].NickName;
+                Jugador2.text = PhotonNetwork.PlayerList[1].NickName;
+                Jugador3.text = PhotonNetwork.PlayerList[2].NickName;
+                Jugador4.text = PhotonNetwork.PlayerList[3].NickName;
+
+            }
+        
+       
+       
+    }
+    public void JoinRandom()
     {
         efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
-        unirseSala.interactable = false;
         crearSala.interactable = false;
         if (!PhotonNetwork.JoinRandomRoom())
         {
@@ -96,32 +161,51 @@ public class Lobby : MonoBehaviourPunCallbacks
     }
     public void OnRoomNameChanged(string nameIn)
     {
+        botonCrearSalaPrivada.interactable = true;
         roomName = nameIn;
 
     }
-    public void OnRoomSizeChanged(string sizeIn)
+    public void AbandonarSala()
     {
-        roomSize = int.Parse(sizeIn);
-        maxPlayersInRoom = (byte)roomSize;
+        if(PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+        CanvasLobby.SetActive(true);
+        CanvasRoom.SetActive(false);
+        CanvasRoomPrivada.SetActive(false);
+        buscarPartida.interactable = true;
+        crearSala.interactable = true;
 
+    }
+    public void IrASalaPrivada()
+    {
+        CanvasLobby.SetActive(false);
+        CanvasRoomPrivada.SetActive(true);
     }
 
     public void JoinLobbyOnClick()
     {
         efectosSonido.PlayEffect(0);
         buscarPartida.interactable = false;
-        unirseSala.interactable = false;
         crearSala.interactable = false;
         PhotonNetwork.JoinRoom(roomName);
     }
     #endregion
     public void FixedUpdate()
     {
+        if (roomName=="")
+        {
+            botonCrearSalaPrivada.interactable = false;
+            botonUnirseSalaPrivada.interactable = false;
+        }
+        else
+        {
+            botonCrearSalaPrivada.interactable = true;
+            botonUnirseSalaPrivada.interactable = true;
+        }
         if (PhotonNetwork.CurrentRoom != null)
         {
             playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
             PlayerCounter.text = playerCount.ToString();
-
+           
 
             if (!IsLoading && playerCount >= minPlayersInRoom)
             {
@@ -130,6 +214,7 @@ public class Lobby : MonoBehaviourPunCallbacks
                     empezarPartida.interactable = true;
                 }
             }
+            UpdatePlayerList();
         }
         
     }
@@ -137,9 +222,10 @@ public class Lobby : MonoBehaviourPunCallbacks
     public void EnviarEmpezarPartida()
     {
         efectosSonido.PlayEffect(2);
+        PhotonNetwork.CurrentRoom.IsOpen = false;
         photonView.RPC("EnviarEmpezarPartidaRPC", RpcTarget.AllViaServer);
     }
-
+    
     [PunRPC]
     public void EnviarEmpezarPartidaRPC()
     {

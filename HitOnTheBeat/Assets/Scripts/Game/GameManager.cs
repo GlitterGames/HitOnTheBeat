@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviourPun
 	
     #region Variables
     public int numRows;
+    public ChangeFloorColor[] suelosFondo;
     public Materiales materiales;
     public ColoresMovimiento coloresEspeciales;
     public ColoresBombaColor coloresBombaColor;
@@ -111,6 +112,7 @@ public class GameManager : MonoBehaviourPun
     //Se ejecuta cada vez que comienza un nuevo Beat.
     public void DoBeatActions()
     {
+        foreach (var v in suelosFondo) v.NextMat();
         PerformUltimates();
         PerformMovements();
         PerformColision();
@@ -235,15 +237,18 @@ public class GameManager : MonoBehaviourPun
     private void PerformColision()
     {
         bool bcolision = true; //En caso de que no se tengan que comprobar colisiones
+        bool X = true;
         List<Colisions> colisiones = new List<Colisions>();
         int iteraciones = 0;
         while (bcolision && iteraciones < 200)
         {
             bcolision = false;
-            //Colision en caso de dos jugadores se intercambien casillas
-            colisiones = PerformNotSameFloorColisions(ref bcolision);
-            //eliminar jugadores que se hayan caido
-            DeletePlayersColision(colisiones, false);
+            if (iteraciones == 0) { //Solo puede pasar en la primera iteracción
+                //Colision en caso de dos jugadores se intercambien casillas
+                colisiones = PerformNotSameFloorColisions(ref bcolision);
+                //eliminar jugadores que se hayan caido
+                DeletePlayersColision(colisiones, false);
+            }
             //Colision normal entre jugadores
             colisiones = PerformSameFloorColisions(ref bcolision);
             //eliminar jugadores que se hayan caido

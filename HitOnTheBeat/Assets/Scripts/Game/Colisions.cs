@@ -10,6 +10,7 @@ public class Colisions
     bool moreThanTwo;
     bool notCinematic;
     bool sameFloor;
+    bool notChangeFuerza; //Colision por detrás emtre dos de los cuales el que no se ha movido tenía más fuerza, nadie pierde fuerza
     GameManager g;
     public Colisions(Floor f, GameManager g, bool sameFloor)
     {
@@ -19,6 +20,7 @@ public class Colisions
         notCinematic = true;
         positions = new List<int>();
         eliminados = new List<int>();
+        notChangeFuerza = false;
     }
     public void PerformColisions()
     {
@@ -156,15 +158,18 @@ public class Colisions
             pos0 = positions[1];
             pos1 = positions[0];
         }
-        
-        g.jugadores[pos0].Golpear();
+        if (g.jugadores[pos0].seHaMovido == true)
+        {
+            g.jugadores[pos0].Golpear();
+        }
         int max = g.jugadores[pos0].Fuerza - g.jugadores[pos1].Fuerza;
         FloorDetectorType dir = g.jugadores[pos0].floorDir;
         if (g.jugadores[pos0].seHaMovido == false)
         {
-            Floor f = g.jugadores[pos1].actualFloor;
+            max = 1;
             dir = g.jugadores[pos1].floorDir;
-            dir = f.GetInverseDireccion(dir);
+            notChangeFuerza = true;
+            moreThanTwo = true; //La inversa de mi dirección y mi nueva dirección
         }
         bool echado = g.jugadores[pos1].EcharOne(dir, max, moreThanTwo, notCinematic, sameFloor, pos0); ;
         if (echado) eliminados.Add(pos1);
@@ -218,5 +223,4 @@ public class Colisions
             }
         }
     }
-
 }
