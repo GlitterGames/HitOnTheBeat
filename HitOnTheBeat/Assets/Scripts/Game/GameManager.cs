@@ -61,8 +61,9 @@ public class GameManager : MonoBehaviourPun
         public Floor targetFloor;
     }
     #endregion
-	
+
     #region Variables
+    public static GameManager instance;
     public int numRows;
     public ChangeFloorColor[] suelosFondo;
     public Materiales materiales;
@@ -88,6 +89,7 @@ public class GameManager : MonoBehaviourPun
 
     void Awake()
     {
+        instance = this;
         numRows = 5;
         spawn = false;
         //Inicializaci�n de la estructura de datos que vamos a utilizar para alamcenar las casillas
@@ -112,7 +114,6 @@ public class GameManager : MonoBehaviourPun
     //Se ejecuta cada vez que comienza un nuevo Beat.
     public void DoBeatActions()
     {
-        foreach (var v in suelosFondo) v.NextMat();
         PerformUltimates();
         PerformMovements();
         PerformColision();

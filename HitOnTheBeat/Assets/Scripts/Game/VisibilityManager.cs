@@ -97,7 +97,9 @@ public class VisibilityManager : MonoBehaviour
             {
                 currentValue += Time.deltaTime;
                 if (currentValue > 1) currentValue = 1;
-                skin.SetFloat("DisolveValue", currentValue);
+                Material m = new Material(skin);
+                m.SetFloat("DisolveValue", currentValue);
+                skin = m;
                 yield return new WaitForEndOfFrame();
             }
         }
@@ -108,7 +110,9 @@ public class VisibilityManager : MonoBehaviour
             {
                 currentValue -= Time.deltaTime;
                 if (currentValue < -1) currentValue = -1;
-                skin.SetFloat("DisolveValue", currentValue);
+                Material m = new Material(skin);
+                m.SetFloat("DisolveValue", currentValue);
+                skin = m;
                 yield return new WaitForEndOfFrame();
             }
         }

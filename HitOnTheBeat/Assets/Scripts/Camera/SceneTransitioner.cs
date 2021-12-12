@@ -101,5 +101,12 @@ public class SceneTransitioner : MonoBehaviour
         this.level = 5;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
+
+    public void GoSettings()
+    {
+        efectosSonido = GetComponent<EfectosSonido>();
+        efectosSonido.PlayEffect(0);
+        StartTransition(6, 0);
+    }
     #endregion
 }

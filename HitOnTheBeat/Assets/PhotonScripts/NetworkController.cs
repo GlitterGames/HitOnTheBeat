@@ -69,9 +69,4 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         Application.Quit();
     }
-    public void GoSettings()
-    {
-        efectosSonido.PlayEffect(0);
-        st.StartTransition(6, 0);
-    }
 }

@@ -147,6 +147,7 @@ public class Ritmo : MonoBehaviourPun
     [PunRPC]
     public void SetColorBeatEndRPC()
     {
+        foreach (var v in GameManager.instance.suelosFondo) v.NextMat();
         if (!haPulsado)
         {
             marcador.GetComponent<Image>().color = colores.fallo;

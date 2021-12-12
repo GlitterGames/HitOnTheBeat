@@ -38,23 +38,7 @@ public class MusicPlayer : MonoBehaviourPun
     IEnumerator WaitForSong(int numeroCancion)
     {
         yield return new WaitForSeconds(6f);
-        StartSong(numeroCancion);
         StartCoroutine(ChangeBMP(numeroCancion, numeroCambios));
-    }
-
-    public void StartSong(int numeroCancion)
-    {
-        photonView.RPC("StartSongRPC", RpcTarget.AllViaServer, numeroCancion);
-    }
-    
-    [PunRPC]
-    private void StartSongRPC(int numeroCancion)
-    {
-        cancionActual.clip = canciones[numeroCancion];
-        if (!cancionActual.isPlaying)
-        {
-            cancionActual.Play();
-        }
     }
 
     IEnumerator ChangeBMP(int numeroCancion, int numeroCambios)
@@ -144,8 +128,13 @@ public class MusicPlayer : MonoBehaviourPun
     }
     
     [PunRPC]
-    private void SendChangeBMPRPC(float bpm)
+    private void SendChangeBMPRPC(float bpm, int numeroCancion)
     {
-        if(Ritmo.instance) Ritmo.instance.Delay = bpm;
+        if (!cancionActual.isPlaying)
+        {
+            cancionActual.clip = canciones[numeroCancion];
+            cancionActual.Play();
+        }
+        if (Ritmo.instance) Ritmo.instance.Delay = bpm;
     }
 }
