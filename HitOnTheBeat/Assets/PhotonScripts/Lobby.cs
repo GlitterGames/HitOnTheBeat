@@ -162,6 +162,7 @@ public class Lobby : MonoBehaviourPunCallbacks
     public void AbandonarSala()
     {
         if(PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+        empezarPartida.interactable = false;
         CanvasLobby.SetActive(true);
         CanvasRoom.SetActive(false);
         CanvasRoomPrivada.SetActive(false);
