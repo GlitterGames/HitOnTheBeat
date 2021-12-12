@@ -6,7 +6,8 @@ using Photon.Pun;
 
 public class TutorialManager : MonoBehaviourPun
 {
-    
+    /*
+
     #region Estructuras
     [System.Serializable]
     public struct Materiales
@@ -49,17 +50,18 @@ public class TutorialManager : MonoBehaviourPun
     }
     public struct Movement
     {
-        public TutorialPlayerController player;
+        public PlayerController player;
         public Floor nextFloor;
         public FloorDetectorType dir;
     }
     public struct Ultimate
     {
-        public TutorialPlayerController player;
-        public TutorialPlayerController.Ultimate type;
+        public PlayerController player;
+        public PlayerController.Ultimate type;
         public Floor targetFloor;
     }
     #endregion
+	
     #region Variables
     public int numRows;
     public Materiales materiales;
@@ -75,13 +77,14 @@ public class TutorialManager : MonoBehaviourPun
     public GameObject[] background = new GameObject[6];
     public List<Floor[]> casillas = new List<Floor[]>();
     [HideInInspector]
-    public List<TutorialPlayerController> jugadores = new List<TutorialPlayerController>();
+    public List<PlayerController> jugadores = new List<PlayerController>();
     public Queue<Movement> movimientos = new Queue<Movement>();
     public Queue<Ultimate> ultimates = new Queue<Ultimate>();
     public float duracion;
     bool spawn;
-    public Queue<int> fallenFloors = new Queue<int>();
+    public Queue<Floor> fallenFloors = new Queue<Floor>();
     #endregion
+
     void Awake()
     {
         numRows = 5;
@@ -94,7 +97,7 @@ public class TutorialManager : MonoBehaviourPun
         casillas.Add(new Floor[24]);
         casillas.Add(new Floor[30]);
     }
-    #region Inicializaciones
+
     // Start is called before the first frame update
     void Start()
     {
@@ -104,7 +107,21 @@ public class TutorialManager : MonoBehaviourPun
         InitBackground();
         AnimateFloors();
     }
+
     //Se ejecuta cada vez que comienza un nuevo Beat.
+    public void DoBeatActions()
+    {
+        ApplyEfectsFromFloor();
+        PerformUltimates();
+        PerformMovements();
+        PerformColision();
+        spawn = true;
+        while (fallenFloors.Count>0)
+        {
+            StartCoroutine(FallFloor(fallenFloors.Dequeue()));
+        }
+    }
+
     private void InitColor() {
         color.Add(coloresAnillos.anillo0);
         color.Add(coloresAnillos.anillo1);
@@ -126,6 +143,16 @@ public class TutorialManager : MonoBehaviourPun
             background[i].GetComponent<Renderer>().material.color = backgroundColor;
         }
     }
+    public void UpdatePlayers()
+    {
+        jugadores.Clear();
+        HashSet<GameObject> players = PhotonNetwork.FindGameObjectsWithComponent(typeof(PlayerController));
+        foreach (GameObject go in players)
+        {
+            jugadores.Add(go.GetComponent<PlayerController>());
+        }
+    }
+
     private void InitCasillas()
     {
         //Adquiero todas las casillas de las escena
@@ -139,6 +166,7 @@ public class TutorialManager : MonoBehaviourPun
 
         CasillasSetColor();
     }
+
     private void CasillasSetColor()
     {
         for (int i = 0; i < casillas.Count; i++)
@@ -150,36 +178,17 @@ public class TutorialManager : MonoBehaviourPun
             }
         }
     }
-    private void AnimateFloors()
-    {
-        if (!PhotonNetwork.IsMasterClient) return;
-        StartCoroutine(DestroyRows());
-        StartCoroutine(SpawnPowerUps());
-    }
-    #endregion
-    public void DoBeatActions()
-    {
-        ApplyEfectsFromFloor();
-        PerformUltimates();
-        PerformMovements();
-        PerformColision();
-        spawn = true;
-        while (fallenFloors.Count > 0)
-        {
-            StartCoroutine(FallFloor(fallenFloors.Dequeue()));
-        }
-    }
-    public void ApplyEfectsFromFloor()
-    {
+
+    public void ApplyEfectsFromFloor() {
         if (PhotonNetwork.IsMasterClient)
         {
-            foreach (TutorialPlayerController jugador in jugadores)
+            foreach (PlayerController jugador in jugadores)
             {
                 if (jugador.actualFloor.GetPower() != Floor.Type.Vacio)
                 {
                     Debug.Log("HE PILLADO UN POWE UP");
                     jugador.GetPowerUp();
-                    if (jugador.actualFloor.powertime != null) StopCoroutine(jugador.actualFloor.powertime);
+                    if(jugador.actualFloor.powertime!=null) StopCoroutine(jugador.actualFloor.powertime);
                     else Debug.Log("No tiene corutina de power up");
                 }
             }
@@ -188,7 +197,7 @@ public class TutorialManager : MonoBehaviourPun
     #region Colisiones
     //Si ya existe esa colision te devuelve la posición en la que te encuentra
     // -1 si no la encuentra
-    private int Exists(List<TutorialColision> colisiones, Floor f) {
+    private int Exists(List<Colisions> colisiones, Floor f) {
         for(int i=0; i<colisiones.Count; i++)
         {
             if (colisiones[i].floor.Equals(f)) return i;
@@ -227,23 +236,23 @@ public class TutorialManager : MonoBehaviourPun
     private void PerformColision()
     {
         bool bcolision = true; //En caso de que no se tengan que comprobar colisiones
-        List<TutorialColision> colisiones = new List<TutorialColision>();
+        List<Colisions> colisiones = new List<Colisions>();
         while (bcolision)
         {
             bcolision = false;
             //Colision en caso de dos jugadores se intercambien casillas
-            colisiones = PerformSameFloorTutorialColision(ref bcolision);
+            colisiones = PerformNotSameFloorColisions(ref bcolision);
             //eliminar jugadores que se hayan caido
             DeletePlayersColision(colisiones, false);
             //Colision normal entre jugadores
-            colisiones = PerformNotSameFloorTutorialColision(ref bcolision);
+            colisiones = PerformSameFloorColisions(ref bcolision);
             //eliminar jugadores que se hayan caido
             DeletePlayersColision(colisiones, true);
             //Colisiones cinemáticas
             CinematicColisions(ref bcolision);
         }
     }
-    private void DeletePlayersColision(List<TutorialColision> colisiones, bool sameFloor)
+    private void DeletePlayersColision(List<Colisions> colisiones, bool sameFloor)
     {
         
         for (int i = 0; i < colisiones.Count; i++)
@@ -291,9 +300,9 @@ public class TutorialManager : MonoBehaviourPun
             }
         }
     }
-    private List<TutorialColision> PerformSameFloorTutorialColision(ref bool bcolision)
+    private List<Colisions> PerformSameFloorColisions(ref bool bcolision)
     {
-        List<TutorialColision> colisiones = new List<TutorialColision>();
+        List<Colisions> colisiones = new List<Colisions>();
         for (int k = 0; k < jugadores.Count; k++)
         {
             for (int i = k + 1; i < jugadores.Count; i++)
@@ -303,7 +312,7 @@ public class TutorialManager : MonoBehaviourPun
                     int pos = Exists(colisiones, jugadores[k].actualFloor);
                     if (pos == -1)
                     {
-                        TutorialColision colision = new TutorialColision(jugadores[k].actualFloor, this, true);
+                        Colisions colision = new Colisions(jugadores[k].actualFloor, this, true);
                         colision.positions.Add(k);
                         colision.positions.Add(i);
                         colisiones.Add(colision);
@@ -320,16 +329,16 @@ public class TutorialManager : MonoBehaviourPun
         }
         return colisiones;
     }
-    private List<TutorialColision> PerformNotSameFloorTutorialColision(ref bool bcolision)
+    private List<Colisions> PerformNotSameFloorColisions(ref bool bcolision)
     {
-        List<TutorialColision> colisiones = new List<TutorialColision>();
+        List<Colisions> colisiones = new List<Colisions>();
         for (int k = 0; k < jugadores.Count; k++)
         {
             for (int i = k + 1; i < jugadores.Count; i++)
             {
                 if (jugadores[k].actualFloor.Equals(jugadores[i].previousFloor) && (jugadores[k].previousFloor.Equals(jugadores[i].actualFloor)))
                 {
-                    TutorialColision colision = new TutorialColision(jugadores[i].actualFloor, this, false);
+                    Colisions colision = new Colisions(jugadores[i].actualFloor, this, false);
                     colision.positions.Add(k);
                     colision.positions.Add(i);
                     colisiones.Add(colision);
@@ -339,17 +348,17 @@ public class TutorialManager : MonoBehaviourPun
         }
         return colisiones;
     }
-    public Coroutine StartCoroutine(TutorialPlayerController p)
+    public Coroutine StartCoroutine(PlayerController p)
     {
         return StartCoroutine(p.PowerUp());
     }
     #endregion
     //Esta region podría mejorarse mediante la implementación de eventos.
-    #region TutorialPlayerControllerManagement
+    #region PlayerControllerManagement
     public void RegisterMovement(int id, int row, int index, FloorDetectorType dir)
     {
         Movement move = new Movement();
-        move.player = jugadores.Find((player) => player.id == id);
+        move.player = jugadores.Find((player) => player.GetIdPlayer() == id);
         move.nextFloor = casillas[row][index];
         move.dir = dir;
         movimientos.Enqueue(move);
@@ -366,18 +375,18 @@ public class TutorialManager : MonoBehaviourPun
         }
     }
 
-    public void RegisterUltimate(int id, TutorialPlayerController.Ultimate type)
+    public void RegisterUltimate(int id, PlayerController.Ultimate type)
     {
         Ultimate ultimate = new Ultimate();
-        ultimate.player = jugadores.Find((player) => player.id == id);
+        ultimate.player = jugadores.Find((player) => player.GetIdPlayer() == id);
         ultimate.type = type;
         ultimates.Enqueue(ultimate);
     }
 
-    public void RegisterUltimate(int id, TutorialPlayerController.Ultimate type, int row, int index)
+    public void RegisterUltimate(int id, PlayerController.Ultimate type, int row, int index)
     {
         Ultimate ultimate = new Ultimate();
-        ultimate.player = jugadores.Find((player) => player.id == id);
+        ultimate.player = jugadores.Find((player) => player.GetIdPlayer() == id);
         ultimate.type = type;
         ultimate.targetFloor = casillas[row][index];
         ultimates.Enqueue(ultimate);
@@ -390,19 +399,19 @@ public class TutorialManager : MonoBehaviourPun
             Ultimate ul = ultimates.Dequeue();
             switch (ul.type)
             {
-                case TutorialPlayerController.Ultimate.MEGA_PUNCH:
+                case PlayerController.Ultimate.MEGA_PUNCH:
                     ul.player.PerformMegaPunch(true);
                     break;
-                case TutorialPlayerController.Ultimate.BOMBA_COLOR:
+                case PlayerController.Ultimate.BOMBA_COLOR:
                     ul.player.PerformBombaColor(true, ul.targetFloor);
                     break;
-                case TutorialPlayerController.Ultimate.INVISIBILITY:
+                case PlayerController.Ultimate.INVISIBILITY:
                     ul.player.PerformInvisibility(true);
                     break;
             }
         }
         //Se actualizan los valores de las Ultimates en todos los jugadores.
-        foreach (TutorialPlayerController pc in jugadores)
+        foreach (PlayerController pc in jugadores)
         {
             pc.UpdateUltimateTime();
         }
@@ -411,121 +420,55 @@ public class TutorialManager : MonoBehaviourPun
     #endregion
 
     #region ROWS and POWER UPS
-    public void DestroyRow(int row, float seg, int repeticiones)
-    {
-
-        StartCoroutine(Blink(row, seg, repeticiones));
-        StartCoroutine(BlinkBackground(row, seg, repeticiones));
-    }
-    private IEnumerator Blink(int row, float seg, int repeticiones)
-    {
-        int j;
+    public void DestroyRow(int row, float seg, int repeticiones) {
         foreach (Floor f in casillas[row])
         {
-            SetPower(f, Floor.Type.Parpadeando, false, false);
+            StartCoroutine(Blink(f, seg, repeticiones));
         }
+        StartCoroutine(BlinkBackground(row, seg, repeticiones));
+    }
+    private IEnumerator Blink(Floor f, float seg, int repeticiones) {
+        int j;
+        jugadores[0].SetPower(f, Floor.Type.Parpadeando, false, false);
         //LAS CASILLAS PARPADEAN
-        for (j = 1; j < colorBlink.Count; j++)
-        {
-            Color c1 = colorBlink[j - 1];
+        for (j = 1; j < colorBlink.Count; j++) {
+            Color c1 = colorBlink[j-1];
             Color c2 = colorBlink[j];
-            SetColorRow(row, c1);
+            jugadores[0].SetColor(f, c1);
             yield return new WaitForSeconds(seg);
             for (int i = 0; i < repeticiones; i++)
             {
-                SetColorRow(row, c1);
-                SetColorRowN(row, c1);
-                yield return new WaitForSeconds(seg / repeticiones);
-                SetColorRow(row, c2);
-                SetColorRowN(row, c2);
-                yield return new WaitForSeconds(seg / repeticiones);
+                jugadores[0].SetColor(f, c1);
+                jugadores[0].SetColorN(f, c1);
+                yield return new WaitForSeconds(seg/repeticiones);
+                jugadores[0].SetColor(f, c2);
+                jugadores[0].SetColorN(f, c2);
+                yield return new WaitForSeconds(seg/repeticiones);
             }
         }
         yield return new WaitForSeconds(seg);
         yield return new WaitForSeconds(0.02f);
-        fallenFloors.Enqueue(row);
+        fallenFloors.Enqueue(f);
     }
-    #region RPC
-    public void SetColorRowRPC(int row, Color c)
-    {
-        foreach (Floor f in casillas[row])
-        {
-            f.SetColor(c);
-        }
-    }
-    public void SetColorBackgroundRPC(int pos, Color c)
-    {
-        background[pos].GetComponent<Renderer>().material.color = c;
-    }
-    public void SetColorRowN(int row, Color c)
-    {
-        foreach (Floor f in casillas[row])
-        {
-            f.SetColorN(c);
-        }
-    }
-    public void SetColorRow(int row, Color c)
-    {
-        foreach (Floor f in casillas[row])
-        {
-            f.SetColor(c);
-        }
-    }
-    public void SetColor(Floor f, Color c)
-    {
-        f.SetColor(c);
-    }
-    public void SetColorN(Floor f, Color c)
-    {
-        f.SetColorN(c);
-    }
-    public void SetPower(Floor f, Floor.Type type, bool b1, bool b2)
-    {
-        f.SetPower(type, b1, b2);
-    }
-    public void CinematicRowRPC(int row)
-    {
-        foreach (Floor f in casillas[row])
-        {
-            f.GetComponentInChildren<Rigidbody>().isKinematic = false;
-            f.GetComponentInChildren<Rigidbody>().useGravity = true;
-        }
-    }
-    public void CinematicBackgroundRPC(int pos)
-    {
-        background[pos].SetActive(false);
-    }
-    public void FallRowRPC(int row)
-    {
-        foreach (Floor f in casillas[row])
-        {
-            f.gameObject.SetActive(false);
-        }
-    }
-    #endregion
-    private IEnumerator FallFloor(int row)
+    private IEnumerator FallFloor(Floor f)
     {
         //LAS CASILLAS SE CAEN POR ACCIÓN DE LA GRAVEDAD
-        CinematicRowRPC(row);
+        jugadores[0].Cinematic(f);
         yield return new WaitForSeconds(0.5f);
-        FallRowRPC(row);
+        jugadores[0].Fall(f);
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
         //LOS JUGADORES QUE SE ENCUENTREN EN ESAS CASILLAS SE CAERAN
-
         if (PhotonNetwork.IsMasterClient)
         {
             for (int i = 0; i < jugadores.Count; i++)
             {
-                foreach (Floor f in casillas[row])
+                if (jugadores[i].actualFloor.Equals(f))
                 {
-                    if (jugadores[i].actualFloor.Equals(f))
-                    {
-                        jugadores[i].Caer();
-                        RemovePlayer(i);
-                        ReordenarGolpeados(i);
-                        i--;
-                    }
+                    jugadores[i].Caer();
+                    RemovePlayer(i);
+                    ReordenarGolpeados(i);
+                    i--;
                 }
             }
         }
@@ -538,18 +481,18 @@ public class TutorialManager : MonoBehaviourPun
         {
             Color c1 = colorBlink[j - 1];
             Color c2 = colorBlink[j];
-            SetColorBackgroundRPC(row, c1);
+            jugadores[0].SetColorBackground(row, c1);
             yield return new WaitForSeconds(seg);
             for (int i = 0; i < repeticiones; i++)
             {
-                SetColorBackgroundRPC(row, c1);
+                jugadores[0].SetColorBackground(row, c1);
                 yield return new WaitForSeconds(seg / repeticiones);
-                SetColorBackgroundRPC(row, c2);
+                jugadores[0].SetColorBackground(row, c2);
                 yield return new WaitForSeconds(seg / repeticiones);
             }
         }
         yield return new WaitForSeconds(seg);
-        CinematicBackgroundRPC(row);
+        jugadores[0].CinematicBackground(row);
     }
     private IEnumerator DestroyRows()
     {
@@ -577,6 +520,13 @@ public class TutorialManager : MonoBehaviourPun
             SpawnPowerUp(15f);
         }
     }
+    //Cuando se cambie el master deberán ejecutarse estos métodos con valores actualizados.
+    private void AnimateFloors()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+        //StartCoroutine(DestroyRows());
+        StartCoroutine(SpawnPowerUps());
+    }
     public void SpawnPowerUp(float time)
     {
         bool seguir = true;
@@ -601,10 +551,10 @@ public class TutorialManager : MonoBehaviourPun
     private IEnumerator SetType(Floor f, Floor.Type t, float time)
     {
         FindObjectOfType<PhotonInstanciate>().my_player.
-            GetComponent<TutorialPlayerController>().SetPowerUpFloor(f, t);
+            GetComponent<PlayerController>().SetPowerUpFloor(f, t);
         yield return new WaitForSeconds(time);
         if(f!=null) FindObjectOfType<PhotonInstanciate>().my_player.
-            GetComponent<TutorialPlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
+            GetComponent<PlayerController>().SetPowerUpFloor(f, Floor.Type.Vacio);
     }
     #endregion 
     public void ChangeAnimationSpeedOnAllPlayers(float bpm)
@@ -619,10 +569,10 @@ public class TutorialManager : MonoBehaviourPun
         jugadores[index].SetPuesto(jugadores.Count - 1);
         if (jugadores.Count == 1)
         {
-            //RemovePlayers.instance.winnerName = jugadores[0].NickName;
-            //RemovePlayers.instance.winnerUltimate = jugadores[0].tipoUltimate;
-            //RemovePlayers.instance.winnerSkin = jugadores[0].tipoSkin;
+            RemovePlayers.instance.winnerName = jugadores[0].photonView.Owner.NickName;
+            RemovePlayers.instance.winnerUltimate = jugadores[0].tipoUltimate;
+            RemovePlayers.instance.winnerSkin = jugadores[0].tipoSkin;
         }
         jugadores.RemoveAt(index);
-    }
+    }*/
 }

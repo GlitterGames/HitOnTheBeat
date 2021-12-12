@@ -7,6 +7,7 @@ using Photon.Realtime;
 using Photon;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class NetworkController : MonoBehaviourPunCallbacks
 {
@@ -25,7 +26,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         efectosSonido = GetComponent<EfectosSonido>();
         _name.text = PlayerPrefs.GetString("name", "");
     }
-    [SerializeField] private InputField _name;
+    [SerializeField] private TMP_InputField _name;
 
     // Update is called once per frame
     public override void OnConnectedToMaster()
@@ -44,7 +45,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public void Connect ()
     {
         efectosSonido.PlayEffect(0);
-        st.StartTransition(1);
+        st.StartTransition(1, "Conectando con el Servidor...");
         if (!PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.ConnectUsingSettings())
@@ -70,6 +71,6 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public void GoSettings()
     {
         efectosSonido.PlayEffect(0);
-        FindObjectOfType<SceneTransitioner>().StartTransition(7, 0.5f); ;
+        st.StartTransition(6, 0);
     }
 }
