@@ -218,7 +218,7 @@ public class Lobby : MonoBehaviourPunCallbacks
         {
             playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
             PlayerCounter.text = playerCount.ToString();
-            UpdatePlayerList();
+           
 
             if (!IsLoading && playerCount >= minPlayersInRoom)
             {
@@ -227,6 +227,7 @@ public class Lobby : MonoBehaviourPunCallbacks
                     empezarPartida.interactable = true;
                 }
             }
+            UpdatePlayerList();
         }
         
     }
