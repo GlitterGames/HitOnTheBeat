@@ -31,7 +31,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
     // Update is called once per frame
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.NickName = _name.text;
+        if(_name.text=="") { PhotonNetwork.NickName = "Fulanito"; }
+        else { PhotonNetwork.NickName = _name.text; }
         PlayerPrefs.SetString("name", _name.text);
         PhotonNetwork.JoinLobby();
     }
