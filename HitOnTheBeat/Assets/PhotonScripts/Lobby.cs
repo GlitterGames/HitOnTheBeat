@@ -26,6 +26,12 @@ public class Lobby : MonoBehaviourPunCallbacks
     public EfectosSonido efectosSonido;
     public GameObject CanvasLobby;
     public GameObject CanvasRoom;
+    public GameObject CanvasRoomPrivada;
+    public GameObject gameObjectCrearSalaPrivada;
+    public GameObject gameObjectUnirseSalaPrivada;
+    public Button botonCrearSalaPrivada;
+    public Button botonUnirseSalaPrivada;
+
     public Text Jugador1;
     public Text Jugador2;
     public Text Jugador3;
@@ -72,6 +78,7 @@ public class Lobby : MonoBehaviourPunCallbacks
         Debug.Log("unido a sala");
         CanvasLobby.SetActive(false);
         CanvasRoom.SetActive(true);
+        CanvasRoomPrivada.SetActive(false);
         
 
 
@@ -160,6 +167,7 @@ public class Lobby : MonoBehaviourPunCallbacks
     }
     public void OnRoomNameChanged(string nameIn)
     {
+        botonCrearSalaPrivada.interactable = true;
         roomName = nameIn;
 
     }
@@ -173,6 +181,24 @@ public class Lobby : MonoBehaviourPunCallbacks
         crearSala.interactable = true;
 
     }
+    public void IrCrearSala()
+    {
+        CanvasLobby.SetActive(false);
+        CanvasRoomPrivada.SetActive(true);
+        gameObjectUnirseSalaPrivada.SetActive(false);
+        
+
+
+    }
+    public void IrUnirseSala()
+    {
+        CanvasLobby.SetActive(false);
+        CanvasRoomPrivada.SetActive(true);
+        gameObjectCrearSalaPrivada.SetActive(false);
+        botonUnirseSalaPrivada.interactable = true;
+
+    }
+
     public void OnRoomSizeChanged(string sizeIn)
     {
         roomSize = int.Parse(sizeIn);
@@ -191,7 +217,16 @@ public class Lobby : MonoBehaviourPunCallbacks
     #endregion
     public void FixedUpdate()
     {
-       
+        if (roomName=="")
+        {
+            botonCrearSalaPrivada.interactable = false;
+            botonUnirseSalaPrivada.interactable = false;
+        }
+        else
+        {
+            botonCrearSalaPrivada.interactable = true;
+            botonUnirseSalaPrivada.interactable = true;
+        }
         if (PhotonNetwork.CurrentRoom != null)
         {
             playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
