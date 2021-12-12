@@ -9,7 +9,7 @@ public class MusicPlayer : MonoBehaviourPun
     public AudioClip[] canciones;
     public AudioSource cancionActual;
 
-    public Ritmo ritmo;
+    [HideInInspector] public Ritmo ritmo;
     private int numeroCambios = 0;
     private float segundosEspera;
     private float bpm;
@@ -146,6 +146,6 @@ public class MusicPlayer : MonoBehaviourPun
     [PunRPC]
     private void SendChangeBMPRPC(float bpm)
     {
-        if(Ritmo.instance) Ritmo.instance.delay = bpm;
+        if(Ritmo.instance) Ritmo.instance.Delay = bpm;
     }
 }

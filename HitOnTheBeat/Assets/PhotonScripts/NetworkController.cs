@@ -7,6 +7,7 @@ using Photon.Realtime;
 using Photon;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class NetworkController : MonoBehaviourPunCallbacks
 {
@@ -25,7 +26,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         efectosSonido = GetComponent<EfectosSonido>();
         _name.text = PlayerPrefs.GetString("name", "");
     }
-    [SerializeField] private InputField _name;
+    [SerializeField] private TMP_InputField _name;
 
     // Update is called once per frame
     public override void OnConnectedToMaster()

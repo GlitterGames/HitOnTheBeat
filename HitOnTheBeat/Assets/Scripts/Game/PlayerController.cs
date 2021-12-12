@@ -1032,7 +1032,7 @@ public class PlayerController : MonoBehaviourPun
             BombaColorManager bcm = GetComponent<BombaColorManager>();
             if (bcm)
             {
-                bcm.StartAnimation(gameManager.casillas[row][index], ULTIMATE_MAX_BEAT_DURATION * Ritmo.instance.delay);
+                bcm.StartAnimation(gameManager.casillas[row][index], ULTIMATE_MAX_BEAT_DURATION * Ritmo.instance.Delay);
             }
             else
             {
