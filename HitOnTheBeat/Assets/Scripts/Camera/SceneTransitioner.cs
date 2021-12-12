@@ -101,13 +101,5 @@ public class SceneTransitioner : MonoBehaviour
         this.level = 5;
         if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
     }
-    public void GoToGemsScene(float delay)
-    {
-        efectosSonido = GetComponent<EfectosSonido>();
-        efectosSonido.PlayEffect(0);
-        anim.SetTrigger("Activate");
-        this.level = 6;
-        if (delay >= 0) StartCoroutine(InstantEndTransition(delay));
-    }
     #endregion
 }
