@@ -150,7 +150,7 @@ public class SkinSelector : MonoBehaviour
                 pref = PlayerPrefs.GetInt("purchasedFrank", 1);
                 break;
             default:
-                pref = 1;
+                pref = 0;
                 break;
         }
         if (value)

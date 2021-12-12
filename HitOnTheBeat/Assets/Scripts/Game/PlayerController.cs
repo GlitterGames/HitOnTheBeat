@@ -1032,7 +1032,7 @@ public class PlayerController : MonoBehaviourPun
             BombaColorManager bcm = GetComponent<BombaColorManager>();
             if (bcm)
             {
-                bcm.StartAnimation(gameManager.casillas[row][index], ULTIMATE_MAX_BEAT_DURATION * Ritmo.instance.Delay);
+                bcm.StartAnimation(gameManager.casillas[row][index], ULTIMATE_MAX_BEAT_DURATION * Ritmo.instance.delay);
             }
             else
             {
@@ -1355,7 +1355,7 @@ public class PlayerController : MonoBehaviourPun
     public void DoEndGameRPC(string name, int num, int skin, int numBeats)
     {
         PlayerController mpc = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
-        PersistenceData ps = FindObjectOfType<PersistenceData>();
+        PlayerSelector ps = FindObjectOfType<PlayerSelector>();
         ps.puesto = mpc.puesto;
         ps.playerWinnerName = name;
         ps.playerWinner = num;

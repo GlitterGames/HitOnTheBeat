@@ -59,9 +59,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: Orbitron Yellow SDF Outline
   m_EditorClassIdentifier: 
-  hashCode: -1848143260
+  hashCode: -1872603321
   material: {fileID: 4083486251781654666}
-  materialHashCode: 308693316
+  materialHashCode: 1101845767
   m_Version: 1.1.0
   m_SourceFontFileGUID: 495c9e2a934bcc640a8d7427b13cb680
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 495c9e2a934bcc640a8d7427b13cb680, type: 3}
@@ -2608,7 +2608,7 @@ Material:
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
-    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FaceColor: {r: 1, g: 0.975548, b: 0.5981132, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}

@@ -18,20 +18,10 @@ public class Ritmo : MonoBehaviourPun
     public Colores colores;
     public GameObject marcador;
     public GameObject indicador;
-    public GameObject adorno;
     private GameManager gameManager;
     [Range(0, 1)]
     public float successPercentaje;
-    private float m_delay = 2;
-    public float Delay
-    {
-        get { return m_delay; }
-        set
-        {
-            m_delay = value;
-            adorno.GetComponent<Animator>().speed = 100f * m_delay / 60f;
-        }
-    }
+    public float delay;
     private float currentTime;
     
     //Variables master
@@ -84,13 +74,13 @@ public class Ritmo : MonoBehaviourPun
     public void ManageTime()
     {
         currentTime += Time.fixedDeltaTime;
-        if (currentTime / Delay >= (1 - successPercentaje)) puedeClickear = true;
-        if (currentTime > Delay)
+        if (currentTime / delay >= (1 - successPercentaje)) puedeClickear = true;
+        if (currentTime > delay)
         {
             currentTime = 0;
             puedeClickear = false;
         }
-        IndicatorSetSize(currentTime / Delay);
+        IndicatorSetSize(currentTime / delay);
     }
 
     public bool TryMovePlayer()
