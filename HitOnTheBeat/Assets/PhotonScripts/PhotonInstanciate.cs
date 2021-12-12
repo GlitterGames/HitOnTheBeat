@@ -21,6 +21,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     public GameObject ritmo;
 
     private PersistenceData playerSelector;
+    private CameraController cameraController;
 
     private EfectosSonido efectosSonido;
 
@@ -44,6 +45,7 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        cameraController = FindObjectOfType<CameraController>();
         //Asignamos la cámara al jugador.
         FindObjectOfType<CameraTargetSwitcher>().target = my_player.transform;
         StartCoroutine(AnimationsOnStart());
@@ -60,7 +62,6 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
     [PunRPC]
     public void CamLookPlayerRPC()
     {
-        Debug.Log("RPC");
         StopAllCoroutines();
         FindObjectOfType<CameraTargetSwitcher>().target = my_player.transform;
         FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
@@ -68,11 +69,12 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
 
     IEnumerator AnimationsOnStart()
     {
-        Debug.Log("Corrutina");
         FindObjectOfType<CameraTargetSwitcher>().target = transforms[0];
         FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
+        cameraController.MainAngle = 0;
         yield return new WaitForSeconds(2);
         FindObjectOfType<CameraTargetSwitcher>().target = transforms[1];
+        cameraController.MainAngle = 45;
         FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
         yield return new WaitForSeconds(2);
         if (PhotonNetwork.IsMasterClient) photonView.RPC("CamLookPlayerRPC", RpcTarget.AllViaServer);
