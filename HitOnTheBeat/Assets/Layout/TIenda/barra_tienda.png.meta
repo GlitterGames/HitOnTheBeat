@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:HitOnTheBeat/Assets/Layout/TIenda/new.png.meta
+guid: db2fa129e79c25d4282431a00db46dcf
+=======
 guid: 97b483dd19a0c964c8e1b576ac6da73e
+>>>>>>> main:HitOnTheBeat/Assets/Layout/TIenda/barra_tienda.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
