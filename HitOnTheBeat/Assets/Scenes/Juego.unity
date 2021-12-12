@@ -274,7 +274,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8013387790904156785, guid: 7bc181991b9640f4790387dfa7208759, type: 3}
       propertyPath: m_XDamping
-      value: 1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8013387790904156785, guid: 7bc181991b9640f4790387dfa7208759, type: 3}
       propertyPath: m_YDamping
@@ -282,7 +282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8013387790904156785, guid: 7bc181991b9640f4790387dfa7208759, type: 3}
       propertyPath: m_ZDamping
-      value: 1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8013387790904156785, guid: 7bc181991b9640f4790387dfa7208759, type: 3}
       propertyPath: m_LookaheadTime
@@ -3552,6 +3552,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numRows: 0
+  suelosFondo:
+  - {fileID: 247994765}
+  - {fileID: 406525182}
   materiales:
     normal: {fileID: 2100000, guid: d46b2aaaa33c0534aa3c33aec38f6d87, type: 2}
     X2: {fileID: 2100000, guid: 37400f1e399d9fd40a2b63843381cde7, type: 2}
@@ -3573,7 +3576,7 @@ MonoBehaviour:
     anillo4: {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 0}
     anillo5: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 0}
   coloresParpadeo:
-    ready: {r: 0.2867924, g: 1, b: 0.35870397, a: 0}
+    ready: {r: 0.27735847, g: 1, b: 0.35369277, a: 0}
     steady: {r: 1, g: 0.95918244, b: 0, a: 0}
     fall: {r: 1, g: 0, b: 0, a: 0}
   color: []

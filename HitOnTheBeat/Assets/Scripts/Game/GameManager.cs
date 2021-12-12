@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviourPun
 	
     #region Variables
     public int numRows;
+    public ChangeFloorColor[] suelosFondo;
     public Materiales materiales;
     public ColoresMovimiento coloresEspeciales;
     public ColoresBombaColor coloresBombaColor;
@@ -111,6 +112,7 @@ public class GameManager : MonoBehaviourPun
     //Se ejecuta cada vez que comienza un nuevo Beat.
     public void DoBeatActions()
     {
+        foreach (var v in suelosFondo) v.NextMat();
         PerformUltimates();
         PerformMovements();
         PerformColision();
