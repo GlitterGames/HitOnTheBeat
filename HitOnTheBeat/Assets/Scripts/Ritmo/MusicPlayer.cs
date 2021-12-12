@@ -116,15 +116,15 @@ public class MusicPlayer : MonoBehaviourPun
             }
         }
         numeroCambios++;
-        SendChangeBMP(bpm);
+        SendChangeBMP(bpm, numeroCancion);
         yield return new WaitForSeconds(segundosEspera);
         StartCoroutine(ChangeBMP(numeroCancion, numeroCambios));
     }
 
-    public void SendChangeBMP(float bpm)
+    public void SendChangeBMP(float bpm, int numeroCancion)
     {
         gameManager.ChangeAnimationSpeedOnAllPlayers(bpm);
-        photonView.RPC("SendChangeBMPRPC", RpcTarget.AllViaServer, bpm);
+        photonView.RPC("SendChangeBMPRPC", RpcTarget.AllViaServer, bpm, numeroCancion);
     }
     
     [PunRPC]
