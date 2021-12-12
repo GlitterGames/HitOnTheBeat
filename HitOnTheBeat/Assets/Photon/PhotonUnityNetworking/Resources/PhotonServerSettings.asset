@@ -120,6 +120,7 @@ MonoBehaviour:
   - FallRowRPC
   - SetColorRowNRPC
   - SetColorRowRPC
+  - CamLookPlayerRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
