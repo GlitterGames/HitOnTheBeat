@@ -41,7 +41,7 @@ public class RemovePlayers : MonoBehaviourPunCallbacks
         if(endGame)
             FindObjectOfType<SceneTransitioner>().GoToVictoryScene(0);
         else
-            FindObjectOfType<SceneTransitioner>().GoToLobbyScene(0);
+            FindObjectOfType<SceneTransitioner>().StartTransition(1, 1f, "Abandonando partida...");
     }
 
     //Cuando un jugador abandona la sala.
