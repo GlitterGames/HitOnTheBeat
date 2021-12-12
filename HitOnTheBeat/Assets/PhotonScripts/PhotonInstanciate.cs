@@ -35,7 +35,15 @@ public class PhotonInstanciate : MonoBehaviourPunCallbacks
         playerSelector = FindObjectOfType<PersistenceData>();
         int typePlayer = playerSelector.selectedPlayer;
         int skinPlayer = playerSelector.selectedSkin;
-        int id = (photonView.ViewID / 1000) - 1;
+        int id = -1;
+        Player[] players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
+        {
+            if(players[i].ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                id = i;
+            }
+        }
         Vector3 pos = new Vector3(f[id].transform.position.x, 0.4f, f[id].transform.position.z);
         string namePrefab = playerAvatar[typePlayer].skins[skinPlayer].name;
         my_player = PhotonNetwork.Instantiate(namePrefab, pos, Quaternion.Euler(0,180,0));
