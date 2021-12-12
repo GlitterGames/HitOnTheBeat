@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialColisions 
+public class TutorialColision
 {
     public Floor floor;
     public List<int> positions;
@@ -11,7 +11,7 @@ public class TutorialColisions
     bool notCinematic;
     bool sameFloor;
     TutorialManager g;
-    public TutorialColisions(Floor f, TutorialManager g, bool sameFloor)
+    public TutorialColision(Floor f, TutorialManager g, bool sameFloor)
     {
         this.floor = f;
         this.g = g;

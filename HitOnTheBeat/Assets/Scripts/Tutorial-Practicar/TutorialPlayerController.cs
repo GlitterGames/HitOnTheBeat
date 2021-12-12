@@ -852,7 +852,8 @@ public class TutorialPlayerController : MonoBehaviour
     //Gestiona la ultimate Bomba Color cuando se selecciona dónde lanzará la bomba.
     public void PerformBombaColor(bool start, Floor f)
     {
-        PerformBombaColorRPC(f.row, f.index);
+        //PHOTON
+        //PPerformBombaColorRPC(f.row, f.index);
         PerformBombaColorServerRPC( start, f.row, f.index);
     }
     //Animación y ejecución de la Bomba Color.
@@ -897,7 +898,7 @@ public class TutorialPlayerController : MonoBehaviour
                 }
             }
         }
-        foreach (PlayerController pc in gameManager.jugadores)
+        foreach (TutorialPlayerController pc in gameManager.jugadores)
         {
             int fuerzaUsada = GetComponent<BombaColorManager>().fuerzaEmpleada;
             if (pc.actualFloor.Equals(target))
@@ -1153,20 +1154,23 @@ public class TutorialPlayerController : MonoBehaviour
     #region RPC Calls
     private void SetPlayerCamera(int id)
     {
-        FindObjectOfType<CameraTargetSwitcher>().target = PhotonView.Find(id).transform;
+        //PHOTON
+        //PFindObjectOfType<CameraTargetSwitcher>().target = PhotonView.Find(id).transform;
         FindObjectOfType<CameraTargetSwitcher>().SwitchToTarget();
     }
 
     private void UpdatePlayersRPC()
     {
-        gameManager.UpdatePlayers();
+        //PHOTON
+        //PgameManager.UpdatePlayers();
     }
 
     public void DoEndGameRPC(string name, int num, int skin, int numBeats)
     {
         PlayerController mpc = FindObjectOfType<PhotonInstanciate>().my_player.GetComponent<PlayerController>();
         PlayerSelector ps = FindObjectOfType<PlayerSelector>();
-        ps.puesto = mpc.puesto;
+        //PHOTON
+        //Pps.puesto = mpc.puesto;
         ps.playerWinnerName = name;
         ps.playerWinner = num;
         ps.playerWinnerSkin = skin;
@@ -1179,7 +1183,9 @@ public class TutorialPlayerController : MonoBehaviour
 
         FindObjectOfType<RemovePlayers>().endGame = true;
         gameManager.StopAllCoroutines();
-        PhotonNetwork.LeaveRoom(true);
+        
+        //PHOTON
+        //PhotonNetwork.LeaveRoom(true);
     }
     #endregion
 

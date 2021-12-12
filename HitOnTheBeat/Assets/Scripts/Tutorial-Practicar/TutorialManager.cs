@@ -94,6 +94,7 @@ public class TutorialManager : MonoBehaviourPun
         casillas.Add(new Floor[24]);
         casillas.Add(new Floor[30]);
     }
+    #region Inicializaciones
     // Start is called before the first frame update
     void Start()
     {
@@ -104,18 +105,6 @@ public class TutorialManager : MonoBehaviourPun
         AnimateFloors();
     }
     //Se ejecuta cada vez que comienza un nuevo Beat.
-    public void DoBeatActions()
-    {
-        ApplyEfectsFromFloor();
-        PerformUltimates();
-        PerformMovements();
-        PerformColision();
-        spawn = true;
-        while (fallenFloors.Count>0)
-        {
-            StartCoroutine(FallFloor(fallenFloors.Dequeue()));
-        }
-    }
     private void InitColor() {
         color.Add(coloresAnillos.anillo0);
         color.Add(coloresAnillos.anillo1);
@@ -135,15 +124,6 @@ public class TutorialManager : MonoBehaviourPun
         for(int i = 0; i<6; i++)
         {
             background[i].GetComponent<Renderer>().material.color = backgroundColor;
-        }
-    }
-    public void UpdatePlayers()
-    {
-        jugadores.Clear();
-        HashSet<GameObject> players = PhotonNetwork.FindGameObjectsWithComponent(typeof(TutorialPlayerController));
-        foreach (GameObject go in players)
-        {
-            jugadores.Add(go.GetComponent<TutorialPlayerController>());
         }
     }
     private void InitCasillas()
@@ -170,7 +150,27 @@ public class TutorialManager : MonoBehaviourPun
             }
         }
     }
-    public void ApplyEfectsFromFloor() {
+    private void AnimateFloors()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+        StartCoroutine(DestroyRows());
+        StartCoroutine(SpawnPowerUps());
+    }
+    #endregion
+    public void DoBeatActions()
+    {
+        ApplyEfectsFromFloor();
+        PerformUltimates();
+        PerformMovements();
+        PerformColision();
+        spawn = true;
+        while (fallenFloors.Count > 0)
+        {
+            StartCoroutine(FallFloor(fallenFloors.Dequeue()));
+        }
+    }
+    public void ApplyEfectsFromFloor()
+    {
         if (PhotonNetwork.IsMasterClient)
         {
             foreach (TutorialPlayerController jugador in jugadores)
@@ -179,7 +179,7 @@ public class TutorialManager : MonoBehaviourPun
                 {
                     Debug.Log("HE PILLADO UN POWE UP");
                     jugador.GetPowerUp();
-                    if(jugador.actualFloor.powertime!=null) StopCoroutine(jugador.actualFloor.powertime);
+                    if (jugador.actualFloor.powertime != null) StopCoroutine(jugador.actualFloor.powertime);
                     else Debug.Log("No tiene corutina de power up");
                 }
             }
@@ -188,7 +188,7 @@ public class TutorialManager : MonoBehaviourPun
     #region Colisiones
     //Si ya existe esa colision te devuelve la posición en la que te encuentra
     // -1 si no la encuentra
-    private int Exists(List<Colisions> colisiones, Floor f) {
+    private int Exists(List<TutorialColision> colisiones, Floor f) {
         for(int i=0; i<colisiones.Count; i++)
         {
             if (colisiones[i].floor.Equals(f)) return i;
@@ -227,23 +227,23 @@ public class TutorialManager : MonoBehaviourPun
     private void PerformColision()
     {
         bool bcolision = true; //En caso de que no se tengan que comprobar colisiones
-        List<Colisions> colisiones = new List<Colisions>();
+        List<TutorialColision> colisiones = new List<TutorialColision>();
         while (bcolision)
         {
             bcolision = false;
             //Colision en caso de dos jugadores se intercambien casillas
-            colisiones = PerformNotSameFloorColisions(ref bcolision);
+            colisiones = PerformSameFloorTutorialColision(ref bcolision);
             //eliminar jugadores que se hayan caido
             DeletePlayersColision(colisiones, false);
             //Colision normal entre jugadores
-            colisiones = PerformSameFloorColisions(ref bcolision);
+            colisiones = PerformNotSameFloorTutorialColision(ref bcolision);
             //eliminar jugadores que se hayan caido
             DeletePlayersColision(colisiones, true);
             //Colisiones cinemáticas
             CinematicColisions(ref bcolision);
         }
     }
-    private void DeletePlayersColision(List<Colisions> colisiones, bool sameFloor)
+    private void DeletePlayersColision(List<TutorialColision> colisiones, bool sameFloor)
     {
         
         for (int i = 0; i < colisiones.Count; i++)
@@ -291,9 +291,9 @@ public class TutorialManager : MonoBehaviourPun
             }
         }
     }
-    private List<Colisions> PerformSameFloorColisions(ref bool bcolision)
+    private List<TutorialColision> PerformSameFloorTutorialColision(ref bool bcolision)
     {
-        List<Colisions> colisiones = new List<Colisions>();
+        List<TutorialColision> colisiones = new List<TutorialColision>();
         for (int k = 0; k < jugadores.Count; k++)
         {
             for (int i = k + 1; i < jugadores.Count; i++)
@@ -303,7 +303,7 @@ public class TutorialManager : MonoBehaviourPun
                     int pos = Exists(colisiones, jugadores[k].actualFloor);
                     if (pos == -1)
                     {
-                        Colisions colision = new Colisions(jugadores[k].actualFloor, this, true);
+                        TutorialColision colision = new TutorialColision(jugadores[k].actualFloor, this, true);
                         colision.positions.Add(k);
                         colision.positions.Add(i);
                         colisiones.Add(colision);
@@ -320,16 +320,16 @@ public class TutorialManager : MonoBehaviourPun
         }
         return colisiones;
     }
-    private List<Colisions> PerformNotSameFloorColisions(ref bool bcolision)
+    private List<TutorialColision> PerformNotSameFloorTutorialColision(ref bool bcolision)
     {
-        List<Colisions> colisiones = new List<Colisions>();
+        List<TutorialColision> colisiones = new List<TutorialColision>();
         for (int k = 0; k < jugadores.Count; k++)
         {
             for (int i = k + 1; i < jugadores.Count; i++)
             {
                 if (jugadores[k].actualFloor.Equals(jugadores[i].previousFloor) && (jugadores[k].previousFloor.Equals(jugadores[i].actualFloor)))
                 {
-                    Colisions colision = new Colisions(jugadores[i].actualFloor, this, false);
+                    TutorialColision colision = new TutorialColision(jugadores[i].actualFloor, this, false);
                     colision.positions.Add(k);
                     colision.positions.Add(i);
                     colisiones.Add(colision);
@@ -577,13 +577,6 @@ public class TutorialManager : MonoBehaviourPun
             SpawnPowerUp(15f);
         }
     }
-    //Cuando se cambie el master deberán ejecutarse estos métodos con valores actualizados.
-    private void AnimateFloors()
-    {
-        if (!PhotonNetwork.IsMasterClient) return;
-        StartCoroutine(DestroyRows());
-        StartCoroutine(SpawnPowerUps());
-    }
     public void SpawnPowerUp(float time)
     {
         bool seguir = true;
@@ -626,9 +619,9 @@ public class TutorialManager : MonoBehaviourPun
         jugadores[index].SetPuesto(jugadores.Count - 1);
         if (jugadores.Count == 1)
         {
-            RemovePlayers.instance.winnerName = jugadores[0].photonView.Owner.NickName;
-            RemovePlayers.instance.winnerUltimate = jugadores[0].tipoUltimate;
-            RemovePlayers.instance.winnerSkin = jugadores[0].tipoSkin;
+            //RemovePlayers.instance.winnerName = jugadores[0].NickName;
+            //RemovePlayers.instance.winnerUltimate = jugadores[0].tipoUltimate;
+            //RemovePlayers.instance.winnerSkin = jugadores[0].tipoSkin;
         }
         jugadores.RemoveAt(index);
     }
