@@ -26,7 +26,7 @@ Aquí se encuentran todas las herramientas que estamos usando para el desarrollo
 
 ## Autores ✒️
 
-* **Jose Pablo Baño García** - *Game Designer* - [José](https://github.com/jopabaga)
+* **Jose Pablo Baño García** - *Game Developer* - [José](https://github.com/jopabaga)
 * **Javier Balenzategui Garcia** - *2D & 3D & Sound Artist* - [Javier](https://github.com/javaperwave)
 * **Iván Rodríguez García** - *Game Developer* - [Iván](https://github.com/ivansploy)
 * **Guillermo Juan García-Delgado Álvarez** - *2D & 3D Artist* - [Guillermo](https://github.com/guilleingvid)
